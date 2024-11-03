@@ -56,6 +56,10 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.material3)
+            implementation("androidx.navigation:navigation-compose:2.7.3")
+            implementation ("androidx.compose.material:material-icons-extended:1.7.5")
+
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
