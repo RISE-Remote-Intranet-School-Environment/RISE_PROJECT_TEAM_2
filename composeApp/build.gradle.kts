@@ -92,6 +92,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    buildFeatures {
+        compose = true
+    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -101,9 +104,31 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    // Jetpack Compose BOM
+    implementation(platform("androidx.compose:compose-bom:2023.01.00"))
+
+    // Material 3 and Compose UI
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+
+    // Foundation
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.foundation:foundation-layout")
+
+    // Activity Compose
+    implementation("androidx.activity:activity-compose:1.7.0")
+
+    // Calendar library by kizitonwose
+    implementation("com.kizitonwose.calendar:compose:0.6.1")
+
+    // Coroutines (for using `launch` and coroutines with Compose)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
 
