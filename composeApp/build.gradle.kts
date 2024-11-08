@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 kotlin {
@@ -51,6 +52,10 @@ kotlin {
     }
     
     sourceSets {
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
         
         androidMain.dependencies {
             implementation(compose.preview)
@@ -58,7 +63,7 @@ kotlin {
             implementation(libs.androidx.material3)
             implementation("androidx.navigation:navigation-compose:2.7.3")
             implementation ("androidx.compose.material:material-icons-extended:1.7.5")
-
+            implementation(libs.ktor.client.okhttp)
 
         }
         commonMain.dependencies {
@@ -72,6 +77,14 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.materialKolor)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.koin.core)
+            implementation(libs.kamel)
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.koin)
+
         }
     }
 }
