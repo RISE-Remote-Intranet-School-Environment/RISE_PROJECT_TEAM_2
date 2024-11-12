@@ -25,7 +25,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.Center // Center content vertically
         ) {
             // Text at the top
-            Text(text = "HomeScreen")
+            Text(text = "New HomeScreen")
 
             Spacer(modifier = Modifier.height(16.dp)) // Add space between the Text and buttons
 

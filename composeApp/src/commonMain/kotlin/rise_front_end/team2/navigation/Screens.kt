@@ -1,15 +1,18 @@
 package rise_front_end.team2.navigation
 
-enum class Screens {
-    //What's in the navbar
-    HomeScreen,
-    GradeScreen,
-    FavoriteScreen,
-    CalendarScreen,
+sealed class Screens(val route: String) {
+    // What's in the navbar
+    object HomeScreen : Screens("home")
+    object GradeScreen : Screens("grade")
+    object FavoriteScreen : Screens("favorite")
+    object CalendarScreen : Screens("calendar")
 
-    //Not in the navbar
-    SyllabusScreen,
-    FileHostingScreen
+    // Not in the navbar
+    object SyllabusScreen : Screens("syllabus")
+    object FileHostingScreen : Screens("fileHosting")
 
+    // New screens with parameters
+    object ListScreen : Screens("list")
 
+    data class DetailScreen(val objectId: Int) : Screens("detail/$objectId")
 }

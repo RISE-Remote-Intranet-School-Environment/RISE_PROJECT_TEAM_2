@@ -7,17 +7,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import rise_front_end.team2.ui.screens.*
+import rise_front_end.team2.ui.screens.detail.DetailScreen
+import rise_front_end.team2.ui.screens.list.ListScreen
+
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
 actual fun PlatformNavigation() {
     AppTheme {
-        val navController = rememberNavController()
+        val navController: NavHostController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
@@ -26,9 +32,9 @@ actual fun PlatformNavigation() {
                 CommonNavigationBar(
                     currentRoute = currentRoute,
                     onNavigate = { newRoute ->
-                        if (newRoute == Screens.HomeScreen.name) {
+                        if (newRoute == Screens.HomeScreen.route) {
                             // Navigate to HomeScreen and reset the back stack
-                            navController.navigate(Screens.HomeScreen.name) {
+                            navController.navigate(Screens.HomeScreen.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     inclusive = true
                                 }
@@ -46,33 +52,53 @@ actual fun PlatformNavigation() {
         ) { paddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screens.HomeScreen.name,
+                startDestination = Screens.HomeScreen.route,
                 modifier = Modifier.padding(paddingValues)
             ) {
-                composable(route = Screens.HomeScreen.name) {
+                // Existing destinations
+                composable(route = Screens.HomeScreen.route) {
                     HomeScreen(
                         onSyllabusClick = {
-                            navController.navigate(Screens.SyllabusScreen.name)
+                            navController.navigate(Screens.SyllabusScreen.route)
                         },
                         onFileHostingClick = {
-                            navController.navigate(Screens.FileHostingScreen.name)
+                            navController.navigate(Screens.FileHostingScreen.route)
                         }
                     )
                 }
-                composable(route = Screens.GradeScreen.name) {
+                composable(route = Screens.GradeScreen.route) {
                     GradeScreen()
                 }
-                composable(route = Screens.FavoriteScreen.name) {
+                composable(route = Screens.FavoriteScreen.route) {
                     FavoriteScreen()
                 }
-                composable(route = Screens.CalendarScreen.name) {
+                composable(route = Screens.CalendarScreen.route) {
                     CalendarScreen()
                 }
-                composable(route = Screens.SyllabusScreen.name) {
+                composable(route = Screens.SyllabusScreen.route) {
                     SyllabusScreen()
                 }
-                composable(route = Screens.FileHostingScreen.name) {
+                composable(route = Screens.FileHostingScreen.route) {
                     FileHostingScreen()
+                }
+
+                // New List and Detail navigation destinations
+                composable(route = Screens.ListScreen.route) {
+                    ListScreen(navigateToDetails = { objectId ->
+                        navController.navigate(Screens.DetailScreen(objectId).route)
+                    })
+                }
+                composable(
+                    route = "detail/{objectId:Int}",
+                    arguments = listOf(navArgument("objectId") { type = NavType.IntType })
+                ) { backStackEntry ->
+                    val objectId = backStackEntry.arguments?.getInt("objectId") ?: 0
+                    DetailScreen(
+                        objectId = objectId,
+                        navigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
                 }
             }
         }
