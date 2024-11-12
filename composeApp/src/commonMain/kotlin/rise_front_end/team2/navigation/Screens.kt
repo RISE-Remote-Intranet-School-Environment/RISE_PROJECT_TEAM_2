@@ -12,7 +12,7 @@ sealed class Screens(val route: String) {
     object FileHostingScreen : Screens("fileHosting")
 
     // New screens with parameters
-    object ListScreen : Screens("list")
+    object ListDestination : Screens("list")
 
-    data class DetailScreen(val objectId: Int) : Screens("detail/$objectId")
+    data class DetailDestination(val objectId: Int) : Screens("detail/$objectId")
 }

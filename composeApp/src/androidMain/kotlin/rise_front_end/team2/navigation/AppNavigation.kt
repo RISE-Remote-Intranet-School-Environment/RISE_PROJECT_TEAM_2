@@ -83,9 +83,9 @@ actual fun PlatformNavigation() {
                 }
 
                 // New List and Detail navigation destinations
-                composable(route = Screens.ListScreen.route) {
+                composable(route = Screens.ListDestination.route) {
                     ListScreen(navigateToDetails = { objectId ->
-                        navController.navigate(Screens.DetailScreen(objectId).route)
+                        navController.navigate(Screens.DetailDestination(objectId).route)
                     })
                 }
                 composable(
