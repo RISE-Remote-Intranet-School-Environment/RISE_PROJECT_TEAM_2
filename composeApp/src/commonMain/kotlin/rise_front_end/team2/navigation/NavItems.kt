@@ -8,31 +8,32 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class NavItem(
-    val label:String,
+    val label: String,
     val icon: ImageVector,
     val route: String
 )
 
 object NavigationItems {
     fun getNavItems() = listOf(
-    NavItem(
-        label = "Home",
-        icon = Icons.Default.Home,
-        route = Screens.HomeScreen.name
-    ),
-    NavItem(
-        label = "Grades",
-        icon = Icons.Default.Person,
-        route = Screens.GradeScreen.name
-    ),
-    NavItem(
-        label = "Favorites",
-        icon = Icons.Default.Star,
-        route = Screens.FavoriteScreen.name
-    ),
-    NavItem(
-        label = "Calendar",
-        icon = Icons.Default.CalendarMonth,//Jsp pourquoi il reste en rouge alors que ça fonctionne
-        route = Screens.CalendarScreen.name
+        NavItem(
+            label = "Home",
+            icon = Icons.Default.Home,
+            route = Screens.HomeScreen.route
+        ),
+        NavItem(
+            label = "Grades",
+            icon = Icons.Default.Person,
+            route = Screens.GradeScreen.route
+        ),
+        NavItem(
+            label = "Favorites",
+            icon = Icons.Default.Star,
+            route = Screens.FavoriteScreen.route
+        ),
+        NavItem(
+            label = "Calendar",
+            icon = Icons.Default.CalendarMonth,
+            route = Screens.CalendarScreen.route
+        )
     )
-) }
+}
