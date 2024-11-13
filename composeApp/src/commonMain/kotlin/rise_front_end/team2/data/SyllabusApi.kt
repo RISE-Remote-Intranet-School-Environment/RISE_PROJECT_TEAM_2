@@ -3,7 +3,8 @@ package rise_front_end.team2.data
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.utils.io.CancellationException
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 interface SyllabusApi {
     suspend fun getData(): List<SyllabusObject>
@@ -17,11 +18,10 @@ class KtorSyllabusApi(private val client: HttpClient) : SyllabusApi {
 
     override suspend fun getData(): List<SyllabusObject> {
         return try {
-            client.get(API_URL).body()
+            val responseBody = client.get(API_URL).body<String>()
+            Json.decodeFromString(responseBody)
         } catch (e: Exception) {
-            if (e is CancellationException) throw e
             e.printStackTrace()
-
             emptyList()
         }
     }

@@ -2,6 +2,7 @@ package rise_front_end.team2.di
 
 
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
@@ -23,23 +24,24 @@ import rise_front_end.team2.ui.screens.list.ListViewModel
 
 val dataModule = module {
     single {
-        val json = Json { ignoreUnknownKeys = true }
-        HttpClient {
+        // Initialize Ktor HTTP Client with Content Negotiation for JSON serialization
+        HttpClient(OkHttp) {
             install(ContentNegotiation) {
-                // TODO Fix API so it serves application/json
-                json(json, contentType = ContentType.Any)
+                json(Json { ignoreUnknownKeys = true }) // Handle unknown keys in the JSON response
             }
         }
     }
 
+    // Ensure the correct SyllabusApi implementation is injected
     single<SyllabusApi> { KtorSyllabusApi(get()) }
     single<SyllabusStorage> { InMemorySyllabusStorage() }
+
+    // Syllabus repository with initialization
     single {
-        SyllabusRepository(get(), get()).apply {
-            initialize()
-        }
+        SyllabusRepository(get(), get()).apply { initialize() }
     }
 }
+
 
 val viewModelModule = module {
     factoryOf(::ListViewModel)

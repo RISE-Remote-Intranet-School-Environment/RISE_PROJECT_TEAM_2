@@ -10,10 +10,11 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinxSerialization)
-
 }
 
 kotlin {
+    // Commenting out the wasmJs configuration to focus only on Android
+    /*
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "composeApp"
@@ -33,14 +34,17 @@ kotlin {
         }
         binaries.executable()
     }
-    
+    */
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
+    // Commenting out iOS targets to keep only Android configuration active
+    /*
     listOf(
         iosX64(),
         iosArm64(),
@@ -51,17 +55,15 @@ kotlin {
             isStatic = true
         }
     }
-    
+    */
+
     sourceSets {
-        
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.material3)
             implementation("androidx.navigation:navigation-compose:2.7.3")
-            implementation ("androidx.compose.material:material-icons-extended:1.7.5")
-
-
+            implementation("androidx.compose.material:material-icons-extended:1.7.5")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -78,11 +80,15 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.okhttp)
+
+
 
             implementation(libs.kamel)
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
+
         }
     }
 }
@@ -117,4 +123,3 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-

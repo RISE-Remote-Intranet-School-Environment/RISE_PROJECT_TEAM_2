@@ -1,4 +1,3 @@
-// AndroidMain/AppNavigation.kt
 package rise_front_end.team2.navigation
 
 import androidx.compose.foundation.layout.padding
@@ -17,7 +16,6 @@ import androidx.navigation.navArgument
 import rise_front_end.team2.ui.screens.*
 import rise_front_end.team2.ui.screens.detail.DetailScreen
 import rise_front_end.team2.ui.screens.list.ListScreen
-
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
@@ -55,42 +53,56 @@ actual fun PlatformNavigation() {
                 startDestination = Screens.HomeScreen.route,
                 modifier = Modifier.padding(paddingValues)
             ) {
-                // Existing destinations
+                // Home Screen
                 composable(route = Screens.HomeScreen.route) {
                     HomeScreen(
                         onSyllabusClick = {
-                            navController.navigate(Screens.SyllabusScreen.route)
+                            navController.navigate(Screens.ListDestination.route)
                         },
                         onFileHostingClick = {
                             navController.navigate(Screens.FileHostingScreen.route)
                         }
                     )
                 }
+
+                // Main Navigation Screens
                 composable(route = Screens.GradeScreen.route) {
                     GradeScreen()
                 }
+
                 composable(route = Screens.FavoriteScreen.route) {
                     FavoriteScreen()
                 }
+
                 composable(route = Screens.CalendarScreen.route) {
                     CalendarScreen()
                 }
+
                 composable(route = Screens.SyllabusScreen.route) {
                     SyllabusScreen()
                 }
+
                 composable(route = Screens.FileHostingScreen.route) {
                     FileHostingScreen()
                 }
 
-                // New List and Detail navigation destinations
+                // List Screen
                 composable(route = Screens.ListDestination.route) {
-                    ListScreen(navigateToDetails = { objectId ->
-                        navController.navigate(Screens.DetailDestination(objectId).route)
-                    })
+                    ListScreen(
+                        navigateToDetails = { objectId ->
+                            navController.navigate("detail/$objectId")
+                        }
+                    )
                 }
+
+                // Detail Screen
                 composable(
-                    route = "detail/{objectId:Int}",
-                    arguments = listOf(navArgument("objectId") { type = NavType.IntType })
+                    route = Screens.DetailDestination.route,
+                    arguments = listOf(
+                        navArgument("objectId") {
+                            type = NavType.IntType
+                        }
+                    )
                 ) { backStackEntry ->
                     val objectId = backStackEntry.arguments?.getInt("objectId") ?: 0
                     DetailScreen(
