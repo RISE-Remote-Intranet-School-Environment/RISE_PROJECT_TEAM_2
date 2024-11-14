@@ -33,22 +33,25 @@ import io.kamel.image.asyncPainterResource
 import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.SyllabusObject
 import rise_front_end.team2.ui.screens.EmptyScreenContent
+import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
 fun ListScreen(
     navigateToDetails: (objectId: Int) -> Unit
 ) {
-    val viewModel = koinViewModel<ListViewModel>()
-    val objects by viewModel.objects.collectAsState()
+    AppTheme {
+        val viewModel = koinViewModel<ListViewModel>()
+        val objects by viewModel.objects.collectAsState()
 
-    AnimatedContent(objects.isNotEmpty()) { objectsAvailable ->
-        if (objectsAvailable) {
-            ObjectGrid(
-                objects = objects,
-                onObjectClick = navigateToDetails,
-            )
-        } else {
-            EmptyScreenContent(Modifier.fillMaxSize())
+        AnimatedContent(objects.isNotEmpty()) { objectsAvailable ->
+            if (objectsAvailable) {
+                ObjectGrid(
+                    objects = objects,
+                    onObjectClick = navigateToDetails,
+                )
+            } else {
+                EmptyScreenContent(Modifier.fillMaxSize())
+            }
         }
     }
 }
