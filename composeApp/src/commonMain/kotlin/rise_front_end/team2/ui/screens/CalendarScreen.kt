@@ -6,16 +6,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -24,7 +19,7 @@ import rise_front_end.team2.ui.theme.AppTheme
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
-import java.util.Locale
+import java.util.*
 
 @Composable
 fun CalendarScreen() {
@@ -34,6 +29,9 @@ fun CalendarScreen() {
             color = MaterialTheme.colorScheme.background
         ) {
             var selectedMonth by remember { mutableStateOf(YearMonth.now()) }
+            val activities = remember { mutableStateMapOf<LocalDate, String>() } // Stores activities for dates
+            var showDialog by remember { mutableStateOf(false) } // State to control the dialog
+            var selectedDate by remember { mutableStateOf<LocalDate?>(null) } // Track the selected date
 
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -44,7 +42,23 @@ fun CalendarScreen() {
                     onPreviousMonth = { selectedMonth = selectedMonth.minusMonths(1) },
                     onNextMonth = { selectedMonth = selectedMonth.plusMonths(1) }
                 )
-                CalendarView(currentMonth = selectedMonth)
+                CalendarView(
+                    currentMonth = selectedMonth,
+                    activities = activities,
+                    onDayClick = { date ->
+                        selectedDate = date
+                        showDialog = true // Show the dialog when a day is clicked
+                    }
+                )
+            }
+
+            // Display the dialog if needed
+            if (showDialog && selectedDate != null) {
+                ShowAddActivityDialog(
+                    selectedDate = selectedDate!!,
+                    activities = activities,
+                    onDismiss = { showDialog = false }
+                )
             }
         }
     }
@@ -79,11 +93,14 @@ fun CalendarHeader(
 }
 
 @Composable
-fun CalendarView(currentMonth: YearMonth) {
+fun CalendarView(
+    currentMonth: YearMonth,
+    activities: Map<LocalDate, String>,
+    onDayClick: (LocalDate) -> Unit
+) {
     val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-    val selectedDate = remember { mutableStateOf<LocalDate?>(null) }
     val daysInMonth = currentMonth.lengthOfMonth()
-    val startDayOfWeek = (currentMonth.atDay(1).dayOfWeek.value + 5) % 7 // Ajustement pour Lundi = 0
+    val startDayOfWeek = (currentMonth.atDay(1).dayOfWeek.value + 5) % 7 // Adjust for Monday = 0
 
     Column {
         // Weekday headers
@@ -119,8 +136,8 @@ fun CalendarView(currentMonth: YearMonth) {
 
                 DayCell(
                     date = date,
-                    isSelected = date == selectedDate.value,
-                    onSelect = { selectedDate.value = it }
+                    activity = activities[date],
+                    onClick = { onDayClick(date) }
                 )
             }
         }
@@ -128,23 +145,72 @@ fun CalendarView(currentMonth: YearMonth) {
 }
 
 @Composable
-fun DayCell(date: LocalDate, isSelected: Boolean, onSelect: (LocalDate) -> Unit) {
+fun DayCell(date: LocalDate, activity: String?, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .size(40.dp)
             .padding(4.dp)
             .background(
-                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                color = if (activity != null) MaterialTheme.colorScheme.primary.copy(alpha = 0.3f) else Color.Transparent,
                 shape = MaterialTheme.shapes.small
             )
-            .clickable { onSelect(date) },
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = date.dayOfMonth.toString(),
-            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onBackground,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            fontSize = 16.sp
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = date.dayOfMonth.toString(),
+                color = MaterialTheme.colorScheme.onBackground,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp
+            )
+            activity?.let {
+                Text(
+                    text = "•",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
     }
+}
+
+@Composable
+fun ShowAddActivityDialog(
+    selectedDate: LocalDate,
+    activities: MutableMap<LocalDate, String>,
+    onDismiss: () -> Unit
+) {
+    var activityText by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add Activity for $selectedDate") },
+        text = {
+            Column {
+                Text("Enter activity:")
+                TextField(
+                    value = activityText,
+                    onValueChange = { activityText = it },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            Button(onClick = {
+                if (activityText.isNotBlank()) {
+                    activities[selectedDate] = activityText
+                }
+                onDismiss()
+            }) {
+                Text("Save")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
 }
