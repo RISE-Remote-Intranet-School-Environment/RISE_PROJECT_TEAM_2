@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,12 +31,12 @@ fun CalendarScreen() {
             color = MaterialTheme.colorScheme.background
         ) {
             var selectedMonth by remember { mutableStateOf(YearMonth.now()) }
-            val activities = remember { mutableStateMapOf<LocalDate, String>() } // Stores activities for dates
+            val activities = remember { mutableStateMapOf<LocalDate, MutableList<String>>() } // Stores activities for dates
+            var selectedDate by remember { mutableStateOf(LocalDate.now()) } // Track the selected date
             var showDialog by remember { mutableStateOf(false) } // State to control the dialog
-            var selectedDate by remember { mutableStateOf<LocalDate?>(null) } // Track the selected date
 
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.fillMaxSize().padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CalendarHeader(
@@ -42,20 +44,39 @@ fun CalendarScreen() {
                     onPreviousMonth = { selectedMonth = selectedMonth.minusMonths(1) },
                     onNextMonth = { selectedMonth = selectedMonth.plusMonths(1) }
                 )
+
                 CalendarView(
                     currentMonth = selectedMonth,
                     activities = activities,
-                    onDayClick = { date ->
-                        selectedDate = date
-                        showDialog = true // Show the dialog when a day is clicked
-                    }
+                    selectedDate = selectedDate,
+                    onDayClick = { date -> selectedDate = date }
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ActivitiesList(
+                    selectedDate = selectedDate,
+                    activities = activities[selectedDate].orEmpty()
+                )
+
+                // Floating action button to add activity
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    FloatingActionButton(
+                        onClick = { showDialog = true },
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text("+", fontSize = 24.sp, color = Color.White, textAlign = TextAlign.Center)
+                    }
+                }
             }
 
-            // Display the dialog if needed
-            if (showDialog && selectedDate != null) {
+            // Show dialog for adding activity
+            if (showDialog) {
                 ShowAddActivityDialog(
-                    selectedDate = selectedDate!!,
+                    selectedDate = selectedDate,
                     activities = activities,
                     onDismiss = { showDialog = false }
                 )
@@ -95,7 +116,8 @@ fun CalendarHeader(
 @Composable
 fun CalendarView(
     currentMonth: YearMonth,
-    activities: Map<LocalDate, String>,
+    activities: Map<LocalDate, List<String>>,
+    selectedDate: LocalDate,
     onDayClick: (LocalDate) -> Unit
 ) {
     val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
@@ -136,7 +158,8 @@ fun CalendarView(
 
                 DayCell(
                     date = date,
-                    activity = activities[date],
+                    activityCount = activities[date]?.size ?: 0,
+                    isSelected = date == selectedDate,
                     onClick = { onDayClick(date) }
                 )
             }
@@ -145,13 +168,13 @@ fun CalendarView(
 }
 
 @Composable
-fun DayCell(date: LocalDate, activity: String?, onClick: () -> Unit) {
+fun DayCell(date: LocalDate, activityCount: Int, isSelected: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .size(40.dp)
             .padding(4.dp)
             .background(
-                color = if (activity != null) MaterialTheme.colorScheme.primary.copy(alpha = 0.3f) else Color.Transparent,
+                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
                 shape = MaterialTheme.shapes.small
             )
             .clickable { onClick() },
@@ -160,14 +183,14 @@ fun DayCell(date: LocalDate, activity: String?, onClick: () -> Unit) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = date.dayOfMonth.toString(),
-                color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.Normal,
+                color = if (isSelected) Color.White else MaterialTheme.colorScheme.onBackground,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                 fontSize = 16.sp
             )
-            activity?.let {
+            if (activityCount > 0) {
                 Text(
                     text = "•",
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.secondary,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -177,9 +200,37 @@ fun DayCell(date: LocalDate, activity: String?, onClick: () -> Unit) {
 }
 
 @Composable
+fun ActivitiesList(selectedDate: LocalDate, activities: List<String>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(8.dp)
+    ) {
+        Text(
+            text = selectedDate.toString(),
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        if (activities.isEmpty()) {
+            Text("No activities for this day.", style = MaterialTheme.typography.bodyMedium)
+        } else {
+            activities.forEach { activity ->
+                Text(
+                    text = "• $activity",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun ShowAddActivityDialog(
     selectedDate: LocalDate,
-    activities: MutableMap<LocalDate, String>,
+    activities: MutableMap<LocalDate, MutableList<String>>,
     onDismiss: () -> Unit
 ) {
     var activityText by remember { mutableStateOf("") }
@@ -200,7 +251,7 @@ fun ShowAddActivityDialog(
         confirmButton = {
             Button(onClick = {
                 if (activityText.isNotBlank()) {
-                    activities[selectedDate] = activityText
+                    activities.getOrPut(selectedDate) { mutableListOf() }.add(activityText)
                 }
                 onDismiss()
             }) {
