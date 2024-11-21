@@ -1,5 +1,6 @@
 package rise_front_end.team2.ui.screens
 
+import android.app.TimePickerDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -22,6 +25,31 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
+import network.chaintech.*
+
+
+@Composable
+fun TimePicker
+            (
+    initialHour: Int,
+    initialMinute: Int,
+    onTimeSelected: (hour: Int, minute: Int) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val context = LocalContext.current
+    TimePickerDialog(
+        context,
+        { _, hourOfDay, minute ->
+            onTimeSelected(hourOfDay, minute)
+        },
+        initialHour,
+        initialMinute,
+        true // Use 24-hour format
+    ).apply {
+        setOnDismissListener { onDismiss() }
+        show()
+    }
+}
 
 @Composable
 fun CalendarScreen() {
@@ -227,6 +255,7 @@ fun ActivitiesList(selectedDate: LocalDate, activities: List<String>) {
     }
 }
 
+
 @Composable
 fun ShowAddActivityDialog(
     selectedDate: LocalDate,
@@ -234,6 +263,21 @@ fun ShowAddActivityDialog(
     onDismiss: () -> Unit
 ) {
     var activityText by remember { mutableStateOf("") }
+    var selectedTime by remember { mutableStateOf("") }
+    var showTimePicker by remember { mutableStateOf(false) }
+
+    // Show the time picker if triggered
+    if (showTimePicker) {
+        TimePicker(
+            initialHour = 12,
+            initialMinute = 0,
+            onTimeSelected = { hour, minute ->
+                selectedTime = String.format("%02d:%02d", hour, minute)
+                showTimePicker = false
+            },
+            onDismiss = { showTimePicker = false },
+        )
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -246,12 +290,23 @@ fun ShowAddActivityDialog(
                     onValueChange = { activityText = it },
                     modifier = Modifier.fillMaxWidth()
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Time: ", style = MaterialTheme.typography.bodyMedium)
+                    Button(onClick = { showTimePicker = true }) {
+                        Text(if (selectedTime.isEmpty()) "Pick Time" else selectedTime)
+                    }
+                }
             }
         },
         confirmButton = {
             Button(onClick = {
                 if (activityText.isNotBlank()) {
-                    activities.getOrPut(selectedDate) { mutableListOf() }.add(activityText)
+                    val time = if (selectedTime.isNotEmpty()) " at $selectedTime" else ""
+                    val activityWithTime = "$activityText$time"
+                    activities.getOrPut(selectedDate) { mutableListOf() }.add(activityWithTime)
                 }
                 onDismiss()
             }) {
