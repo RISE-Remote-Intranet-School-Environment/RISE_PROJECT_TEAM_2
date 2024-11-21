@@ -3,14 +3,17 @@ package rise_front_end.team2.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,113 +21,111 @@ import rise_front_end.team2.ui.theme.AppTheme
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
-import java.util.*
+import java.util.Locale
 
 @Composable
 fun CalendarScreen() {
-    val currentYear = LocalDate.now().year
-    var selectedYear by remember { mutableStateOf(currentYear) }
-    val months = (1..12).map { YearMonth.of(selectedYear, it) }
-
     AppTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
         ) {
-            YearSelector(selectedYear) { selectedYear = it }
-            Spacer(modifier = Modifier.height(8.dp))
-            MonthGrid(months)
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CalendarHeader()
+                CalendarView()
+            }
         }
     }
 }
 
 @Composable
-fun YearSelector(currentYear: Int, onYearSelected: (Int) -> Unit) {
-    val adjacentYears = (currentYear - 2)..(currentYear + 2)
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(vertical = 16.dp)
-    ) {
-        items(adjacentYears.toList()) { year ->
-            Text(
-                text = year.toString(),
-                fontSize = 20.sp,
-                color = if (year == currentYear) Color.Blue else Color.Black,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .clickable { onYearSelected(year) },
-                textAlign = TextAlign.Center
-            )
-        }
-    }
+fun CalendarHeader() {
+    // Utilisation de YearMonth pour obtenir le mois et l'année actuels
+    val currentMonth = remember { YearMonth.now() }
+    val monthName = currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault()) // Nom du mois
+    val year = currentMonth.year // Année actuelle
+
+    // Affichage de l'en-tête du calendrier
+    Text(
+        text = "$monthName $year",
+        style = MaterialTheme.typography.headlineMedium,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(bottom = 16.dp)
+    )
 }
 
 @Composable
-fun MonthGrid(months: List<YearMonth>) {
-    Column(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        months.forEach { month ->
-            MonthView(month)
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-    }
-}
-
-@Composable
-fun MonthView(month: YearMonth) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = month.month.getDisplayName(TextStyle.FULL, Locale.getDefault()),
-            fontSize = 20.sp,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(8.dp)
-        )
-        DaysGrid(month)
-    }
-}
-
-@Composable
-fun DaysGrid(month: YearMonth) {
-    val daysInMonth = month.lengthOfMonth()
-    val firstDayOfMonth = month.atDay(1).dayOfWeek.value % 7 // Décalage pour aligner le premier jour
-    val dayNumbers = (1..daysInMonth).map { it.toString() }
+fun CalendarView() {
+    // Liste des jours de la semaine
+    val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+    val selectedDate = remember { mutableStateOf<LocalDate?>(null) }
+    val currentMonth = remember { YearMonth.now() }
+    val daysInMonth = currentMonth.lengthOfMonth()
+    val startDayOfWeek = (currentMonth.atDay(1).dayOfWeek.value + 5) % 7 // Ajustement pour démarrer le lundi
 
     Column {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun").forEach { dayName ->
+        // Affichage des jours de la semaine
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            daysOfWeek.forEach { day ->
                 Text(
-                    text = dayName,
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.width(32.dp),
-                    textAlign = TextAlign.Center
+                    text = day,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(top = 8.dp)
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Affichage des jours du mois dans une grille
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(7),
+            contentPadding = PaddingValues(4.dp)
         ) {
-            Spacer(modifier = Modifier.width((firstDayOfMonth * 32).dp)) // Décalage pour aligner le premier jour
-            dayNumbers.forEach { day ->
-                DayView(day)
+            // Cases vides pour aligner les jours
+            items(startDayOfWeek) {
+                Spacer(modifier = Modifier.size(40.dp))
+            }
+
+            // Affichage des jours du mois
+            items(daysInMonth) { day ->
+                val date = currentMonth.atDay(day + 1)
+
+                DayCell(
+                    date = date,
+                    isSelected = date == selectedDate.value,
+                    onSelect = { selectedDate.value = it }
+                )
             }
         }
     }
 }
 
 @Composable
-fun DayView(day: String) {
-    Text(
-        text = day,
-        fontSize = 16.sp,
+fun DayCell(date: LocalDate, isSelected: Boolean, onSelect: (LocalDate) -> Unit) {
+    Box(
         modifier = Modifier
+            .size(40.dp)
             .padding(4.dp)
-            .size(32.dp),
-        textAlign = TextAlign.Center
-    )
+            .background(
+                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                shape = MaterialTheme.shapes.small
+            )
+            .clickable { onSelect(date) },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = date.dayOfMonth.toString(),
+            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onBackground,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+            fontSize = 16.sp
+        )
+    }
 }
