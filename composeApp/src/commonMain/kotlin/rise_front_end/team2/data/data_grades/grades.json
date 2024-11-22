@@ -21,7 +21,7 @@
   },
   {
     "objectID": 3,
-    "nameUe": "Architecture and software quality",
+    "nameUe": "Architecture and\nsoftware quality",
     "ects": 4,
     "list": [
       { "name": "Software Architecture", "grades": 17, "ectsNumber": 2 },
@@ -34,7 +34,7 @@
   },
   {
     "objectID": 4,
-    "nameUe": "Database management system",
+    "nameUe": "Database \nmanagement system",
     "ects": 4,
     "list": [
       { "name": "Relationnal Database", "grades": 2, "ectsNumber": 2 },

@@ -217,14 +217,24 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
     ) {
         Column {
             val totalEcts = objects.sumOf { it.ects }
+            val ectsNumber = objects.sumOf { gradesObject ->
+                gradesObject.list.sumOf {
+                    if(it.grades > 10){
+                        it.ectsNumber
+                    }
+                    else{
+                        0
+                    }
+                }
+            }
             val moyenneGenerale = if (totalEcts > 0) {
                 objects.sumOf { gradesObject ->
                     gradesObject.list.sumOf { it.grades * it.ectsNumber }
                 } /totalEcts
             } else 0
 
-            val icon = if (totalEcts > 50) Icons.Default.CheckCircleOutline else Icons.Default.Cancel
-            val text = if (totalEcts > 50) "Admis" else "Non Admis"
+            val icon = if (ectsNumber > 30) Icons.Default.CheckCircleOutline else Icons.Default.Cancel
+            val text = if (ectsNumber > 30) "Admis" else "Non Admis"
 
 
             Row(
@@ -242,7 +252,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                     )
 
                     Text(
-                        text = "$totalEcts/60",
+                        text = "$ectsNumber/$totalEcts",
                         color = Color.White,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
@@ -341,6 +351,7 @@ fun CourseSection(objects: List<GradesObject>,) {
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
+        Spacer(modifier = Modifier.height(24.dp))
 
 
     }
