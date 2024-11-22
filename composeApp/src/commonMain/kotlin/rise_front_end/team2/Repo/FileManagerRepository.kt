@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import rise_front_end.team2.data.FileManager.FileManagerObject
+import rise_front_end.team2.data.FileManager.FileObject
 import rise_front_end.team2.data.FileManager.FileManagerApi
 import rise_front_end.team2.data.FileManager.FileManagerStorage
 
@@ -25,7 +25,7 @@ class FileManagerRepository(
         fileManagerStorage.saveObjects(fileManagerApi.getData())
     }
 
-    fun getObjects(): Flow<List<FileManagerObject>> = fileManagerStorage.getObjects()
+    fun getObjects(): Flow<List<FileObject>> = fileManagerStorage.getObjects()
 
-    fun getObjectById(objectId: Int): Flow<FileManagerObject?> = fileManagerStorage.getObjectById(objectId)
+    fun getObjectById(objectId: String): Flow<FileObject?> = fileManagerStorage.getObjectById(objectId)
 }

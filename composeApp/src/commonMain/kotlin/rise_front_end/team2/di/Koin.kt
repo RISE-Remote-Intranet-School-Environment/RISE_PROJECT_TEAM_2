@@ -12,6 +12,10 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import rise_front_end.team2.Repo.FileManagerRepository
 import rise_front_end.team2.Repo.SyllabusRepository
+import rise_front_end.team2.data.CourseManager.CourseManagerApi
+import rise_front_end.team2.data.CourseManager.CourseManagerStorage
+import rise_front_end.team2.data.CourseManager.InMemoryCourseManagerStorage
+import rise_front_end.team2.data.CourseManager.KtorCourseManagerApi
 import rise_front_end.team2.data.FileManager.FileManagerApi
 import rise_front_end.team2.data.FileManager.FileManagerStorage
 import rise_front_end.team2.data.FileManager.InMemoryFileManagerStorage
@@ -47,11 +51,17 @@ val dataModule = module {
         SyllabusRepository(get(), get()).apply { initialize() }
     }
 
-    single<FileManagerApi> { KtorFileManagerApi(get()) }
-    single<FileManagerStorage> { InMemoryFileManagerStorage() }
+    single<CourseManagerApi> { KtorCourseManagerApi(get()) }
+    single<CourseManagerStorage> { InMemoryCourseManagerStorage() }
     single{
         FileManagerRepository(get(), get()).apply { initialize() }
     }
+
+//    single<FileManagerApi> { KtorFileManagerApi(get()) }
+//    single<FileManagerStorage> { InMemoryFileManagerStorage() }
+//    single{
+//        FileManagerRepository(get(), get()).apply { initialize() }
+//    }
 }
 
 

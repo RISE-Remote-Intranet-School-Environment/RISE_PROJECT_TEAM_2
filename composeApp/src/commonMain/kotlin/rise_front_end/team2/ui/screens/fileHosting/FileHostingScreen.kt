@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import org.koin.compose.viewmodel.koinViewModel
-import rise_front_end.team2.data.FileManager.FileManagerObject
+import rise_front_end.team2.data.FileManager.FileObject
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 
@@ -47,7 +47,7 @@ fun FileHostingScreen(
 
 @Composable
 private fun ObjectGrid(
-    objects: List<FileManagerObject>,
+    objects: List<FileObject>,
     onObjectClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -69,7 +69,7 @@ private fun ObjectGrid(
 
 @Composable
 private fun ObjectFrame(
-    obj: FileManagerObject,
+    obj: FileObject,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

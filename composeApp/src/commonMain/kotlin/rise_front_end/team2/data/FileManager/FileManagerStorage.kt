@@ -5,25 +5,25 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 interface FileManagerStorage {
-    suspend fun saveObjects(newObjects: List<FileManagerObject>)
+    suspend fun saveObjects(newObjects: List<FileObject>)
 
-    fun getObjectById(objectId: Int): Flow<FileManagerObject?>
+    fun getObjectById(fileID: String): Flow<FileObject?>
 
-    fun getObjects(): Flow<List<FileManagerObject>>
+    fun getObjects(): Flow<List<FileObject>>
 }
 
 class InMemoryFileManagerStorage : FileManagerStorage {
-    private val storedObjects = MutableStateFlow(emptyList<FileManagerObject>())
+    private val storedObjects = MutableStateFlow(emptyList<FileObject>())
 
-    override suspend fun saveObjects(newObjects: List<FileManagerObject>) {
+    override suspend fun saveObjects(newObjects: List<FileObject>) {
         storedObjects.value = newObjects
     }
 
-    override fun getObjectById(objectId: Int): Flow<FileManagerObject?> {
+    override fun getObjectById(fileID: String): Flow<FileObject?> {
         return storedObjects.map { objects ->
-            objects.find { it.objectID == objectId }
+            objects.find { it.fileObjectID == fileID }
         }
     }
 
-    override fun getObjects(): Flow<List<FileManagerObject>> = storedObjects
+    override fun getObjects(): Flow<List<FileObject>> = storedObjects
 }

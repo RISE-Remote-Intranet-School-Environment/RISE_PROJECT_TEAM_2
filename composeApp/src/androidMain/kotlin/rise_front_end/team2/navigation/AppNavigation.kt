@@ -85,8 +85,8 @@ actual fun PlatformNavigation() {
 
                 composable(route = Screens.FileHostingScreen.route) {
                     FileHostingScreen(
-                        navigateToDetails = { objectId ->
-                            navController.navigate("detail/$objectId")
+                        navigateToDetails = { fileID ->
+                            navController.navigate("detail/$fileID")
                         }
                     )
                 }

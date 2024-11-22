@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import rise_front_end.team2.Repo.FileManagerRepository
-import rise_front_end.team2.data.FileManager.FileManagerObject
+import rise_front_end.team2.data.FileManager.FileObject
 
 class FileHostingViewModel(museumRepository: FileManagerRepository) : ViewModel() {
-    val objects: StateFlow<List<FileManagerObject>> =
+    val objects: StateFlow<List<FileObject>> =
         museumRepository.getObjects()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 }

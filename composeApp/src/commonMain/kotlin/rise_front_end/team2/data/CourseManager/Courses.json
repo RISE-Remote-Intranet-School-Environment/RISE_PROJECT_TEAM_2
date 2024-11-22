@@ -1,0 +1,12 @@
+{
+  "courses":[
+    {
+      "course_id": "4mage40_1",
+      "course_name": "Projet Qualité"
+    },
+    {
+      "course_id": "4mage40_2",
+      "course_name": "Sciences Humaines"
+    }
+  ]
+}
