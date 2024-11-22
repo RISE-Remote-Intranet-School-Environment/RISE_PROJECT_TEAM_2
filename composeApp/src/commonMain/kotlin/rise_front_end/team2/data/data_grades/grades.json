@@ -1,0 +1,78 @@
+[
+  {
+    "ObjectID": 1,
+    "nameUe": "Langues",
+    "ects": 3,
+    "list": [{ "name": "Langues", "grade": 17, "ectsNumber": 1 }]
+  },
+  {
+    "ObjectID": 2,
+    "nameUe": "GPU computing",
+    "ects": 6,
+    "list": [
+      {
+        "name": "Programmation parallele, OpenGL",
+        "grade": 17,
+        "ectsNumber": 2
+      },
+      { "name": "Algorithms", "grade": 1, "ectsNumber": 2 },
+      { "name": "Image Processing Lab", "grade": 15, "ectsNumber": 2 }
+    ]
+  },
+  {
+    "ObjectID": 3,
+    "nameUe": "Architecture and software quality",
+    "ects": 4,
+    "list": [
+      { "name": "Software Architecture", "grade": 17, "ectsNumber": 2 },
+      {
+        "name": "Software Architecture and Quality Lab",
+        "grade": 13,
+        "ectsNumber": 2
+      }
+    ]
+  },
+  {
+    "ObjectID": 4,
+    "nameUe": "Database management system",
+    "ects": 4,
+    "list": [
+      { "name": "Relationnal Database", "grade": 2, "ectsNumber": 2 },
+      { "name": "Realtime DB, NoSQL, XML", "grade": 14, "ectsNumber": 2 }
+    ]
+  },
+  {
+    "ObjectID": 5,
+    "nameUe": "Computer Network",
+    "ects": 5,
+    "list": [
+      {
+        "name": "Fieldbuses and industrial Ethernet",
+        "grade": 5,
+        "ectsNumber": 2
+      },
+      { "name": "Network concepts", "grade": 3, "ectsNumber": 2 },
+      { "name": "Computer Network Lab", "grade": 12, "ectsNumber": 1 }
+    ]
+  },
+  {
+    "ObjectID": 6,
+    "nameUe": "IOT and data acquisition",
+    "ects": 4,
+    "list": [
+      { "name": "IoT Lab", "grade": 11, "ectsNumber": 2 },
+      { "name": "Instrumentation Lab", "grade": 10, "ectsNumber": 1 },
+      { "name": "Instrumentation", "grade": 17, "ectsNumber": 1 }
+    ]
+  },
+  {
+    "ObjectID": 7,
+    "nameUe": "Gestion 1",
+    "ects": 6,
+    "list": [
+      { "name": "Projet - qualité", "grade": 18, "ectsNumber": 2 },
+      { "name": "Science humaines", "grade": 13, "ectsNumber": 2 },
+      { "name": "Ethics Lab", "grade": 13, "ectsNumber": 2 }
+    ]
+  }
+]

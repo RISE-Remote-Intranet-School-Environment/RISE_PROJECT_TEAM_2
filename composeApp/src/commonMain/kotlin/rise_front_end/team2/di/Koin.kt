@@ -10,15 +10,22 @@ import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
+import rise_front_end.team2.Repo.GradesRepository
 import rise_front_end.team2.Repo.SyllabusRepository
 import rise_front_end.team2.data.InMemorySyllabusStorage
 import rise_front_end.team2.data.KtorSyllabusApi
 import rise_front_end.team2.data.SyllabusApi
 import rise_front_end.team2.data.SyllabusStorage
+import rise_front_end.team2.data.data_grades.GradeStorage
+import rise_front_end.team2.data.data_grades.GradesApi
+import rise_front_end.team2.data.data_grades.InMemoryGradeStorage
+import rise_front_end.team2.data.data_grades.KtorGradesApi
 
 
 import rise_front_end.team2.ui.screens.detail.DetailViewModel
 import rise_front_end.team2.ui.screens.list.ListViewModel
+
+import rise_front_end.team2.ui.screens.screens_grades.GradeViewModel
 
 
 
@@ -35,10 +42,16 @@ val dataModule = module {
     // Ensure the correct SyllabusApi implementation is injected
     single<SyllabusApi> { KtorSyllabusApi(get()) }
     single<SyllabusStorage> { InMemorySyllabusStorage() }
+    single<GradesApi> { KtorGradesApi(get()) }
+    single<GradeStorage> { InMemoryGradeStorage() }
+
 
     // Syllabus repository with initialization
     single {
         SyllabusRepository(get(), get()).apply { initialize() }
+    }
+    single {
+        GradesRepository(get(), get()).apply { initialize() }
     }
 }
 
@@ -46,6 +59,7 @@ val dataModule = module {
 val viewModelModule = module {
     factoryOf(::ListViewModel)
     factoryOf(::DetailViewModel)
+    factoryOf(::GradeViewModel)
 }
 
 fun initKoin() {

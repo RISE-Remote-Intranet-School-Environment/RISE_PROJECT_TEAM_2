@@ -16,6 +16,7 @@ import androidx.navigation.navArgument
 import rise_front_end.team2.ui.screens.*
 import rise_front_end.team2.ui.screens.detail.DetailScreen
 import rise_front_end.team2.ui.screens.list.ListScreen
+import rise_front_end.team2.ui.screens.screens_grades.GradeScreen
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
