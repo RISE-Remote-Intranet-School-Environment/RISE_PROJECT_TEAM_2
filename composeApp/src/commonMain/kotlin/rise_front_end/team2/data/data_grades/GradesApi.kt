@@ -19,7 +19,7 @@ interface GradesApi {
 class KtorGradesApi(private val client: HttpClient) : GradesApi {
     companion object {
         private const val API_URL =
-            "https://raw.githubusercontent.com/Warzieram/rise_project_json/refs/heads/main/grades.json"
+            "https://raw.githubusercontent.com/RISE-Remote-Intranet-School-Environment/RISE_PROJECT_TEAM_2/refs/heads/master/composeApp/src/commonMain/kotlin/rise_front_end/team2/data/data_grades/grades.json"
     }
 
     override suspend fun getData(): List<GradesObject> {
