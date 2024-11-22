@@ -2,6 +2,7 @@ package rise_front_end.team2.ui.screens
 
 import android.app.TimePickerDialog
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -14,10 +15,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import rise_front_end.team2.ui.theme.AppTheme
@@ -141,6 +144,7 @@ fun CalendarHeader(
     }
 }
 
+
 @Composable
 fun CalendarView(
     currentMonth: YearMonth,
@@ -151,9 +155,12 @@ fun CalendarView(
     val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
     val daysInMonth = currentMonth.lengthOfMonth()
     val startDayOfWeek = (currentMonth.atDay(1).dayOfWeek.value + 5) % 7 // Adjust for Monday = 0
+    val screenWidth = LocalContext.current.resources.displayMetrics.widthPixels / LocalContext.current.resources.displayMetrics.density
+    val cellSize = (screenWidth / 7).dp
 
-    Column {
-        // Weekday headers
+
+    Column (modifier = Modifier.fillMaxWidth()){
+        // Weekday headers without grid borders
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
@@ -163,32 +170,36 @@ fun CalendarView(
                     text = day,
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(1f)
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f) // Even spacing
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp)) // Space between weekdays and grid
 
-        // Days grid
+        // Grid for days
         LazyVerticalGrid(
             columns = GridCells.Fixed(7),
-            contentPadding = PaddingValues(4.dp)
-        ) {
-            // Empty cells at the start of the month
+            verticalArrangement = Arrangement.spacedBy(0.dp), // Ensure no extra space
+            horizontalArrangement = Arrangement.spacedBy(0.dp),
+            modifier = Modifier.fillMaxWidth()
+        )
+ {
+            // Empty cells for alignment at the start of the month
             items(startDayOfWeek) {
-                Spacer(modifier = Modifier.size(40.dp))
+                Spacer(modifier = Modifier.size(cellSize)) // Same size as day cells, no border
             }
 
             // Days of the month
             items(daysInMonth) { day ->
                 val date = currentMonth.atDay(day + 1)
-
                 DayCell(
                     date = date,
                     activityCount = activities[date]?.size ?: 0,
                     isSelected = date == selectedDate,
-                    onClick = { onDayClick(date) }
+                    onClick = { onDayClick(date) },
+                    cellSize = cellSize
                 )
             }
         }
@@ -196,33 +207,43 @@ fun CalendarView(
 }
 
 @Composable
-fun DayCell(date: LocalDate, activityCount: Int, isSelected: Boolean, onClick: () -> Unit) {
+fun DayCell(date: LocalDate, activityCount: Int, isSelected: Boolean, onClick: () -> Unit, cellSize: Dp) {
     Box(
         modifier = Modifier
-            .size(40.dp)
-            .padding(4.dp)
+            .size(cellSize) // Use consistent size for cells
+            //.border(shape = MaterialTheme.shapes.small) // Optional border
             .background(
                 color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
                 shape = MaterialTheme.shapes.small
             )
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
+            .clickable { onClick() }
+
+
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        // Day number in the upper-left corner
+        Box(
+            modifier = Modifier
+                .fillMaxSize() // Use the full size of the cell for positioning
+                .padding(4.dp), // Add some padding to keep it away from edges
+            contentAlignment = Alignment.TopStart // Align to the top-left
+        ) {
             Text(
                 text = date.dayOfMonth.toString(),
                 color = if (isSelected) Color.White else MaterialTheme.colorScheme.onBackground,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                fontSize = 16.sp
+                fontSize = 12.sp // Smaller font size for the corner
             )
-            if (activityCount > 0) {
-                Text(
-                    text = "•",
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+        }
+
+        // Activity indicator centered below
+        if (activityCount > 0) {
+            Text(
+                text = "•",
+                color = MaterialTheme.colorScheme.secondary,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.Center) // Center alignment for activity dot
+            )
         }
     }
 }
@@ -302,21 +323,28 @@ fun ShowAddActivityDialog(
             }
         },
         confirmButton = {
-            Button(onClick = {
-                if (activityText.isNotBlank()) {
-                    val time = if (selectedTime.isNotEmpty()) " at $selectedTime" else ""
-                    val activityWithTime = "$activityText$time"
-                    activities.getOrPut(selectedDate) { mutableListOf() }.add(activityWithTime)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(onClick = {
+                    if (activityText.isNotBlank()) {
+                        val time = if (selectedTime.isNotEmpty()) " at $selectedTime" else ""
+                        val activityWithTime = "$activityText$time"
+                        activities.getOrPut(selectedDate) { mutableListOf() }.add(activityWithTime)
+                    }
+                    onDismiss()
+                }) {
+                    Text("Save")
                 }
-                onDismiss()
-            }) {
-                Text("Save")
-            }
-        },
-        dismissButton = {
-            Button(onClick = onDismiss) {
-                Text("Cancel")
+
+                Spacer(modifier = Modifier.width(32.dp)) // Add space between buttons
+
+                Button(onClick = onDismiss) {
+                    Text("Cancel")
+                }
             }
         }
+
     )
 }
