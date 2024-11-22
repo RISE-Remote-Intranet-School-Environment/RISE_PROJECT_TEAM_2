@@ -10,7 +10,12 @@ import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
+import rise_front_end.team2.Repo.FileManagerRepository
 import rise_front_end.team2.Repo.SyllabusRepository
+import rise_front_end.team2.data.FileManager.FileManagerApi
+import rise_front_end.team2.data.FileManager.FileManagerStorage
+import rise_front_end.team2.data.FileManager.InMemoryFileManagerStorage
+import rise_front_end.team2.data.FileManager.KtorFileManagerApi
 import rise_front_end.team2.data.InMemorySyllabusStorage
 import rise_front_end.team2.data.KtorSyllabusApi
 import rise_front_end.team2.data.SyllabusApi
@@ -19,6 +24,7 @@ import rise_front_end.team2.data.SyllabusStorage
 
 import rise_front_end.team2.ui.screens.detail.DetailViewModel
 import rise_front_end.team2.ui.screens.list.ListViewModel
+import rise_front_end.team2.ui.screens.fileHosting.FileHostingViewModel
 
 
 
@@ -40,12 +46,19 @@ val dataModule = module {
     single {
         SyllabusRepository(get(), get()).apply { initialize() }
     }
+
+    single<FileManagerApi> { KtorFileManagerApi(get()) }
+    single<FileManagerStorage> { InMemoryFileManagerStorage() }
+    single{
+        FileManagerRepository(get(), get()).apply { initialize() }
+    }
 }
 
 
 val viewModelModule = module {
     factoryOf(::ListViewModel)
     factoryOf(::DetailViewModel)
+    factoryOf(::FileHostingViewModel)
 }
 
 fun initKoin() {
