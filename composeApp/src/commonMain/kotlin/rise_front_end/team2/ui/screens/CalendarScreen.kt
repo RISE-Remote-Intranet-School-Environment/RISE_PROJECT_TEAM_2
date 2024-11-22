@@ -281,13 +281,13 @@ fun ShowAddActivityDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Activity for $selectedDate") },
+        title = { Text("Add Activity \n $selectedDate") },
         text = {
             Column {
-                Text("Enter activity:")
-                TextField(
+                OutlinedTextField(
                     value = activityText,
                     onValueChange = { activityText = it },
+                    label = { Text("Enter Activity") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
