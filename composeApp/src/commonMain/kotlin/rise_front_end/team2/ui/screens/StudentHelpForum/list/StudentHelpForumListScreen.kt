@@ -1,4 +1,4 @@
-package rise_front_end.team2.ui.screens.list
+package rise_front_end.team2.ui.screens.StudentHelpForum.list
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
@@ -20,16 +20,16 @@ import androidx.compose.ui.unit.dp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import org.koin.compose.viewmodel.koinViewModel
-import rise_front_end.team2.data.SyllabusObject
+import rise_front_end.team2.data.objects.StudentHelpForumObject
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
-fun ListScreen(
+fun StudentHelpForumListScreen(
     navigateToDetails: (objectId: Int) -> Unit
 ) {
     AppTheme {
-        val viewModel = koinViewModel<ListViewModel>()
+        val viewModel = koinViewModel<StudentHelpForumListViewModel>()
         val objects by viewModel.objects.collectAsState()
 
         AnimatedContent(objects.isNotEmpty()) { objectsAvailable ->
@@ -47,7 +47,7 @@ fun ListScreen(
 
 @Composable
 private fun ObjectGrid(
-    objects: List<SyllabusObject>,
+    objects: List<StudentHelpForumObject>,
     onObjectClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -69,7 +69,7 @@ private fun ObjectGrid(
 
 @Composable
 private fun ObjectFrame(
-    obj: SyllabusObject,
+    obj: StudentHelpForumObject,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

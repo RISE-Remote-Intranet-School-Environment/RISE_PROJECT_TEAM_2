@@ -14,8 +14,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import rise_front_end.team2.ui.screens.*
-import rise_front_end.team2.ui.screens.detail.DetailScreen
-import rise_front_end.team2.ui.screens.list.ListScreen
+import rise_front_end.team2.ui.screens.StudentHelpForum.detail.StudentHelpForumDetailScreen
+import rise_front_end.team2.ui.screens.StudentHelpForum.list.StudentHelpForumListScreen
+import rise_front_end.team2.ui.screens.syllabus.detail.SyllabusDetailScreen
+import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListScreen
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
@@ -57,11 +59,16 @@ actual fun PlatformNavigation() {
                 composable(route = Screens.HomeScreen.route) {
                     HomeScreen(
                         onSyllabusClick = {
-                            navController.navigate(Screens.ListDestination.route)
+                            navController.navigate(Screens.SyllabusListDestination.route)
                         },
                         onFileHostingClick = {
                             navController.navigate(Screens.FileHostingScreen.route)
+                        },
+                        onStudentHelpForumClick = {
+                            navController.navigate(Screens.StudentHelpForumList.route)
+
                         }
+
                     )
                 }
 
@@ -86,18 +93,18 @@ actual fun PlatformNavigation() {
                     FileHostingScreen()
                 }
 
-                // List Screen
-                composable(route = Screens.ListDestination.route) {
-                    ListScreen(
+                // SyllabusList Screen
+                composable(route = Screens.SyllabusListDestination.route) {
+                    SyllabusListScreen(
                         navigateToDetails = { objectId ->
                             navController.navigate("detail/$objectId")
                         }
                     )
                 }
 
-                // Detail Screen
+                // SyllabusDetail Screen
                 composable(
-                    route = Screens.DetailDestination.route,
+                    route = Screens.SyllabusDetailDestination.route,
                     arguments = listOf(
                         navArgument("objectId") {
                             type = NavType.IntType
@@ -105,13 +112,42 @@ actual fun PlatformNavigation() {
                     )
                 ) { backStackEntry ->
                     val objectId = backStackEntry.arguments?.getInt("objectId") ?: 0
-                    DetailScreen(
+                    SyllabusDetailScreen(
                         objectId = objectId,
                         navigateBack = {
                             navController.popBackStack()
                         }
                     )
                 }
+
+
+                // Student Help forum list Screen
+                composable(route = Screens.StudentHelpForumList.route) {
+                    StudentHelpForumListScreen(
+                        navigateToDetails = { objectId ->
+                            navController.navigate("studenthelpForumdetail/$objectId")
+                        }
+                    )
+                }
+
+                // Student Help Forum Detail Screen
+                composable(
+                    route = Screens.StudentHelpForumDetail.route,
+                    arguments = listOf(
+                        navArgument("objectId") {
+                            type = NavType.IntType
+                        }
+                    )
+                ) { backStackEntry ->
+                    val objectId = backStackEntry.arguments?.getInt("objectId") ?: 0
+                    StudentHelpForumDetailScreen(
+                        objectId = objectId,
+                        navigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+
             }
         }
     }

@@ -1,4 +1,4 @@
-package rise_front_end.team2.ui.screens.detail
+package rise_front_end.team2.ui.screens.syllabus.detail
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
@@ -23,7 +23,7 @@ import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import rise_front_end.team2.data.SyllabusObject
+import rise_front_end.team2.data.objects.SyllabusObject
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 import rise_front_end_team2.composeapp.generated.resources.Res
@@ -38,12 +38,12 @@ import rise_front_end_team2.composeapp.generated.resources.label_medium
 import rise_front_end_team2.composeapp.generated.resources.label_department
 
 @Composable
-fun DetailScreen(
+fun SyllabusDetailScreen(
     objectId: Int,
     navigateBack: () -> Unit,
 ) {
     AppTheme {
-        val viewModel = koinViewModel<DetailViewModel>()
+        val viewModel = koinViewModel<SyllabusDetailViewModel>()
         val obj by viewModel.getObject(objectId).collectAsState(initial = null)
 
         AnimatedContent(obj != null) { objectAvailable ->

@@ -7,12 +7,19 @@ sealed class Screens(val route: String) {
     object CalendarScreen : Screens("calendar")
     object SyllabusScreen : Screens("syllabus")
     object FileHostingScreen : Screens("filehosting")
-    object ListDestination : Screens("list")
+    object SyllabusListDestination : Screens("list")
+    object StudentHelpForumList : Screens("studentHelpForumList")
 
 
-    class DetailDestination(objectId: Int) : Screens("detail/$objectId") {
+    class SyllabusDetailDestination(objectId: Int) : Screens("detail/$objectId") {
         companion object {
             const val route = "detail/{objectId}"
+        }
+    }
+
+    class StudentHelpForumDetail(objectId: Int) : Screens("studenthelpForumdetail/$objectId") {
+        companion object {
+            const val route = "studenthelpForumdetail/{objectId}"
         }
     }
 }

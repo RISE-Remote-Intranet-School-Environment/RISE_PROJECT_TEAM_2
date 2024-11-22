@@ -1,4 +1,4 @@
-package rise_front_end.team2.data
+package rise_front_end.team2.data.objects
 
 import kotlinx.serialization.Serializable
 
