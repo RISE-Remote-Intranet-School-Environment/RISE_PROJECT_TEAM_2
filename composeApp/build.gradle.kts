@@ -9,9 +9,12 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 kotlin {
+    // Commenting out the wasmJs configuration to focus only on Android
+    /*
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "composeApp"
@@ -31,14 +34,17 @@ kotlin {
         }
         binaries.executable()
     }
-    
+    */
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
+    // Commenting out iOS targets to keep only Android configuration active
+    /*
     listOf(
         iosX64(),
         iosArm64(),
@@ -49,17 +55,15 @@ kotlin {
             isStatic = true
         }
     }
-    
+    */
+
     sourceSets {
-        
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.material3)
             implementation("androidx.navigation:navigation-compose:2.7.3")
-            implementation ("androidx.compose.material:material-icons-extended:1.7.5")
-
-
+            implementation("androidx.compose.material:material-icons-extended:1.7.5")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -72,6 +76,20 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.materialKolor)
+            implementation("network.chaintech:kmp-date-time-picker:1.0.6")
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.okhttp)
+
+
+
+            implementation(libs.kamel)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.navigation.compose)
+
         }
     }
 }
@@ -92,9 +110,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    buildFeatures {
-        compose = true
-    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -104,31 +119,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
-    // Jetpack Compose BOM
-    implementation(platform("androidx.compose:compose-bom:2023.01.00"))
-
-    // Material 3 and Compose UI
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-
-    // Foundation
-    implementation("androidx.compose.foundation:foundation")
-    implementation("androidx.compose.foundation:foundation-layout")
-
-    // Activity Compose
-    implementation("androidx.activity:activity-compose:1.7.0")
-
-    // Calendar library by kizitonwose
-    implementation("com.kizitonwose.calendar:compose:0.6.1")
-
-    // Coroutines (for using `launch` and coroutines with Compose)
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
-

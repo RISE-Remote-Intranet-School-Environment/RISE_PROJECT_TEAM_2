@@ -12,7 +12,7 @@ fun AppTheme(
     content: @Composable () -> Unit,
 ) {
     val dynamicThemeState = rememberDynamicMaterialThemeState(
-        isDark = darkTheme,
+        isDark = false,
         style = PaletteStyle.TonalSpot,
         primary = Primary,
         secondary = Secondary,
