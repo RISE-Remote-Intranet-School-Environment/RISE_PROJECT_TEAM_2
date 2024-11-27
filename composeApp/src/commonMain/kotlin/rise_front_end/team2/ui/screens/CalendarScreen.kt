@@ -7,16 +7,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,7 +26,15 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
-import network.chaintech.*
+
+
+val modernGradientDarkColor = listOf(
+    Color(0xFFEF4444L), // Coral Red (Urgent task)
+    Color(0xFF2563EBL), // Royal Blue (Work deadline)
+    Color(0xFF9333EAL), // Deep Violet (Team collaboration)
+    Color(0xFF10B981L),  // Minty Teal (Focus task)
+    Color(0xFFDFAF2CL)   //Yellow Ocre
+)
 
 
 @Composable
@@ -62,7 +68,7 @@ fun CalendarScreen() {
             color = MaterialTheme.colorScheme.background
         ) {
             var selectedMonth by remember { mutableStateOf(YearMonth.now()) }
-            val activities = remember { mutableStateMapOf<LocalDate, MutableList<String>>() } // Stores activities for dates
+            val activities = remember { mutableStateMapOf<LocalDate, MutableList<Pair<String, Color>>>() } // Stores activities for dates
             var selectedDate by remember { mutableStateOf(LocalDate.now()) } // Track the selected date
             var showDialog by remember { mutableStateOf(false) } // State to control the dialog
 
@@ -148,7 +154,7 @@ fun CalendarHeader(
 @Composable
 fun CalendarView(
     currentMonth: YearMonth,
-    activities: Map<LocalDate, List<String>>,
+    activities: SnapshotStateMap<LocalDate, MutableList<Pair<String, Color>>>,
     selectedDate: LocalDate,
     onDayClick: (LocalDate) -> Unit
 ) {
@@ -194,12 +200,14 @@ fun CalendarView(
             // Days of the month
             items(daysInMonth) { day ->
                 val date = currentMonth.atDay(day + 1)
+                val activitiesForDate = activities[date].orEmpty()
                 DayCell(
                     date = date,
                     activityCount = activities[date]?.size ?: 0,
                     isSelected = date == selectedDate,
                     onClick = { onDayClick(date) },
-                    cellSize = cellSize
+                    cellSize = cellSize,
+                    activityColors = activitiesForDate.map {it.second}
                 )
             }
         }
@@ -207,7 +215,12 @@ fun CalendarView(
 }
 
 @Composable
-fun DayCell(date: LocalDate, activityCount: Int, isSelected: Boolean, onClick: () -> Unit, cellSize: Dp) {
+fun DayCell(date: LocalDate,
+            activityCount: Int,
+            isSelected: Boolean,
+            onClick: () -> Unit,
+            cellSize: Dp,
+            activityColors: List<Color> = modernGradientDarkColor ){
     Box(
         modifier = Modifier
             .size(cellSize) // Use consistent size for cells
@@ -217,8 +230,6 @@ fun DayCell(date: LocalDate, activityCount: Int, isSelected: Boolean, onClick: (
                 shape = MaterialTheme.shapes.small
             )
             .clickable { onClick() }
-
-
     ) {
         // Day number in the upper-left corner
         Box(
@@ -237,19 +248,29 @@ fun DayCell(date: LocalDate, activityCount: Int, isSelected: Boolean, onClick: (
 
         // Activity indicator centered below
         if (activityCount > 0) {
-            Text(
-                text = "•",
-                color = MaterialTheme.colorScheme.secondary,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.Center) // Center alignment for activity dot
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomStart)
+                    .padding(horizontal = 4.dp, vertical = 2.dp)
+
+            ){
+                for (i in 0 until minOf(activityCount, 5)){
+                    Box(
+                        modifier = Modifier
+                            .height(2.dp)
+                            .fillMaxWidth()
+                            .background(activityColors[i % activityColors.size])
+                    )
+                }
+
+            }
         }
     }
 }
 
 @Composable
-fun ActivitiesList(selectedDate: LocalDate, activities: List<String>) {
+fun ActivitiesList(selectedDate: LocalDate, activities: List<Pair<String,Color>>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -265,12 +286,24 @@ fun ActivitiesList(selectedDate: LocalDate, activities: List<String>) {
         if (activities.isEmpty()) {
             Text("No activities for this day.", style = MaterialTheme.typography.bodyMedium)
         } else {
-            activities.forEach { activity ->
-                Text(
-                    text = "• $activity",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
+            activities.forEach { (activity, color) ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(12.dp)
+                            .background(color, shape = MaterialTheme.shapes.small)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = activity,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
     }
@@ -280,12 +313,13 @@ fun ActivitiesList(selectedDate: LocalDate, activities: List<String>) {
 @Composable
 fun ShowAddActivityDialog(
     selectedDate: LocalDate,
-    activities: MutableMap<LocalDate, MutableList<String>>,
+    activities: MutableMap<LocalDate, MutableList<Pair<String, Color>>>, // Update type to include color
     onDismiss: () -> Unit
 ) {
     var activityText by remember { mutableStateOf("") }
     var selectedTime by remember { mutableStateOf("") }
     var showTimePicker by remember { mutableStateOf(false) }
+    var selectedColor by remember { mutableStateOf(Color.Blue) } // Default color
 
     // Show the time picker if triggered
     if (showTimePicker) {
@@ -305,6 +339,7 @@ fun ShowAddActivityDialog(
         title = { Text("Add Activity \n $selectedDate") },
         text = {
             Column {
+                // Activity Name
                 OutlinedTextField(
                     value = activityText,
                     onValueChange = { activityText = it },
@@ -314,10 +349,35 @@ fun ShowAddActivityDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // Time Picker
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("Time: ", style = MaterialTheme.typography.bodyMedium)
                     Button(onClick = { showTimePicker = true }) {
                         Text(if (selectedTime.isEmpty()) "Pick Time" else selectedTime)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Color Picker
+                Text("Choose a Color:", style = MaterialTheme.typography.bodyMedium)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    val colors = modernGradientDarkColor
+                    colors.forEach { color ->
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .background(color, shape = MaterialTheme.shapes.small)
+                                .border(
+                                    width = if (color == selectedColor) 2.dp else 1.dp,
+                                    color = if (color == selectedColor) Color.Black else Color.Gray,
+                                    shape = MaterialTheme.shapes.small
+                                )
+                                .clickable { selectedColor = color }
+                        )
                     }
                 }
             }
@@ -327,24 +387,25 @@ fun ShowAddActivityDialog(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
+                Button(onClick = onDismiss) {
+                    Text("Cancel")
+                }
+
+                Spacer(modifier = Modifier.width(32.dp))
+
                 Button(onClick = {
                     if (activityText.isNotBlank()) {
                         val time = if (selectedTime.isNotEmpty()) " at $selectedTime" else ""
                         val activityWithTime = "$activityText$time"
-                        activities.getOrPut(selectedDate) { mutableListOf() }.add(activityWithTime)
+                        // Save activity with chosen color
+                        activities.getOrPut(selectedDate) { mutableListOf() }
+                            .add(activityWithTime to selectedColor)
                     }
                     onDismiss()
                 }) {
                     Text("Save")
                 }
-
-                Spacer(modifier = Modifier.width(32.dp)) // Add space between buttons
-
-                Button(onClick = onDismiss) {
-                    Text("Cancel")
-                }
             }
         }
-
     )
 }
