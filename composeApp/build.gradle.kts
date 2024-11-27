@@ -39,7 +39,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
 
@@ -56,7 +56,6 @@ kotlin {
         }
     }
     */
-
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
@@ -64,6 +63,7 @@ kotlin {
             implementation(libs.androidx.material3)
             implementation("androidx.navigation:navigation-compose:2.7.3")
             implementation("androidx.compose.material:material-icons-extended:1.7.5")
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -88,6 +88,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
+            implementation(libs.koin.android)
 
         }
     }
@@ -115,8 +116,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 }
 

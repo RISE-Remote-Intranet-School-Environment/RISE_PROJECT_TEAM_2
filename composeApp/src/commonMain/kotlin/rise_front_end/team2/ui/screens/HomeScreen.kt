@@ -13,7 +13,7 @@ import rise_front_end.team2.ui.theme.AppTheme
 @Composable
 fun HomeScreen(
     onSyllabusClick: () -> Unit,  // Lambda to navigate to SyllabusScreen
-    onFileHostingClick: () -> Unit // Lambda to navigate to FileSharingScreen
+    onCourseManagerClick: () -> Unit // Lambda to navigate to FileSharingScreen
 ) {
     AppTheme {
         // Use Column to vertically arrange the buttons
@@ -41,7 +41,7 @@ fun HomeScreen(
 
             // Button to navigate to FileSharingScreen
             Button(
-                onClick = onFileHostingClick,
+                onClick = onCourseManagerClick,
                 modifier = Modifier.fillMaxWidth() // Make the button fill the width
             ) {
                 Text("Go to File Sharing")

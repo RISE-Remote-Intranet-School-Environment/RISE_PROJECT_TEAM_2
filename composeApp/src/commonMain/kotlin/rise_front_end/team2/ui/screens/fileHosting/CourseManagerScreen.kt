@@ -13,23 +13,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
 import org.koin.compose.viewmodel.koinViewModel
-import rise_front_end.team2.data.FileManager.FileObject
+import rise_front_end.team2.data.courseManager.CourseObject
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
-fun FileHostingScreen(
-    navigateToDetails: (objectId: Int) -> Unit
+fun CourseManagerScreen(
+    navigateToDetails: (objectId: String) -> Unit
 ) {
     AppTheme {
-        val viewModel = koinViewModel<FileHostingViewModel>()
+        val viewModel = koinViewModel<CourseManagerViewModel>()
         val objects by viewModel.objects.collectAsState()
 
         AnimatedContent(objects.isNotEmpty()) { objectsAvailable ->
@@ -47,8 +43,8 @@ fun FileHostingScreen(
 
 @Composable
 private fun ObjectGrid(
-    objects: List<FileObject>,
-    onObjectClick: (Int) -> Unit,
+    objects: List<CourseObject>,
+    onObjectClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -58,10 +54,10 @@ private fun ObjectGrid(
             .padding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()),
         contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical).asPaddingValues(),
     ) {
-        items(objects, key = { it.objectID }) { obj ->
+        items(objects, key = { it.courseObjectID }) { obj ->
             ObjectFrame(
                 obj = obj,
-                onClick = { onObjectClick(obj.objectID) },
+                onClick = { onObjectClick(obj.courseObjectID) },
             )
         }
     }
@@ -69,7 +65,7 @@ private fun ObjectGrid(
 
 @Composable
 private fun ObjectFrame(
-    obj: FileObject,
+    obj: CourseObject,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -80,32 +76,25 @@ private fun ObjectFrame(
             .background(MaterialTheme.colorScheme.surface) // Background color for better contrast
             .padding(8.dp) // Inner padding for a cleaner layout
     ) {
-        KamelImage(
-            resource = asyncPainterResource(data = obj.primaryImageSmall),
-            contentDescription = obj.title,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .background(Color.LightGray), // Placeholder background
-            onLoading = { /* Add loading UI here */ },
-            onFailure = { /* Add error UI here */ }
-        )
+//        KamelImage(
+//            resource = asyncPainterResource(data = obj.primaryImageSmall),
+//            contentDescription = obj.courseObjectName,
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .aspectRatio(1f)
+//                .background(Color.LightGray), // Placeholder background
+//            onLoading = { /* Add loading UI here */ },
+//            onFailure = { /* Add error UI here */ }
+//        )
 
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = obj.title,
+            text = obj.courseObjectName,
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
-        Text(
-            text = obj.artistDisplayName,
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Text(
-            text = obj.objectDate,
-            style = MaterialTheme.typography.bodySmall
-        )
+
 
 //        // Example for additional info like file size
 //        Text(

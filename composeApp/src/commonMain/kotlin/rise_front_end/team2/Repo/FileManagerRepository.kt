@@ -4,9 +4,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import rise_front_end.team2.data.FileManager.FileObject
-import rise_front_end.team2.data.FileManager.FileManagerApi
-import rise_front_end.team2.data.FileManager.FileManagerStorage
+import rise_front_end.team2.data.fileManager.FileObject
+import rise_front_end.team2.data.fileManager.FileManagerApi
+import rise_front_end.team2.data.fileManager.FileManagerStorage
 
 
 class FileManagerRepository(

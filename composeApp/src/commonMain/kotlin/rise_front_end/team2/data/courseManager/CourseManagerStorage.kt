@@ -1,4 +1,4 @@
-package rise_front_end.team2.data.CourseManager
+package rise_front_end.team2.data.courseManager
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,3 +27,18 @@ class InMemoryCourseManagerStorage : CourseManagerStorage {
 
     override fun getObjects(): Flow<List<CourseObject>> = storedObjects
 }
+
+
+//    private val storedObjects = MutableStateFlow<Map<String, CourseObject>>(emptyMap())
+//
+//    override suspend fun saveObjects(newObjects: List<CourseObject>) {
+//        storedObjects.value = newObjects.associateBy { it.courseObjectID }
+//    }
+//
+//    override fun getObjectById(courseID: String): Flow<CourseObject?> {
+//        return storedObjects.map { it[courseID] }
+//    }
+//
+//    override fun getObjects(): Flow<List<CourseObject>> {
+//        return storedObjects.map { it.values.toList() }
+//    }

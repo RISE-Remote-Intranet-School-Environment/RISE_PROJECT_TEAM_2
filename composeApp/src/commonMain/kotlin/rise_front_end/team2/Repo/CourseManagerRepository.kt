@@ -4,14 +4,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import rise_front_end.team2.data.CourseManager.CourseManagerApi
-import rise_front_end.team2.data.CourseManager.CourseObject
-import rise_front_end.team2.data.CourseManager.CourseManagerStorage
+import rise_front_end.team2.data.courseManager.LocalCourseManagerApi
+import rise_front_end.team2.data.courseManager.CourseObject
+import rise_front_end.team2.data.courseManager.CourseManagerStorage
 
 
 
 class CourseManagerRepository (
-    private val courseManagerApi: CourseManagerApi,
+    private val courseManagerApi: LocalCourseManagerApi,
     private val courseManagerStorage: CourseManagerStorage, )
 {
     private val scope = CoroutineScope(SupervisorJob())
@@ -23,7 +23,13 @@ class CourseManagerRepository (
     }
 
     suspend fun refresh() {
-        courseManagerStorage.saveObjects(courseManagerApi.getData())
+        try {
+            val data = courseManagerApi.getData()
+            courseManagerStorage.saveObjects(data)
+        } catch (e: Exception) {
+            // Log or handle error
+            e.printStackTrace()
+        }
     }
 
     fun getObjects(): Flow<List<CourseObject>> = courseManagerStorage.getObjects()

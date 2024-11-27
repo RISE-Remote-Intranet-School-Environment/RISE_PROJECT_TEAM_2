@@ -1,4 +1,4 @@
-package rise_front_end.team2.data.FileManager
+package rise_front_end.team2.data.fileManager
 
 import kotlinx.serialization.Serializable
 

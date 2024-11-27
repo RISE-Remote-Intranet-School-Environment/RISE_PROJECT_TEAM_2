@@ -16,7 +16,7 @@ import androidx.navigation.navArgument
 import rise_front_end.team2.ui.screens.*
 import rise_front_end.team2.ui.screens.detail.DetailScreen
 import rise_front_end.team2.ui.screens.list.ListScreen
-import rise_front_end.team2.ui.screens.fileHosting.FileHostingScreen
+import rise_front_end.team2.ui.screens.fileHosting.CourseManagerScreen
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
@@ -60,8 +60,8 @@ actual fun PlatformNavigation() {
                         onSyllabusClick = {
                             navController.navigate(Screens.ListDestination.route)
                         },
-                        onFileHostingClick = {
-                            navController.navigate(Screens.FileHostingScreen.route)
+                        onCourseManagerClick = {
+                            navController.navigate(Screens.CourseScreen.route)
                         }
                     )
                 }
@@ -83,8 +83,8 @@ actual fun PlatformNavigation() {
                     SyllabusScreen()
                 }
 
-                composable(route = Screens.FileHostingScreen.route) {
-                    FileHostingScreen(
+                composable(route = Screens.CourseScreen.route) {
+                    CourseManagerScreen(
                         navigateToDetails = { fileID ->
                             navController.navigate("detail/$fileID")
                         }
