@@ -14,8 +14,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import rise_front_end.team2.ui.screens.*
-import rise_front_end.team2.ui.screens.StudentHelpForum.detail.StudentHelpForumDetailScreen
-import rise_front_end.team2.ui.screens.StudentHelpForum.list.StudentHelpForumListScreen
+import rise_front_end.team2.ui.screens.StudentHelpForum.answer.ForumMessageAnswersScreen
+import rise_front_end.team2.ui.screens.StudentHelpForum.courseslist.StudentHelpForumListScreen
+import rise_front_end.team2.ui.screens.StudentHelpForum.posts.StudentHelpForumDetailScreen
 import rise_front_end.team2.ui.screens.syllabus.detail.SyllabusDetailScreen
 import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListScreen
 import rise_front_end.team2.ui.screens.screens_grades.GradeScreen
@@ -145,11 +146,11 @@ actual fun PlatformNavigation() {
                 }
 
 
-                // Student Help forum list Screen
+                // Student Help Forum List Screen
                 composable(route = Screens.StudentHelpForumList.route) {
                     StudentHelpForumListScreen(
-                        navigateToDetails = { objectId ->
-                            navController.navigate("studenthelpForumdetail/$objectId")
+                        navigateToCourseDetails = { courseId ->
+                            navController.navigate(Screens.StudentHelpForumDetail(courseId).route)
                         }
                     )
                 }
@@ -158,19 +159,42 @@ actual fun PlatformNavigation() {
                 composable(
                     route = Screens.StudentHelpForumDetail.route,
                     arguments = listOf(
-                        navArgument("objectId") {
-                            type = NavType.IntType
-                        }
+                        navArgument("courseId") { type = NavType.IntType }
                     )
                 ) { backStackEntry ->
-                    val objectId = backStackEntry.arguments?.getInt("objectId") ?: 0
+                    val courseId = backStackEntry.arguments?.getInt("courseId") ?: 0
                     StudentHelpForumDetailScreen(
-                        objectId = objectId,
+                        courseId = courseId,
+                        navigateToAnswers = { courseId, messageId ->
+                            navController.navigate(
+                                Screens.StudentHelpForumMessageAnswers(courseId, messageId).route
+                            )
+                        },
                         navigateBack = {
                             navController.popBackStack()
                         }
                     )
                 }
+
+                // Forum Message Answers Screen
+                composable(
+                    route = Screens.StudentHelpForumMessageAnswers.route,
+                    arguments = listOf(
+                        navArgument("courseId") { type = NavType.IntType },
+                        navArgument("messageId") { type = NavType.IntType }
+                    )
+                ) { backStackEntry ->
+                    val courseId = backStackEntry.arguments?.getInt("courseId") ?: 0
+                    val messageId = backStackEntry.arguments?.getInt("messageId") ?: 0
+                    ForumMessageAnswersScreen(
+                        courseId = courseId,
+                        messageId = messageId,
+                        navigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
 
             }
 
@@ -179,7 +203,7 @@ actual fun PlatformNavigation() {
 
 
     }
-}
+
 
 fun getScreenTitle(route: String?): String {
     return when (route) {

@@ -1,5 +1,6 @@
-package rise_front_end.team2.ui.screens.StudentHelpForum.list
+package rise_front_end.team2.ui.screens.StudentHelpForum.courseslist
 
+import androidx.compose.runtime.Composable
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,7 +10,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,23 +20,23 @@ import androidx.compose.ui.unit.dp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import org.koin.compose.viewmodel.koinViewModel
-import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumObject
+import rise_front_end.team2.data.studentHelp.forum.Course
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
 fun StudentHelpForumListScreen(
-    navigateToDetails: (objectId: Int) -> Unit
+    navigateToCourseDetails: (courseId: Int) -> Unit
 ) {
     AppTheme {
         val viewModel = koinViewModel<StudentHelpForumListViewModel>()
-        val objects by viewModel.objects.collectAsState()
+        val courses by viewModel.courses.collectAsState()
 
-        AnimatedContent(objects.isNotEmpty()) { objectsAvailable ->
-            if (objectsAvailable) {
-                ObjectGrid(
-                    objects = objects,
-                    onObjectClick = navigateToDetails,
+        AnimatedContent(courses.isNotEmpty()) { coursesAvailable ->
+            if (coursesAvailable) {
+                CourseGrid(
+                    courses = courses,
+                    onCourseClick = navigateToCourseDetails,
                 )
             } else {
                 EmptyScreenContent(Modifier.fillMaxSize())
@@ -46,9 +46,9 @@ fun StudentHelpForumListScreen(
 }
 
 @Composable
-private fun ObjectGrid(
-    objects: List<StudentHelpForumObject>,
-    onObjectClick: (Int) -> Unit,
+private fun CourseGrid(
+    courses: List<Course>,
+    onCourseClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -58,18 +58,18 @@ private fun ObjectGrid(
             .padding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()),
         contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical).asPaddingValues(),
     ) {
-        items(objects, key = { it.objectID }) { obj ->
-            ObjectFrame(
-                obj = obj,
-                onClick = { onObjectClick(obj.objectID) },
+        items(courses, key = { it.courseID }) { course ->
+            CourseFrame(
+                course = course,
+                onClick = { onCourseClick(course.courseID) },
             )
         }
     }
 }
 
 @Composable
-private fun ObjectFrame(
-    obj: StudentHelpForumObject,
+private fun CourseFrame(
+    course: Course,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -78,28 +78,16 @@ private fun ObjectFrame(
             .padding(8.dp)
             .clickable { onClick() }
     ) {
-        KamelImage(
-            resource = asyncPainterResource(data = obj.primaryImageSmall),
-            contentDescription = obj.title,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .background(Color.LightGray),
-        )
-
-        Spacer(Modifier.height(2.dp))
-
         Text(
-            text = obj.title,
+            text = course.courseName,
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
         Text(
-            text = obj.artistDisplayName,
+            text = course.teacherName,
             style = MaterialTheme.typography.bodyMedium
         )
         Text(
-            text = obj.objectDate,
+            text = course.courseYear,
             style = MaterialTheme.typography.bodySmall
         )
     }

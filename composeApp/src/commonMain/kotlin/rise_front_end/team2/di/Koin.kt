@@ -32,8 +32,10 @@ import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumStorage
 import rise_front_end.team2.data.syllabus.SyllabusStorage
 import rise_front_end.team2.ui.screens.syllabus.detail.SyllabusDetailViewModel
 import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListViewModel
-import rise_front_end.team2.ui.screens.StudentHelpForum.detail.StudentHelpForumDetailViewModel
-import rise_front_end.team2.ui.screens.StudentHelpForum.list.StudentHelpForumListViewModel
+import rise_front_end.team2.ui.screens.StudentHelpForum.courseslist.StudentHelpForumListViewModel
+import rise_front_end.team2.ui.screens.StudentHelpForum.answer.ForumMessageAnswersViewModel
+import rise_front_end.team2.ui.screens.StudentHelpForum.posts.StudentHelpForumDetailViewModel
+
 // Data module - Dependency registration for APIs, storages, and repositories
 val dataModule = module {
     single {
@@ -75,6 +77,8 @@ val viewModelModule = module {
     // Factory for Student Help Forum-related view models
     factoryOf(::StudentHelpForumListViewModel)
     factoryOf(::StudentHelpForumDetailViewModel)
+    factoryOf(::ForumMessageAnswersViewModel)
+
 }
 
 fun initKoin() {

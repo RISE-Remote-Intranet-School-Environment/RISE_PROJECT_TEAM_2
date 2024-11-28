@@ -4,9 +4,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumObject
+import rise_front_end.team2.data.studentHelp.forum.ForumMessage
 import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumApi
 import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumStorage
+import rise_front_end.team2.data.studentHelp.forum.Course
+
 
 
 class StudentHelpForumRepository(
@@ -15,17 +17,26 @@ class StudentHelpForumRepository(
 ) {
     private val scope = CoroutineScope(SupervisorJob())
 
+    // Initialize the repository by fetching data from the API and saving it to storage.
     fun initialize() {
         scope.launch {
             refresh()
         }
     }
 
+    // Fetch data from the API and save it to the storage.
     suspend fun refresh() {
-        studentHelpForumStorage.saveObjects(studentHelpForumApi.getData())
+        val courses = studentHelpForumApi.getData()
+        studentHelpForumStorage.saveCourses(courses)
     }
 
-    fun getObjects(): Flow<List<StudentHelpForumObject>> = studentHelpForumStorage.getObjects()
+    // Get the list of courses.
+    fun getCourses(): Flow<List<Course>> = studentHelpForumStorage.getCourses()
 
-    fun getObjectById(objectId: Int): Flow<StudentHelpForumObject?> = studentHelpForumStorage.getObjectById(objectId)
+    // Get a specific course by its ID.
+    fun getCourseById(courseId: Int): Flow<Course?> = studentHelpForumStorage.getCourseById(courseId)
+
+    // Get a specific forum message by course ID and message ID.
+    fun getForumMessageById(courseId: Int, messageId: Int): Flow<ForumMessage?> =
+        studentHelpForumStorage.getForumMessageById(courseId, messageId)
 }

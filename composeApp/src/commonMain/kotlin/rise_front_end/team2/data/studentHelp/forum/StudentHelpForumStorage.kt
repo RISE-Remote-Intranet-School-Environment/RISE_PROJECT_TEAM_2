@@ -5,25 +5,32 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 interface StudentHelpForumStorage {
-    suspend fun saveObjects(newObjects: List<StudentHelpForumObject>)
-
-    fun getObjectById(objectId: Int): Flow<StudentHelpForumObject?>
-
-    fun getObjects(): Flow<List<StudentHelpForumObject>>
+    suspend fun saveCourses(newCourses: List<Course>)
+    fun getCourses(): Flow<List<Course>>
+    fun getCourseById(courseId: Int): Flow<Course?>
+    fun getForumMessageById(courseId: Int, messageId: Int): Flow<ForumMessage?>
 }
+
 
 class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
-    private val storedObjects = MutableStateFlow(emptyList<StudentHelpForumObject>())
+    private val storedCourses = MutableStateFlow(emptyList<Course>())
 
-    override suspend fun saveObjects(newObjects: List<StudentHelpForumObject>) {
-        storedObjects.value = newObjects
+    override suspend fun saveCourses(newCourses: List<Course>) {
+        storedCourses.value = newCourses
     }
 
-    override fun getObjectById(objectId: Int): Flow<StudentHelpForumObject?> {
-        return storedObjects.map { objects ->
-            objects.find { it.objectID == objectId }
+    override fun getCourses(): Flow<List<Course>> = storedCourses
+
+    override fun getCourseById(courseId: Int): Flow<Course?> {
+        return storedCourses.map { courses -> courses.find { it.courseID == courseId } }
+    }
+
+    override fun getForumMessageById(courseId: Int, messageId: Int): Flow<ForumMessage?> {
+        return storedCourses.map { courses ->
+            courses.find { it.courseID == courseId }
+                ?.forum
+                ?.find { it.messageID == messageId }
         }
     }
-
-    override fun getObjects(): Flow<List<StudentHelpForumObject>> = storedObjects
 }
+

@@ -8,10 +8,10 @@ sealed class Screens(val route: String) {
     object SyllabusScreen : Screens("syllabus")
     object FileHostingScreen : Screens("filehosting")
     object SyllabusListDestination : Screens("list")
-    object StudentHelpForumList : Screens("studentHelpForumList")
     object ListDestination : Screens("list")
     object RegistrationScreen : Screens("registration")
     object ProfileScreen : Screens("profil")
+    object StudentHelpForumList : Screens("studentHelpForumList")
 
 
     class SyllabusDetailDestination(objectId: Int) : Screens("detail/$objectId") {
@@ -20,9 +20,16 @@ sealed class Screens(val route: String) {
         }
     }
 
-    class StudentHelpForumDetail(objectId: Int) : Screens("studenthelpForumdetail/$objectId") {
+
+    class StudentHelpForumDetail(courseId: Int) : Screens("studentHelpForumDetail/$courseId") {
         companion object {
-            const val route = "studenthelpForumdetail/{objectId}"
+            const val route = "studentHelpForumDetail/{courseId}"
+        }
+    }
+    class StudentHelpForumMessageAnswers(courseId: Int, messageId: Int) :
+        Screens("studentHelpForumMessageAnswers/$courseId/$messageId") {
+        companion object {
+            const val route = "studentHelpForumMessageAnswers/{courseId}/{messageId}"
         }
     }
 }
