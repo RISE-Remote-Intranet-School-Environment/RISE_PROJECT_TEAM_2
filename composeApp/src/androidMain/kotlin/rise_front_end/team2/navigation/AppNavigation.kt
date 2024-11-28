@@ -18,6 +18,11 @@ import rise_front_end.team2.ui.screens.StudentHelpForum.detail.StudentHelpForumD
 import rise_front_end.team2.ui.screens.StudentHelpForum.list.StudentHelpForumListScreen
 import rise_front_end.team2.ui.screens.syllabus.detail.SyllabusDetailScreen
 import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListScreen
+import rise_front_end.team2.ui.screens.detail.DetailScreen
+import rise_front_end.team2.ui.screens.list.ListScreen
+import rise_front_end.team2.ui.screens.screens_grades.GradeScreen
+import rise_front_end.team2.ui.screens.screens_grades.RegistrationScreen
+import rise_front_end.team2.ui.screens.screens_profil.ProfileScreen
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
@@ -27,7 +32,16 @@ actual fun PlatformNavigation() {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
+
         Scaffold(
+
+            topBar = {
+
+                TopBar(getScreenTitle(currentRoute),
+                    onProfilClick = {
+                    navController.navigate(Screens.ProfileScreen.route)
+                })
+            },
             bottomBar = {
                 CommonNavigationBar(
                     currentRoute = currentRoute,
@@ -74,7 +88,19 @@ actual fun PlatformNavigation() {
 
                 // Main Navigation Screens
                 composable(route = Screens.GradeScreen.route) {
-                    GradeScreen()
+                    GradeScreen(
+                        onRegistrationClick = {
+                            navController.navigate(Screens.RegistrationScreen.route)
+                        }
+                    )
+                }
+
+                composable(route = Screens.RegistrationScreen.route) {
+                    RegistrationScreen()
+                }
+
+                composable(route = Screens.ProfileScreen.route) {
+                    ProfileScreen()
                 }
 
                 composable(route = Screens.FavoriteScreen.route) {

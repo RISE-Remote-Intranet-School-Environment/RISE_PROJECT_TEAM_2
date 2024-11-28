@@ -9,6 +9,9 @@ sealed class Screens(val route: String) {
     object FileHostingScreen : Screens("filehosting")
     object SyllabusListDestination : Screens("list")
     object StudentHelpForumList : Screens("studentHelpForumList")
+    object ListDestination : Screens("list")
+    object RegistrationScreen : Screens("registration")
+    object ProfileScreen : Screens("profil")
 
 
     class SyllabusDetailDestination(objectId: Int) : Screens("detail/$objectId") {

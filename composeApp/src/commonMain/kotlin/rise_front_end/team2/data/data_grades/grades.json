@@ -1,0 +1,78 @@
+[
+  {
+    "objectID": 1,
+    "nameUe": "Langues",
+    "ects": 3,
+    "list": [{ "name": "Langues", "grades": 17, "ectsNumber": 1 }]
+  },
+  {
+    "objectID": 2,
+    "nameUe": "GPU computing",
+    "ects": 6,
+    "list": [
+      {
+        "name": "Programmation parrallele, OpenGL",
+        "grades": 17,
+        "ectsNumber": 2
+      },
+      { "name": "Algorithms", "grades": 1, "ectsNumber": 2 },
+      { "name": "Image Processing Lab", "grades": 15, "ectsNumber": 2 }
+    ]
+  },
+  {
+    "objectID": 3,
+    "nameUe": "Architecture and\nsoftware quality",
+    "ects": 4,
+    "list": [
+      { "name": "Software Architecture", "grades": 17, "ectsNumber": 2 },
+      {
+        "name": "Software Architecture and Quality Lab",
+        "grades": 13,
+        "ectsNumber": 2
+      }
+    ]
+  },
+  {
+    "objectID": 4,
+    "nameUe": "Database \nmanagement system",
+    "ects": 4,
+    "list": [
+      { "name": "Relationnal Database", "grades": 2, "ectsNumber": 2 },
+      { "name": "Realtime DB, NoSQL, XML", "grades": 14, "ectsNumber": 2 }
+    ]
+  },
+  {
+    "objectID": 5,
+    "nameUe": "Computer Network",
+    "ects": 5,
+    "list": [
+      {
+        "name": "Fieldbuses and industrial Ethernet",
+        "grades": 5,
+        "ectsNumber": 2
+      },
+      { "name": "Network concepts", "grades": 3, "ectsNumber": 2 },
+      { "name": "Computer Network Lab", "grades": 12, "ectsNumber": 1 }
+    ]
+  },
+  {
+    "objectID": 6,
+    "nameUe": "IOT and data acquisition",
+    "ects": 4,
+    "list": [
+      { "name": "IoT Lab", "grades": 11, "ectsNumber": 2 },
+      { "name": "Instrumentation Lab", "grades": 10, "ectsNumber": 1 },
+      { "name": "Instrumentation", "grades": 17, "ectsNumber": 1 }
+    ]
+  },
+  {
+    "objectID": 7,
+    "nameUe": "Gestion 1",
+    "ects": 6,
+    "list": [
+      { "name": "Projet - qualité", "grades": 18, "ectsNumber": 2 },
+      { "name": "Science humaines", "grades": 13, "ectsNumber": 2 },
+      { "name": "Ethics Lab", "grades": 13, "ectsNumber": 2 }
+    ]
+  }
+]
