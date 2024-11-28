@@ -8,6 +8,8 @@ sealed class Screens(val route: String) {
     object SyllabusScreen : Screens("syllabus")
     object FileHostingScreen : Screens("filehosting")
     object ListDestination : Screens("list")
+    object RegistrationScreen : Screens("registration")
+    object ProfileScreen : Screens("profil")
 
 
     class DetailDestination(objectId: Int) : Screens("detail/$objectId") {

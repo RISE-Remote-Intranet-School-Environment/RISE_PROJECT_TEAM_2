@@ -17,6 +17,8 @@ import rise_front_end.team2.ui.screens.*
 import rise_front_end.team2.ui.screens.detail.DetailScreen
 import rise_front_end.team2.ui.screens.list.ListScreen
 import rise_front_end.team2.ui.screens.screens_grades.GradeScreen
+import rise_front_end.team2.ui.screens.screens_grades.RegistrationScreen
+import rise_front_end.team2.ui.screens.screens_profil.ProfileScreen
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
@@ -26,7 +28,16 @@ actual fun PlatformNavigation() {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
+
         Scaffold(
+
+            topBar = {
+
+                TopBar(getScreenTitle(currentRoute),
+                    onProfilClick = {
+                    navController.navigate(Screens.ProfileScreen.route)
+                })
+            },
             bottomBar = {
                 CommonNavigationBar(
                     currentRoute = currentRoute,
@@ -68,7 +79,19 @@ actual fun PlatformNavigation() {
 
                 // Main Navigation Screens
                 composable(route = Screens.GradeScreen.route) {
-                    GradeScreen()
+                    GradeScreen(
+                        onRegistrationClick = {
+                            navController.navigate(Screens.RegistrationScreen.route)
+                        }
+                    )
+                }
+
+                composable(route = Screens.RegistrationScreen.route) {
+                    RegistrationScreen()
+                }
+
+                composable(route = Screens.ProfileScreen.route) {
+                    ProfileScreen()
                 }
 
                 composable(route = Screens.FavoriteScreen.route) {
@@ -115,5 +138,21 @@ actual fun PlatformNavigation() {
                 }
             }
         }
+    }
+}
+
+fun getScreenTitle(route: String?): String {
+    return when (route) {
+        Screens.HomeScreen.route -> "Home"
+        Screens.GradeScreen.route -> "Grades"
+        Screens.RegistrationScreen.route -> "Registration"
+        Screens.ProfileScreen.route -> "Profile"
+        Screens.FavoriteScreen.route -> "Favorites"
+        Screens.CalendarScreen.route -> "Calendar"
+        Screens.SyllabusScreen.route -> "Syllabus"
+        Screens.FileHostingScreen.route -> "File Hosting"
+        Screens.ListDestination.route -> "Syllabus"
+        Screens.DetailDestination.route -> "Detail"
+        else -> "App"
     }
 }

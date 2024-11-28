@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.DriveFileRenameOutline
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -52,7 +53,7 @@ import rise_front_end.team2.ui.theme.Tertiary
 
 
 @Composable
-fun GradeScreen() {
+fun GradeScreen(onRegistrationClick: () -> Unit,) {
     AppTheme {
         val viewModel = koinViewModel<GradeViewModel>()
         val objects by viewModel.objects.collectAsState()
@@ -66,10 +67,8 @@ fun GradeScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFEFF4FF))
                 .verticalScroll(rememberScrollState())
         ) {
-            TopBar("Grades") // La TopBar prend maintenant toute la largeur sans être affectée par un padding
             Spacer(modifier = Modifier.height(16.dp)) // Espacement entre la TopBar et les autres composants
 
             AnimatedContent(objects.isNotEmpty()) { objectsAvailable ->
@@ -78,7 +77,8 @@ fun GradeScreen() {
                         ButtonBar(
                             context = context,
                             searchText = searchText,
-                            onSearchTextChange = { searchText = it })
+                            onSearchTextChange = { searchText = it },
+                            onRegistrationClick = onRegistrationClick)
                         if (filteredObjects.isEmpty() && objects.isNotEmpty()) {
                             Text(
                                 text = "Aucun résultat trouvé",
@@ -102,52 +102,11 @@ fun GradeScreen() {
     }
 }
 
-@Composable
-fun TopBar(name: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = rise_front_end.team2.ui.theme.Secondary, // Couleur personnalisée de la TopBar
-                shape = RoundedCornerShape(
-                    bottomStart = 50.dp,
-                    bottomEnd = 50.dp
-                )// Coins inférieurs arrondis
-            )
-            .padding(bottom = 20.dp),
-        contentAlignment = Alignment.Center
-    ){
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = rise_front_end.team2.ui.theme.Primary, // Couleur personnalisée de la TopBar
-                    shape = RoundedCornerShape(
-                        bottomStart = 50.dp,
-                        bottomEnd = 50.dp
-                    ) // Coins inférieurs arrondis
-                )
-                .padding(vertical = 30.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(name, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    "Master 2024-2025",
-                    color = rise_front_end.team2.ui.theme.Secondary,
-                    fontSize = 20.sp
-                )
-
-            }
-        }
-    }
-}
 
 
 
 @Composable
-fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String) -> Unit) {
+fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String) -> Unit, onRegistrationClick: () -> Unit,) {
     var showSearchBar by remember { mutableStateOf(false) }
     var isFocused by remember { mutableStateOf(false) }
 
@@ -156,7 +115,8 @@ fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String)
     ) {
         CircularButton(onClick = { downloadFile(context, "grades.json") }, Icons.Default.Download, Primary, 45)
         Spacer(modifier = Modifier.width(16.dp))
-        CircularButton({}, Icons.Default.DriveFileRenameOutline, Primary, 45)
+        CircularButton(onClick = onRegistrationClick, Icons.Default.DriveFileRenameOutline, Primary, 45)
+
         Spacer(modifier = Modifier.width(16.dp))
         CircularButton({showSearchBar = !showSearchBar}, Icons.Default.Search, Primary, 45)
     }
@@ -166,7 +126,7 @@ fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String)
             onValueChange = onSearchTextChange,
             placeholder = {
                 Text(
-                    text = "Rechercher...",
+                    text = "Search...",
                     color = if (isFocused) Color.Black else Color.White // Couleur dynamique
                 )
             },
@@ -192,7 +152,7 @@ fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String)
         CircularButton({}, Icons.Default.ArrowBackIosNew, Secondary, 35)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Années Précédentes",
+            text = "Previous years",
             textDecoration = TextDecoration.Underline,
             color = Color.Gray,
             fontSize = 14.sp,
@@ -211,7 +171,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(rise_front_end.team2.ui.theme.Primary, shape = MaterialTheme.shapes.medium)
+            .background(rise_front_end.team2.ui.theme.Primary, shape = RoundedCornerShape(20.dp))
             .padding(16.dp)
             .animateContentSize()
     ) {
@@ -234,7 +194,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
             } else 0
 
             val icon = if (ectsNumber > 30) Icons.Default.CheckCircleOutline else Icons.Default.Cancel
-            val text = if (ectsNumber > 30) "Admis" else "Non Admis"
+            val text = if (ectsNumber > 30) "Accepted" else "Not Accepted"
 
 
             Row(
@@ -246,7 +206,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
                     Text(
-                        text = "Nombres de crédit",
+                        text = "Credit amount",
                         color = rise_front_end.team2.ui.theme.Secondary,
                         fontSize = 14.sp,
                     )
@@ -281,7 +241,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ){
                         Text(
-                            text = "Moyenne Générale",
+                            text = "Grade point average",
                             color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 14.sp,
                         )
@@ -296,7 +256,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ){
                         Text(
-                            text = "Décision du jury",
+                            text = "Jury's decision",
                             color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 14.sp,
                         )
