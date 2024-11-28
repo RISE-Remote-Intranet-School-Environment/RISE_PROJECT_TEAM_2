@@ -4,9 +4,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import rise_front_end.team2.data.objects.SyllabusObject
-import rise_front_end.team2.data.api.SyllabusApi
-import rise_front_end.team2.data.storage.SyllabusStorage
+import rise_front_end.team2.data.syllabus.SyllabusObject
+import rise_front_end.team2.data.syllabus.SyllabusApi
+import rise_front_end.team2.data.syllabus.SyllabusStorage
 
 
 class SyllabusRepository(

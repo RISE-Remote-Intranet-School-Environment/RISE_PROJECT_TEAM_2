@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
-import rise_front_end.team2.data.SyllabusApi
-import rise_front_end.team2.data.SyllabusObject
+import rise_front_end.team2.data.syllabus.SyllabusApi
+import rise_front_end.team2.data.syllabus.SyllabusObject
 
 interface GradeStorage {
     suspend fun saveObjects(newObjects: List<GradesObject>)

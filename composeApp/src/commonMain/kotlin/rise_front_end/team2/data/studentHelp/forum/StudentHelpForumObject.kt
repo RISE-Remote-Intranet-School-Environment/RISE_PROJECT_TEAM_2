@@ -1,9 +1,9 @@
-package rise_front_end.team2.data.objects
+package rise_front_end.team2.data.studentHelp.forum
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SyllabusObject(
+data class StudentHelpForumObject(
     val objectID: Int,
     val title: String,
     val artistDisplayName: String,

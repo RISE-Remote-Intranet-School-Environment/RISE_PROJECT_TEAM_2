@@ -1,10 +1,9 @@
-package rise_front_end.team2.data.api
+package rise_front_end.team2.data.syllabus
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.serialization.json.Json
-import rise_front_end.team2.data.objects.SyllabusObject
 
 interface SyllabusApi {
     suspend fun getData(): List<SyllabusObject>

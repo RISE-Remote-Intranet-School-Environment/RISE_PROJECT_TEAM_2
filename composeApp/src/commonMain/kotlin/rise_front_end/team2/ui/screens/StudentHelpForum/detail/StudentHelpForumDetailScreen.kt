@@ -23,7 +23,7 @@ import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import rise_front_end.team2.data.objects.StudentHelpForumObject
+import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumObject
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 import rise_front_end_team2.composeapp.generated.resources.Res

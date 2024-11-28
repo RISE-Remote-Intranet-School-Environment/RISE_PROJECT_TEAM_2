@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import org.koin.compose.viewmodel.koinViewModel
-import rise_front_end.team2.data.objects.StudentHelpForumObject
+import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumObject
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 

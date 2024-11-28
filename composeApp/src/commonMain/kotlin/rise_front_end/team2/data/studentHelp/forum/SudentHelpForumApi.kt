@@ -1,10 +1,9 @@
-package rise_front_end.team2.data.api
+package rise_front_end.team2.data.studentHelp.forum
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.serialization.json.Json
-import rise_front_end.team2.data.objects.StudentHelpForumObject
 
 interface StudentHelpForumApi {
     suspend fun getData(): List<StudentHelpForumObject>

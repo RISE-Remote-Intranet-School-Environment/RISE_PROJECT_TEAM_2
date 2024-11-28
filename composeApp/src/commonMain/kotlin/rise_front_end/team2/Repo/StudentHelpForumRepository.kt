@@ -4,9 +4,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import rise_front_end.team2.data.objects.StudentHelpForumObject
-import rise_front_end.team2.data.api.StudentHelpForumApi
-import rise_front_end.team2.data.storage.StudentHelpForumStorage
+import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumObject
+import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumApi
+import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumStorage
 
 
 class StudentHelpForumRepository(

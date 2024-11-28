@@ -1,9 +1,8 @@
-package rise_front_end.team2.data.storage
+package rise_front_end.team2.data.syllabus
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
-import rise_front_end.team2.data.objects.SyllabusObject
 
 interface SyllabusStorage {
     suspend fun saveObjects(newObjects: List<SyllabusObject>)

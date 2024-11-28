@@ -18,8 +18,6 @@ import rise_front_end.team2.ui.screens.StudentHelpForum.detail.StudentHelpForumD
 import rise_front_end.team2.ui.screens.StudentHelpForum.list.StudentHelpForumListScreen
 import rise_front_end.team2.ui.screens.syllabus.detail.SyllabusDetailScreen
 import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListScreen
-import rise_front_end.team2.ui.screens.detail.DetailScreen
-import rise_front_end.team2.ui.screens.list.ListScreen
 import rise_front_end.team2.ui.screens.screens_grades.GradeScreen
 import rise_front_end.team2.ui.screens.screens_grades.RegistrationScreen
 import rise_front_end.team2.ui.screens.screens_profil.ProfileScreen
@@ -175,6 +173,24 @@ actual fun PlatformNavigation() {
                 }
 
             }
+
+
         }
+
+
+    }
+}
+
+fun getScreenTitle(route: String?): String {
+    return when (route) {
+        Screens.HomeScreen.route -> "Home"
+        Screens.GradeScreen.route -> "Grades"
+        Screens.RegistrationScreen.route -> "Registration"
+        Screens.ProfileScreen.route -> "Profile"
+        Screens.FavoriteScreen.route -> "Favorites"
+        Screens.CalendarScreen.route -> "Calendar"
+        Screens.SyllabusScreen.route -> "Syllabus"
+        Screens.FileHostingScreen.route -> "File Hosting"
+        else -> "App"
     }
 }
