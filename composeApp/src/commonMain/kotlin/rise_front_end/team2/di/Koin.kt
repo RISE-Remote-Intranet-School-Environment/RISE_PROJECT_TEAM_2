@@ -35,6 +35,11 @@ import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListViewModel
 import rise_front_end.team2.ui.screens.StudentHelpForum.courseslist.StudentHelpForumListViewModel
 import rise_front_end.team2.ui.screens.StudentHelpForum.answer.ForumMessageAnswersViewModel
 import rise_front_end.team2.ui.screens.StudentHelpForum.posts.StudentHelpForumDetailViewModel
+import rise_front_end.team2.ui.screens.studentHelp.files.filesList.CourseFilesViewModel
+import rise_front_end.team2.ui.screens.studentHelp.files.fileanswers.FileDiscussionsViewModel
+
+
+
 
 // Data module - Dependency registration for APIs, storages, and repositories
 val dataModule = module {
@@ -78,6 +83,12 @@ val viewModelModule = module {
     factoryOf(::StudentHelpForumListViewModel)
     factoryOf(::StudentHelpForumDetailViewModel)
     factoryOf(::ForumMessageAnswersViewModel)
+
+    // Factory for StuHelp filees related view models
+    factoryOf(::CourseFilesViewModel)
+    factoryOf(::FileDiscussionsViewModel)
+
+
 
 }
 

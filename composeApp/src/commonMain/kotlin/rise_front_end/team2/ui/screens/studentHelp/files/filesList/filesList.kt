@@ -8,6 +8,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.InsertDriveFile
+import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material.icons.filled.TableChart
+import androidx.compose.material.icons.filled.TextSnippet
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -19,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
@@ -51,6 +57,7 @@ fun CourseFilesScreen(
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,7 +100,7 @@ private fun FileFrame(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Row(
         modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -101,13 +108,26 @@ private fun FileFrame(
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(16.dp)
     ) {
-        Text(
-            text = file.fileName,
-            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+        Icon(
+            imageVector = getFileIcon(file.fileName),
+            contentDescription = "File type icon",
+            modifier = Modifier.padding(end = 8.dp)
         )
-        Text(
-            text = "File URL: ${file.fileUrl}",
-            style = MaterialTheme.typography.bodySmall
-        )
+        Column {
+            Text(
+                text = file.fileName,
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+            )
+        }
+    }
+}
+
+fun getFileIcon(fileName: String): ImageVector {
+    return when {
+        fileName.endsWith(".pdf") -> Icons.Default.PictureAsPdf
+        fileName.endsWith(".docx") -> Icons.Default.Description
+        fileName.endsWith(".xlsx") -> Icons.Default.TableChart
+        fileName.endsWith(".txt") -> Icons.Default.TextSnippet
+        else -> Icons.Default.InsertDriveFile
     }
 }
