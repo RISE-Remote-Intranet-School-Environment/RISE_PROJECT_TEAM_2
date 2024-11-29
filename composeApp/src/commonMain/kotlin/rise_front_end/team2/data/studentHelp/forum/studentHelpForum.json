@@ -25,7 +25,7 @@
       {
         "fileID": 101,
         "fileName": "Thermodynamics Basics.pdf",
-        "fileUrl": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        "fileUrl": "https://www.stewartcalculus.com/data/ESSENTIAL%20CALCULUS%20Early%20Transcendentals/upfiles/ess-reviewofalgebra.pdf",
         "messages": [
           {
             "messageID": 1,
@@ -42,8 +42,28 @@
             "likes": 5
           }
         ]
+      },
+      {
+        "fileID": 102,
+        "fileName": "Thermodynamics Synthese.docx",
+        "fileUrl": "https://wagner.nyu.edu/files/students/Math_Review_-_Algebra_Operations.pdf",
+        "messages": [
+          {
+            "messageID": 1,
+            "content": "This is a test for docx files",
+            "author": "Student987",
+            "timestamp": "2024-11-27T14:00:00Z",
+            "likes": 7
+          },
+          {
+            "messageID": 2,
+            "content": "Hell yeah, it works!",
+            "author": "TeacherMarc",
+            "timestamp": "2024-11-27T15:00:00Z",
+            "likes": 5
+          }
+        ]
       }
-
     ]
   }
 ]
