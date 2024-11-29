@@ -2,7 +2,6 @@ package rise_front_end.team2.ui.screens.studentHelp.files.fileanswers
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,9 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
-import rise_front_end.team2.data.studentHelp.forum.File
 import rise_front_end.team2.data.studentHelp.forum.FileMessage
-import rise_front_end.team2.data.studentHelp.forum.ForumMessage
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 

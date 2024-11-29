@@ -9,7 +9,7 @@ interface StudentHelpForumStorage {
     fun getCourses(): Flow<List<Course>>
     fun getCourseById(courseId: Int): Flow<Course?>
     fun getForumMessageById(courseId: Int, messageId: Int): Flow<ForumMessage?>
-    fun getFileById(courseId: Int, fileId: Int): Flow<File?>
+    fun getFileById(courseId: Int, fileId: Int): Flow<CourseFile?>
     fun getFileMessageById(courseId: Int, fileId: Int, messageId: Int): Flow<FileMessage?>
 }
 
@@ -34,10 +34,10 @@ class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
         }
     }
 
-    override fun getFileById(courseId: Int, fileId: Int): Flow<File?> {
+    override fun getFileById(courseId: Int, fileId: Int): Flow<CourseFile?> {
         return storedCourses.map { courses ->
             courses.find { it.courseID == courseId }
-                ?.files
+                ?.courseFiles
                 ?.find { it.fileID == fileId }
         }
     }
@@ -45,7 +45,7 @@ class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
     override fun getFileMessageById(courseId: Int, fileId: Int, messageId: Int): Flow<FileMessage?> {
         return storedCourses.map { courses ->
             courses.find { it.courseID == courseId }
-                ?.files
+                ?.courseFiles
                 ?.find { it.fileID == fileId }
                 ?.messages
                 ?.find { it.messageID == messageId }

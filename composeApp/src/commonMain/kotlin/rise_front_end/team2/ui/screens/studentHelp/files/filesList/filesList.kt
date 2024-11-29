@@ -1,11 +1,18 @@
-package rise_front_end.team2.ui.screens.studentHelp.files.filesList
+package rise.front_end.team2.ui.screens.studentHelp.files.filesList
 
+import android.app.DownloadManager
+import android.content.Context
+import android.net.Uri
+import android.os.Environment
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Description
@@ -13,25 +20,30 @@ import androidx.compose.material.icons.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material.icons.filled.TextSnippet
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.github.barteksc.pdfviewer.PDFView
+import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.koin.compose.viewmodel.koinViewModel
-import rise_front_end.team2.data.studentHelp.forum.File
-import rise_front_end.team2.data.studentHelp.forum.ForumMessage
+import rise_front_end.team2.data.studentHelp.forum.CourseFile
 import rise_front_end.team2.ui.screens.EmptyScreenContent
+import rise_front_end.team2.ui.screens.studentHelp.files.filesList.CourseFilesViewModel
 import rise_front_end.team2.ui.theme.AppTheme
+import java.io.File
+import java.net.URL
 
 @Composable
 fun CourseFilesScreen(
@@ -46,7 +58,7 @@ fun CourseFilesScreen(
         AnimatedContent(course != null) { courseAvailable ->
             if (courseAvailable) {
                 FileList(
-                    files = course!!.files,
+                    courseFiles = course!!.courseFiles,
                     courseId = courseId,
                     navigateToFileDiscussions = navigateToFileDiscussions,
                     navigateBack = navigateBack
@@ -58,11 +70,10 @@ fun CourseFilesScreen(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FileList(
-    files: List<File>,
+    courseFiles: List<CourseFile>,
     courseId: Int,
     navigateToFileDiscussions: (courseId: Int, fileId: Int) -> Unit,
     navigateBack: () -> Unit,
@@ -84,9 +95,10 @@ private fun FileList(
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
-            files.forEach { file ->
+            courseFiles.forEach { file ->
                 FileFrame(
-                    file = file,
+                    courseFile = file,
+                    courseId = courseId,
                     onClick = { navigateToFileDiscussions(courseId, file.fileID) }
                 )
             }
@@ -96,32 +108,105 @@ private fun FileList(
 
 @Composable
 private fun FileFrame(
-    file: File,
+    courseFile: CourseFile,
+    courseId: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+    val screenHeight = with(LocalDensity.current) { LocalContext.current.resources.displayMetrics.heightPixels.toDp() }
+
     Row(
         modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(horizontal = 10.dp, vertical = 8.dp) // Add 10px padding from both ends of the screen
             .clickable { onClick() }
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(16.dp)
     ) {
         Icon(
-            imageVector = getFileIcon(file.fileName),
+            imageVector = getFileIcon(courseFile.fileName),
             contentDescription = "File type icon",
             modifier = Modifier.padding(end = 8.dp)
         )
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = file.fileName,
+                text = courseFile.fileName,
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
             )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Box for the preview with rounded corners
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(screenHeight / 4) // Restrict height to 1/4th of the screen
+                    .clip(RoundedCornerShape(12.dp)) // Rounded corners
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(10.dp) // Optional inner padding
+            ) {
+                if (courseFile.fileName.endsWith(".pdf")) {
+                    PdfPreview(fileUrl = courseFile.fileUrl)
+                } else if (courseFile.fileName.endsWith(".jpg") || courseFile.fileName.endsWith(".png")) {
+                    ImagePreview(fileUrl = courseFile.fileUrl)
+                }
+            }
+
+            // Download Button
+            Button(
+                onClick = { downloadFile(context, courseFile.fileUrl) },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text("Download")
+            }
         }
     }
 }
 
+
+@Composable
+private fun PdfPreview(fileUrl: String) {
+    val context = LocalContext.current
+    var pdfFile by remember { mutableStateOf<File?>(null) }
+
+    LaunchedEffect(fileUrl) {
+        if (fileUrl.isNotBlank() && Uri.parse(fileUrl).scheme != null) {
+            pdfFile = downloadPdf(context, fileUrl)
+        } else {
+            Log.e("PdfPreview", "Invalid file URL")
+        }
+    }
+
+    pdfFile?.let { file ->
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { context ->
+                PDFView(context, null).apply {
+                    fromFile(file)
+                        .defaultPage(0)
+                        .enableSwipe(true)
+                        .swipeHorizontal(false)
+                        .scrollHandle(DefaultScrollHandle(context))
+                        .load()
+                }
+            }
+        )
+    } ?: Text("Error loading PDF", color = MaterialTheme.colorScheme.error, modifier = Modifier.fillMaxSize())
+}
+
+@Composable
+private fun ImagePreview(fileUrl: String) {
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(fileUrl)
+            .crossfade(true)
+            .build(),
+        contentDescription = "File preview",
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+//Not used right now but will be later
 fun getFileIcon(fileName: String): ImageVector {
     return when {
         fileName.endsWith(".pdf") -> Icons.Default.PictureAsPdf
@@ -129,5 +214,37 @@ fun getFileIcon(fileName: String): ImageVector {
         fileName.endsWith(".xlsx") -> Icons.Default.TableChart
         fileName.endsWith(".txt") -> Icons.Default.TextSnippet
         else -> Icons.Default.InsertDriveFile
+    }
+}
+
+suspend fun downloadPdf(context: Context, url: String): File? = withContext(Dispatchers.IO) {
+    try {
+        val file = File(context.cacheDir, "tempfile.pdf")
+        URL(url).openStream().use { input ->
+            file.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+        file
+    } catch (e: Exception) {
+        Log.e("DownloadPdf", "Error downloading PDF", e)
+        null
+    }
+}
+
+fun downloadFile(context: Context, url: String) {
+    try {
+        val request = DownloadManager.Request(Uri.parse(url))
+            .setTitle("File Download")
+            .setDescription("Downloading file")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, url.substringAfterLast("/"))
+            .setAllowedOverMetered(true)
+            .setAllowedOverRoaming(true)
+
+        val downloadManager = ContextCompat.getSystemService(context, DownloadManager::class.java)
+        downloadManager?.enqueue(request)
+    } catch (e: Exception) {
+        Log.e("Download", "Error downloading file", e)
     }
 }

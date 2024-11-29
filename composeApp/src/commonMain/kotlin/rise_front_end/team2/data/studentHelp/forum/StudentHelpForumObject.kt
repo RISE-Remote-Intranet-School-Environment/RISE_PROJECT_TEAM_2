@@ -9,7 +9,7 @@ data class Course(
     val teacherName: String,
     val courseYear: String,
     val forum: List<ForumMessage>,
-    val files: List<File>
+    val courseFiles: List<CourseFile>
 
 )
 
@@ -32,7 +32,7 @@ data class Answer(
 )
 
 @Serializable
-data class File(
+data class CourseFile(
     val fileID: Int,
     val fileName: String,
     val fileUrl: String,
