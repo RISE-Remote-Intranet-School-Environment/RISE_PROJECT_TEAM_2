@@ -25,7 +25,7 @@
       {
         "fileID": 101,
         "fileName": "Thermodynamics Basics.pdf",
-        "fileUrl": "https://example.com/files/thermo_basics.pdf",
+        "fileUrl": "https://drive.google.com/file/d/1Cn2S7RfxmeCBgUQVodw8-MwQgQCgvvlN/view",
         "messages": [
           {
             "messageID": 1,
@@ -42,28 +42,8 @@
             "likes": 5
           }
         ]
-      },
-      {
-        "fileID": 102,
-        "fileName": "Thermodynamics Synthese.docx",
-        "fileUrl": "https://example.com/files/thermo_basics.docx",
-        "messages": [
-          {
-            "messageID": 1,
-            "content": "This is a test for docx files",
-            "author": "Student987",
-            "timestamp": "2024-11-27T14:00:00Z",
-            "likes": 7
-          },
-          {
-            "messageID": 2,
-            "content": "Hell yeah, it works!",
-            "author": "TeacherMarc",
-            "timestamp": "2024-11-27T15:00:00Z",
-            "likes": 5
-          }
-        ]
       }
+
     ]
   }
 ]
