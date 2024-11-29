@@ -31,18 +31,18 @@
             "messageID": 1,
             "content": "Is this file enough to understand the first law?",
             "author": "Student987",
-            "timestamp": "2024-11-27T14:00:00Z"
+            "timestamp": "2024-11-27T14:00:00Z",
+            "likes": 10
           },
           {
-
-                "messageID": 2,
-                "content": "Yes, this file provides a solid foundation.",
-                "author": "TeacherMarc",
-                "timestamp": "2024-11-27T15:00:00Z",
-                "likes": 5
-              }
-            ]
-          },
+            "messageID": 2,
+            "content": "Yes, this file provides a solid foundation.",
+            "author": "TeacherMarc",
+            "timestamp": "2024-11-27T15:00:00Z",
+            "likes": 5
+          }
+        ]
+      },
       {
         "fileID": 102,
         "fileName": "Thermodynamics Synthese.docx",
@@ -52,10 +52,10 @@
             "messageID": 1,
             "content": "This is a test for docx files",
             "author": "Student987",
-            "timestamp": "2024-11-27T14:00:00Z"
+            "timestamp": "2024-11-27T14:00:00Z",
+            "likes": 7
           },
           {
-
             "messageID": 2,
             "content": "Hell yeah, it works!",
             "author": "TeacherMarc",
@@ -64,8 +64,6 @@
           }
         ]
       }
-        ]
-      }
     ]
-
-
+  }
+]

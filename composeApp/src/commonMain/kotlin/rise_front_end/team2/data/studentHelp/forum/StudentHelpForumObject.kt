@@ -45,5 +45,5 @@ data class FileMessage(
     val content: String,
     val author: String,
     val timestamp: String,
-    val answers: List<Answer>
+    val likes: Int
 )
