@@ -8,7 +8,9 @@ data class Course(
     val courseName: String,
     val teacherName: String,
     val courseYear: String,
-    val forum: List<ForumMessage> // List of forum posts for the course
+    val forum: List<ForumMessage>,
+    val files: List<File>
+
 )
 
 @Serializable
@@ -27,4 +29,21 @@ data class Answer(
     val author: String,
     val timestamp: String,
     val likes: Int // the number of likes of an answer
+)
+
+@Serializable
+data class File(
+    val fileID: Int,
+    val fileName: String,
+    val fileUrl: String,
+    val messages: List<FileMessage> // Messages related to this file
+)
+
+@Serializable
+data class FileMessage(
+    val messageID: Int,
+    val content: String,
+    val author: String,
+    val timestamp: String,
+    val answers: List<Answer>
 )

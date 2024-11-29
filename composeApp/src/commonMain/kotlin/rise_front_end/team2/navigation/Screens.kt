@@ -32,4 +32,16 @@ sealed class Screens(val route: String) {
             const val route = "studentHelpForumMessageAnswers/{courseId}/{messageId}"
         }
     }
+
+    class CourseFiles(courseId: Int) : Screens("courseFiles/$courseId") {
+        companion object {
+            const val route = "courseFiles/{courseId}"
+        }
+    }
+
+    class FileDiscussions(courseId: Int, fileId: Int) : Screens("fileDiscussions/$courseId/$fileId") {
+        companion object {
+            const val route = "fileDiscussions/{courseId}/{fileId}"
+        }
+    }
 }

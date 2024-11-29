@@ -22,6 +22,8 @@ import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListScreen
 import rise_front_end.team2.ui.screens.screens_grades.GradeScreen
 import rise_front_end.team2.ui.screens.screens_grades.RegistrationScreen
 import rise_front_end.team2.ui.screens.screens_profil.ProfileScreen
+import rise_front_end.team2.ui.screens.studentHelp.files.fileanswers.FileDiscussionsScreen
+import rise_front_end.team2.ui.screens.studentHelp.files.filesList.CourseFilesScreen
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
@@ -149,11 +151,16 @@ actual fun PlatformNavigation() {
                 // Student Help Forum List Screen
                 composable(route = Screens.StudentHelpForumList.route) {
                     StudentHelpForumListScreen(
-                        navigateToCourseDetails = { courseId ->
+
+                        navigateToForum = { courseId ->
                             navController.navigate(Screens.StudentHelpForumDetail(courseId).route)
+                        },
+                        navigateToFiles = { courseId ->
+                            navController.navigate(Screens.CourseFiles(courseId).route)
                         }
                     )
                 }
+
 
                 // Student Help Forum Detail Screen
                 composable(
@@ -189,6 +196,46 @@ actual fun PlatformNavigation() {
                     ForumMessageAnswersScreen(
                         courseId = courseId,
                         messageId = messageId,
+                        navigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+
+                // Course Files Screen
+                composable(
+                    route = Screens.CourseFiles.route,
+                    arguments = listOf(
+                        navArgument("courseId") { type = NavType.IntType }
+                    )
+                ) { backStackEntry ->
+                    val courseId = backStackEntry.arguments?.getInt("courseId") ?: 0
+                    CourseFilesScreen(
+                        courseId = courseId,
+                        navigateToFileDiscussions = { courseId, fileId ->
+                            navController.navigate(
+                                Screens.FileDiscussions(courseId, fileId).route
+                            )
+                        },
+                        navigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+
+                // File Discussions Screen
+                composable(
+                    route = Screens.FileDiscussions.route,
+                    arguments = listOf(
+                        navArgument("courseId") { type = NavType.IntType },
+                        navArgument("fileId") { type = NavType.IntType }
+                    )
+                ) { backStackEntry ->
+                    val courseId = backStackEntry.arguments?.getInt("courseId") ?: 0
+                    val fileId = backStackEntry.arguments?.getInt("fileId") ?: 0
+                    FileDiscussionsScreen(
+                        courseId = courseId,
+                        fileId = fileId,
                         navigateBack = {
                             navController.popBackStack()
                         }
