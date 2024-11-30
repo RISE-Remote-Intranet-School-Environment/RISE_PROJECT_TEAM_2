@@ -12,7 +12,7 @@ interface  FavoriteApi{
 class KtorFavoriteApi(private val client: HttpClient): FavoriteApi {
     companion object {
         private const val API_URL =
-            "https://github.com/RISE-Remote-Intranet-School-Environment/RISE_PROJECT_TEAM_2/tree/Tanguy/composeApp/src/commonMain/kotlin/rise_front_end/team2/navigation/favorites.json"
+            "https://raw.githubusercontent.com/RISE-Remote-Intranet-School-Environment/RISE_PROJECT_TEAM_2/refs/heads/Tanguy/composeApp/src/commonMain/kotlin/rise_front_end/team2/navigation/favorites.json"
     }
 
     override suspend fun getData(): List<FavoritesObject> {
