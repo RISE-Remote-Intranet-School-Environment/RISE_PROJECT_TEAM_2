@@ -3,7 +3,7 @@ package rise_front_end.team2.navigation
 sealed class Screens(val route: String) {
     object HomeScreen : Screens("home")
     object GradeScreen : Screens("grade")
-    object FavoriteScreen : Screens("favorite")
+    object FavoritesScreen : Screens("favorites")
     object CalendarScreen : Screens("calendar")
     object SyllabusScreen : Screens("syllabus")
     object FileHostingScreen : Screens("filehosting")

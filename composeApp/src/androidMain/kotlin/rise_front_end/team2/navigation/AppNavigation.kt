@@ -20,6 +20,7 @@ import rise_front_end.team2.ui.screens.StudentHelpForum.courseslist.StudentHelpC
 import rise_front_end.team2.ui.screens.StudentHelpForum.posts.StudentHelpForumPostsScreen
 import rise_front_end.team2.ui.screens.syllabus.detail.SyllabusDetailScreen
 import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListScreen
+import rise_front_end.team2.ui.screens.favorites.FavoritesScreen
 import rise_front_end.team2.ui.screens.screens_grades.GradeScreen
 import rise_front_end.team2.ui.screens.screens_grades.RegistrationScreen
 import rise_front_end.team2.ui.screens.screens_profil.ProfileScreen
@@ -104,8 +105,17 @@ actual fun PlatformNavigation() {
                     ProfileScreen()
                 }
 
-                composable(route = Screens.FavoriteScreen.route) {
-                    FavoriteScreen()
+                composable(route = Screens.FavoritesScreen.route) {
+                    FavoritesScreen(
+                        navigateToCourse = { courseId ->
+                            // Navigate to course page
+                            navController.navigate(Screens.StudentHelpForumDetail(courseId).route)
+                        },
+                        navigateToFile = { fileId ->
+                            // Navigate to file page
+                            navController.navigate(Screens.FileDiscussions(courseId = 0, fileId).route)
+                        }
+                    )
                 }
 
                 composable(route = Screens.CalendarScreen.route) {
@@ -258,7 +268,7 @@ fun getScreenTitle(route: String?): String {
         Screens.GradeScreen.route -> "Grades"
         Screens.RegistrationScreen.route -> "Registration"
         Screens.ProfileScreen.route -> "Profile"
-        Screens.FavoriteScreen.route -> "Favorites"
+        Screens.FavoritesScreen.route -> "Favorites"
         Screens.CalendarScreen.route -> "Calendar"
         Screens.SyllabusScreen.route -> "Syllabus"
         Screens.FileHostingScreen.route -> "File Hosting"
