@@ -21,7 +21,7 @@ class InMemoryFileManagerStorage : FileManagerStorage {
 
     override fun getObjectById(fileID: String): Flow<FileObject?> {
         return storedObjects.map { objects ->
-            objects.find { it.fileObjectID == fileID }
+            objects.find { it.fileID == fileID }
         }
     }
 

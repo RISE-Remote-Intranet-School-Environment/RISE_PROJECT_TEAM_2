@@ -1,12 +1,31 @@
-{
-  "courses":[
+[
     {
-      "course_id": "4mage40_1",
-      "course_name": "Projet Qualité"
+      "courseID": "4mage40_1",
+      "courseName": "Projet Qualité",
+      "files": [
+        {
+          "fileID": "4mage40_1_1",
+          "fileName": "Synthèse test",
+          "fileExtension": ".pdf",
+          "fileSize": "5 Mo",
+          "filePrimaryImage": "",
+          "filePrimaryImageSmall": ""
+        },
+        {
+          "fileID": "4mage40_1_2",
+          "fileName": "Slides",
+          "fileExtension": ".pdf",
+          "fileSize": "10 Mo",
+          "filePrimaryImage": "",
+          "filePrimaryImageSmall": ""
+        }
+      ]
     },
     {
-      "course_id": "4mage40_2",
-      "course_name": "Sciences Humaines"
+      "courseID": "4mage40_2",
+      "courseName": "Sciences Humaines",
+      "files": [
+
+      ]
     }
-  ]
-}
+]

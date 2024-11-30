@@ -4,9 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FileObject(
-    val fileObjectID: String,
+    val fileID: String,
     val fileName: String,
-    val dataLink: String,
-    val previewLink: String,
-    val size: Float
+    val fileExtension: String,
+    val fileSize: String,
+    val filePrimaryImage: String,
+    val filePrimaryImageSmall: String
 )
