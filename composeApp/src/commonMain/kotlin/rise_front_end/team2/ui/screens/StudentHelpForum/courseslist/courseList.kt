@@ -20,7 +20,7 @@ import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
-fun StudentHelpForumListScreen(
+fun StudentHelpCourseListScreen(
     navigateToForum: (courseId: Int) -> Unit,
     navigateToFiles: (courseId: Int) -> Unit
 ) {

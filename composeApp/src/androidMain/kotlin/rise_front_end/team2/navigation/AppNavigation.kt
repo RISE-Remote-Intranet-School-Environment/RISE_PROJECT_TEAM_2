@@ -13,11 +13,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import rise.front_end.team2.ui.screens.studentHelp.files.filesList.CourseFilesScreen
+import rise.front_end.team2.ui.screens.studentHelp.files.filesList.CourseFilesListScreen
 import rise_front_end.team2.ui.screens.*
 import rise_front_end.team2.ui.screens.StudentHelpForum.answer.ForumMessageAnswersScreen
-import rise_front_end.team2.ui.screens.StudentHelpForum.courseslist.StudentHelpForumListScreen
-import rise_front_end.team2.ui.screens.StudentHelpForum.posts.StudentHelpForumDetailScreen
+import rise_front_end.team2.ui.screens.StudentHelpForum.courseslist.StudentHelpCourseListScreen
+import rise_front_end.team2.ui.screens.StudentHelpForum.posts.StudentHelpForumPostsScreen
 import rise_front_end.team2.ui.screens.syllabus.detail.SyllabusDetailScreen
 import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListScreen
 import rise_front_end.team2.ui.screens.screens_grades.GradeScreen
@@ -150,7 +150,7 @@ actual fun PlatformNavigation() {
 
                 // Student Help Forum List Screen
                 composable(route = Screens.StudentHelpForumList.route) {
-                    StudentHelpForumListScreen(
+                    StudentHelpCourseListScreen(
 
                         navigateToForum = { courseId ->
                             navController.navigate(Screens.StudentHelpForumDetail(courseId).route)
@@ -170,7 +170,7 @@ actual fun PlatformNavigation() {
                     )
                 ) { backStackEntry ->
                     val courseId = backStackEntry.arguments?.getInt("courseId") ?: 0
-                    StudentHelpForumDetailScreen(
+                    StudentHelpForumPostsScreen(
                         courseId = courseId,
                         navigateToAnswers = { courseId, messageId ->
                             navController.navigate(
@@ -210,7 +210,7 @@ actual fun PlatformNavigation() {
                     )
                 ) { backStackEntry ->
                     val courseId = backStackEntry.arguments?.getInt("courseId") ?: 0
-                    CourseFilesScreen(
+                    CourseFilesListScreen(
                         courseId = courseId,
                         navigateToFileDiscussions = { courseId, fileId ->
                             navController.navigate(

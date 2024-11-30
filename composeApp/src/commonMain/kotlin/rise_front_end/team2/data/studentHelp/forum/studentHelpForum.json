@@ -65,5 +65,97 @@
         ]
       }
     ]
+  },
+  {
+    "courseID": 539224,
+    "courseName": "Introduction to Machine Learning",
+    "teacherName": "Dr. Al Gorithm",
+    "courseYear": "BA4",
+    "forum": [
+      {
+        "messageID": 1,
+        "content": "What is supervised learning?",
+        "author": "StudentML",
+        "timestamp": "2024-11-29T10:00:00Z",
+        "answers": [
+          {
+            "answerID": 1,
+            "content": "Supervised learning involves training a model on labeled data.",
+            "author": "TeacherGorithm",
+            "timestamp": "2024-11-29T12:00:00Z",
+            "likes": 20
+          }
+        ]
+      }
+    ],
+    "courseFiles": [
+      {
+        "fileID": 201,
+        "fileName": "ML Basics.pdf",
+        "fileUrl": "https://www.physics.ox.ac.uk/system/files/file_attachments/basic_thermo.pdf",
+        "messages": [
+          {
+            "messageID": 1,
+            "content": "Does this include examples of supervised learning?",
+            "author": "StudentML",
+            "timestamp": "2024-11-28T14:00:00Z",
+            "likes": 8
+          },
+          {
+            "messageID": 2,
+            "content": "Yes, it covers classification and regression examples.",
+            "author": "TeacherGorithm",
+            "timestamp": "2024-11-28T15:00:00Z",
+            "likes": 6
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "courseID": 657831,
+    "courseName": "Advanced Mathematics",
+    "teacherName": "Prof. Calc U. Lator",
+    "courseYear": "BA4",
+    "forum": [
+      {
+        "messageID": 1,
+        "content": "How do you solve differential equations?",
+        "author": "MathEnthusiast",
+        "timestamp": "2024-11-30T09:00:00Z",
+        "answers": [
+          {
+            "answerID": 1,
+            "content": "You can use methods like separation of variables or integrating factors.",
+            "author": "ProfLator",
+            "timestamp": "2024-11-30T11:00:00Z",
+            "likes": 12
+          }
+        ]
+      }
+    ],
+    "courseFiles": [
+      {
+        "fileID": 301,
+        "fileName": "Differential Equations Guide.pdf",
+        "fileUrl": "https://www.hood.edu/sites/default/files/A%20Quick%20Algebra%20Review.pdf",
+        "messages": [
+          {
+            "messageID": 1,
+            "content": "Is this guide enough for BA4 exams?",
+            "author": "ExamPrepper",
+            "timestamp": "2024-11-29T14:00:00Z",
+            "likes": 9
+          },
+          {
+            "messageID": 2,
+            "content": "Yes, it is quite comprehensive.",
+            "author": "ProfLator",
+            "timestamp": "2024-11-29T15:00:00Z",
+            "likes": 10
+          }
+        ]
+      }
+    ]
   }
 ]

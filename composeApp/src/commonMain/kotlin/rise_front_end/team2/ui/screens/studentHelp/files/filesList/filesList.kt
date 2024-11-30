@@ -15,6 +15,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
+import androidx.compose.material.icons.automirrored.filled.TextSnippet
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.PictureAsPdf
@@ -28,7 +30,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
@@ -46,7 +47,7 @@ import java.io.File
 import java.net.URL
 
 @Composable
-fun CourseFilesScreen(
+fun CourseFilesListScreen(
     courseId: Int,
     navigateToFileDiscussions: (courseId: Int, fileId: Int) -> Unit,
     navigateBack: () -> Unit,
@@ -107,9 +108,9 @@ private fun FileList(
 }
 
 @Composable
-private fun FileFrame(
+private fun FileFrame( //The frame in which each pdf are displayed
     courseFile: CourseFile,
-    courseId: Int,
+    courseId: Int, //Might need to pass the courseID if files in different courses can have the same ID
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -119,7 +120,7 @@ private fun FileFrame(
     Row(
         modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 8.dp) // Add 10px padding from both ends of the screen
+            .padding(horizontal = 10.dp, vertical = 8.dp) // 10px padding from both ends of the screen.
             .clickable { onClick() }
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(16.dp)
@@ -140,10 +141,10 @@ private fun FileFrame(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(screenHeight / 4) // Restrict height to 1/4th of the screen
-                    .clip(RoundedCornerShape(12.dp)) // Rounded corners
+                    .height(screenHeight / 4) // Restrict height to 1/4th of the screen. Not sure it works tbh
+                    .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(10.dp) // Optional inner padding
+                    .padding(10.dp)
             ) {
                 if (courseFile.fileName.endsWith(".pdf")) {
                     PdfPreview(fileUrl = courseFile.fileUrl)
@@ -154,7 +155,7 @@ private fun FileFrame(
 
             // Download Button
             Button(
-                onClick = { downloadFile(context, courseFile.fileUrl) },
+                onClick = { downloadFile(context, courseFile.fileUrl, courseFile.fileName) },
                 modifier = Modifier.padding(top = 8.dp)
             ) {
                 Text("Download")
@@ -206,17 +207,19 @@ private fun ImagePreview(fileUrl: String) {
     )
 }
 
-//Not used right now but will be later
+//Not really used right now but will be later
+//Might need to replace icons with material3. Right now it's material
 fun getFileIcon(fileName: String): ImageVector {
     return when {
         fileName.endsWith(".pdf") -> Icons.Default.PictureAsPdf
         fileName.endsWith(".docx") -> Icons.Default.Description
         fileName.endsWith(".xlsx") -> Icons.Default.TableChart
-        fileName.endsWith(".txt") -> Icons.Default.TextSnippet
-        else -> Icons.Default.InsertDriveFile
+        fileName.endsWith(".txt") -> Icons.AutoMirrored.Filled.TextSnippet
+        else -> Icons.AutoMirrored.Filled.InsertDriveFile
     }
 }
 
+//Need to sorta download the pdf before previewing it. Need to check if it can be done more easily
 suspend fun downloadPdf(context: Context, url: String): File? = withContext(Dispatchers.IO) {
     try {
         val file = File(context.cacheDir, "tempfile.pdf")
@@ -232,10 +235,10 @@ suspend fun downloadPdf(context: Context, url: String): File? = withContext(Disp
     }
 }
 
-fun downloadFile(context: Context, url: String) {
+fun downloadFile(context: Context, url: String, name: String) {
     try {
         val request = DownloadManager.Request(Uri.parse(url))
-            .setTitle("File Download")
+            .setTitle(name)
             .setDescription("Downloading file")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, url.substringAfterLast("/"))
