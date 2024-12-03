@@ -1,6 +1,5 @@
 package rise_front_end.team2.Repo
 
-import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
@@ -8,6 +7,8 @@ import kotlinx.coroutines.launch
 import rise_front_end.team2.data.favorites.FavoritesObject
 import rise_front_end.team2.data.favorites.FavoriteStorage
 import rise_front_end.team2.data.favorites.FavoriteApi
+import rise_front_end.team2.data.favorites.FavoritesCourseObject
+import rise_front_end.team2.data.favorites.FavoritesFileObject
 
 class FavoritesRepository (
     private val favoriteStorage : FavoriteStorage,
@@ -27,5 +28,7 @@ class FavoritesRepository (
 
     fun getFavorites() : Flow<List<FavoritesObject>> = favoriteStorage.getFavorites()
 
-    fun getFavoriteByID(linkID : Int) : Flow<FavoritesObject?> = favoriteStorage.getFavoriteByID(linkID)
+    fun getFavoriteCourseByID(courseID : Int) : Flow<FavoritesCourseObject?> = favoriteStorage.getFavoriteCourseByID(courseID)
+
+    fun getFavoriteFileByID(courseID: Int, fileID : Int) : Flow<FavoritesFileObject?> = favoriteStorage.getFavoriteFileByID(courseID, fileID)
 }

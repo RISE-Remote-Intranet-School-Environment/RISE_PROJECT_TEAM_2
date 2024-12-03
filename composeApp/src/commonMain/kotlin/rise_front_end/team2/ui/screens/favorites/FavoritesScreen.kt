@@ -12,18 +12,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.favorites.FavoritesObject
-import rise_front_end.team2.data.studentHelp.forum.Course
+import rise_front_end.team2.data.favorites.FavoritesCourseObject
+import rise_front_end.team2.data.favorites.FavoritesFileObject
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
 fun FavoritesScreen(
     navigateToCourse: (courseId: Int) -> Unit,
-    navigateToFile: (fileId: Int) -> Unit
+    navigateToFile: (courseId: Int, fileId: Int) -> Unit
 ) {
     AppTheme {
         val viewModel = koinViewModel<FavoritesViewModel>()
@@ -33,13 +33,8 @@ fun FavoritesScreen(
             if (favoritesAvailable) {
                 FavouritesGrid(
                     favorites = favorites,
-                    onLinkClick = { linkID ->
-                        // Check prefix of linkID and navigate accordingly
-                        when {
-                            linkID.toString().startsWith("1") -> navigateToCourse(linkID)
-                            linkID.toString().startsWith("4") -> navigateToFile(linkID)
-                        }
-                    }
+                    onCourseClick = navigateToCourse,
+                    onFileClick = navigateToFile
                 )
             } else {
                 EmptyScreenContent(Modifier.fillMaxSize())
@@ -51,7 +46,8 @@ fun FavoritesScreen(
 @Composable
 private fun FavouritesGrid(
     favorites: List<FavoritesObject>,
-    onLinkClick: (Int) -> Unit,
+    onCourseClick: (Int) -> Unit,
+    onFileClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -61,10 +57,11 @@ private fun FavouritesGrid(
             .padding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()),
         contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical).asPaddingValues(),
     ) {
-        items(favorites, key = { it.linkID }) { favorite ->
+        items(favorites, key = { it.courseID }) { favorite ->
             FavoriteFrame(
                 favorite = favorite,
-                onLinkClick = { onLinkClick(favorite.linkID) }
+                onCourseClick = onCourseClick,
+                onFileClick = onFileClick
             )
         }
     }
@@ -73,23 +70,44 @@ private fun FavouritesGrid(
 @Composable
 private fun FavoriteFrame(
     favorite: FavoritesObject,
-    onLinkClick: () -> Unit,
+    onCourseClick: (Int) -> Unit,
+    onFileClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier
             .padding(8.dp)
     ) {
-        Text(
-            text = favorite.linkID.toString(),
-            style = MaterialTheme.typography.bodySmall
-        )
-        Row(
-            modifier = Modifier.padding(top = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(onClick = onLinkClick) {
-                Text("Go to Link")
+        // Show different information depending on the favorite type
+        when (favorite) {
+            is FavoritesCourseObject -> {
+                Text(
+                    text = "Course: ${favorite.courseID}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(onClick = { onCourseClick(favorite.courseID) }) {
+                        Text("Go to Course")
+                    }
+                }
+            }
+
+            is FavoritesFileObject -> {
+                Text(
+                    text = "File: ${favorite.fileID} (Course: ${favorite.courseID})",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(onClick = { onFileClick(favorite.courseID, favorite.fileID) }) {
+                        Text("Go to File")
+                    }
+                }
             }
         }
     }

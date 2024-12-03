@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.map
 interface FavoriteStorage {
     suspend fun saveFavorites(newFavorites : List<FavoritesObject>)
     fun getFavorites(): Flow<List<FavoritesObject>>
-    fun getFavoriteByID(favoriteID : Int): Flow<FavoritesObject?>
+    fun getFavoriteCourseByID(courseID : Int): Flow<FavoritesCourseObject?>
+    fun getFavoriteFileByID(courseID: Int, fileID : Int): Flow<FavoritesFileObject?>
 }
 
 class InMemoryFavoritesStorage : FavoriteStorage {
@@ -19,9 +20,17 @@ class InMemoryFavoritesStorage : FavoriteStorage {
 
     override fun getFavorites(): Flow<List<FavoritesObject>> = storedFavorites
 
-    override fun getFavoriteByID(linkID: Int): Flow<FavoritesObject?> {
+    override fun getFavoriteCourseByID(courseID: Int): Flow<FavoritesCourseObject?> {
         return storedFavorites.map { favorites ->
-            favorites.find { it.linkID == linkID }
+            favorites.filterIsInstance<FavoritesCourseObject>()
+                .find { it.courseID == courseID }
+        }
+    }
+
+    override fun getFavoriteFileByID(courseID: Int, fileID: Int): Flow<FavoritesFileObject?> {
+        return storedFavorites.map { favorites ->
+            favorites.filterIsInstance<FavoritesFileObject>()
+                .find { it.courseID == courseID && it.fileID == fileID }
         }
     }
 }

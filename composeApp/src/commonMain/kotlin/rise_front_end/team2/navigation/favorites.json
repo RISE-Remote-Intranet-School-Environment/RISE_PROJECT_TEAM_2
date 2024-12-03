@@ -1,8 +1,9 @@
 [
   {
-    "linkID": 100001
+    "courseID": 100001
   },
   {
-    "linkID": 400001
+    "courseID": 100001,
+    "fileID": 400001
   }
 ]

@@ -111,9 +111,9 @@ actual fun PlatformNavigation() {
                             // Navigate to course page
                             navController.navigate(Screens.StudentHelpForumDetail(courseId).route)
                         },
-                        navigateToFile = { fileId ->
+                        navigateToFile = { courseID, fileId ->
                             // Navigate to file page
-                            navController.navigate(Screens.FileDiscussions(courseId = 0, fileId).route)
+                            navController.navigate(Screens.FileDiscussions(courseID, fileId).route)
                         }
                     )
                 }

@@ -18,7 +18,18 @@ class KtorFavoriteApi(private val client: HttpClient): FavoriteApi {
     override suspend fun getData(): List<FavoritesObject> {
         return try {
             val responseBody = client.get(API_URL).body<String>()
-            Json.decodeFromString(responseBody)
+            val jsonData = Json.decodeFromString<List<Map<String, Int>>>(responseBody)
+
+            jsonData.mapNotNull { entry ->
+                val courseID = entry["courseID"] ?: return@mapNotNull null
+                val fileID = entry["fileID"]
+
+                if (fileID == 0) {
+                    FavoritesCourseObject(courseID)
+                } else if (fileID != null) {
+                    FavoritesFileObject(courseID, fileID)
+                } else null
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
