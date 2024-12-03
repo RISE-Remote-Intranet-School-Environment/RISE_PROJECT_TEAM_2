@@ -33,8 +33,8 @@ fun FavoritesScreen(
             if (favoritesAvailable) {
                 FavouritesGrid(
                     favorites = favorites,
-                    onCourseClick = navigateToCourse,
-                    onFileClick = navigateToFile
+                    onCourseClick = { courseId -> navigateToCourse(courseId) },
+                    onFileClick = { courseId, fileId -> navigateToFile(courseId, fileId) }
                 )
             } else {
                 EmptyScreenContent(Modifier.fillMaxSize())
@@ -78,35 +78,23 @@ private fun FavoriteFrame(
         modifier
             .padding(8.dp)
     ) {
-        // Show different information depending on the favorite type
         when (favorite) {
             is FavoritesCourseObject -> {
                 Text(
                     text = "Course: ${favorite.courseID}",
                     style = MaterialTheme.typography.bodySmall
                 )
-                Row(
-                    modifier = Modifier.padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Button(onClick = { onCourseClick(favorite.courseID) }) {
-                        Text("Go to Course")
-                    }
+                Button(onClick = { onCourseClick(favorite.courseID) }) {
+                    Text("Go to Course")
                 }
             }
-
             is FavoritesFileObject -> {
                 Text(
                     text = "File: ${favorite.fileID} (Course: ${favorite.courseID})",
                     style = MaterialTheme.typography.bodySmall
                 )
-                Row(
-                    modifier = Modifier.padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Button(onClick = { onFileClick(favorite.courseID, favorite.fileID) }) {
-                        Text("Go to File")
-                    }
+                Button(onClick = { onFileClick(favorite.courseID, favorite.fileID) }) {
+                    Text("Go to File")
                 }
             }
         }

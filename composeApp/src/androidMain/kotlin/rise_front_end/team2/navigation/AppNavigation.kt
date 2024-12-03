@@ -108,12 +108,10 @@ actual fun PlatformNavigation() {
                 composable(route = Screens.FavoritesScreen.route) {
                     FavoritesScreen(
                         navigateToCourse = { courseId ->
-                            // Navigate to course page
                             navController.navigate(Screens.StudentHelpForumDetail(courseId).route)
                         },
-                        navigateToFile = { courseID, fileId ->
-                            // Navigate to file page
-                            navController.navigate(Screens.FileDiscussions(courseID, fileId).route)
+                        navigateToFile = { courseId, fileId ->
+                            navController.navigate(Screens.FileDiscussions(courseId, fileId).route)
                         }
                     )
                 }
