@@ -118,7 +118,7 @@ actual fun PlatformNavigation() {
                     FileHostingScreen()
                 }
 
-                // SyllabusList Screen
+// SyllabusList Screen
                 composable(route = Screens.SyllabusListDestination.route) {
                     SyllabusListScreen(
                         navigateToDetails = { objectId ->
@@ -127,7 +127,7 @@ actual fun PlatformNavigation() {
                     )
                 }
 
-                // SyllabusDetail Screen
+// SyllabusDetail Screen
                 composable(
                     route = Screens.SyllabusDetailDestination.route,
                     arguments = listOf(
