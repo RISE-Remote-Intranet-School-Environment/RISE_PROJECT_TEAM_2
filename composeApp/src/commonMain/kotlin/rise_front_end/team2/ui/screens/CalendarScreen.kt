@@ -1,17 +1,18 @@
 package rise_front_end.team2.ui.screens
 
 import android.app.TimePickerDialog
-import androidx.compose.foundation.BorderStroke
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateMap
@@ -28,8 +29,13 @@ import androidx.compose.ui.zIndex
 import rise_front_end.team2.ui.theme.AppTheme
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.*
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Folder
+import CalendarFile
 
 
 val modernGradientDarkColor = listOf(
@@ -73,9 +79,17 @@ fun CalendarScreen() {
             color = MaterialTheme.colorScheme.background
         ) {
             var selectedMonth by remember { mutableStateOf(YearMonth.now()) }
-            val activities = remember { mutableStateMapOf<LocalDate, MutableList<Pair<String, Color>>>() } // Stores activities for dates
+            val activities = remember { mutableStateMapOf<LocalDate, MutableList<Triple<String, String, Color>>>() } // Stores activities for dates
             var selectedDate by remember { mutableStateOf(LocalDate.now()) } // Track the selected date
             var showDialog by remember { mutableStateOf(false) } // State to control the dialog
+            val context = LocalContext.current
+            val calendarFile = CalendarFile()
+
+            val onFileSelected = { uri: Uri ->
+                calendarFile.handleSelectedFile(context, uri)
+            }
+
+            //calendarFile.FilePicker(onFileSelected = onFileSelected)
 
             Column(
                 modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -108,7 +122,8 @@ fun CalendarScreen() {
                 ) {
                     FloatingActionButton(
                         onClick = { showDialog = true },
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(16.dp),
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
                     ) {
                         Text("+", fontSize = 24.sp, color = Color.White, textAlign = TextAlign.Center)
                     }
@@ -152,6 +167,7 @@ fun CalendarHeader(
         Button(onClick = onNextMonth) {
             Text(">")
         }
+        CalendarFile().FilePicker(onFileSelected = {uri ->  })
     }
 }
 
@@ -159,7 +175,7 @@ fun CalendarHeader(
 @Composable
 fun CalendarView(
     currentMonth: YearMonth,
-    activities: SnapshotStateMap<LocalDate, MutableList<Pair<String, Color>>>,
+    activities: SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>>,
     selectedDate: LocalDate,
     onDayClick: (LocalDate) -> Unit
 ) {
@@ -169,8 +185,7 @@ fun CalendarView(
     val screenWidth = LocalContext.current.resources.displayMetrics.widthPixels / LocalContext.current.resources.displayMetrics.density
     val cellSize = (screenWidth / 7).dp
 
-
-    Column (modifier = Modifier.fillMaxWidth()){
+    Column(modifier = Modifier.fillMaxWidth()) {
         // Weekday headers without grid borders
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -195,8 +210,7 @@ fun CalendarView(
             verticalArrangement = Arrangement.spacedBy(0.dp), // Ensure no extra space
             horizontalArrangement = Arrangement.spacedBy(0.dp),
             modifier = Modifier.fillMaxWidth()
-        )
-        {
+        ) {
             // Empty cells for alignment at the start of the month
             items(startDayOfWeek) {
                 Spacer(modifier = Modifier.size(cellSize)) // Same size as day cells, no border
@@ -206,13 +220,14 @@ fun CalendarView(
             items(daysInMonth) { day ->
                 val date = currentMonth.atDay(day + 1)
                 val activitiesForDate = activities[date].orEmpty()
+
                 DayCell(
                     date = date,
-                    activityCount = activities[date]?.size ?: 0,
+                    activityCount = activitiesForDate.size,
                     isSelected = date == selectedDate,
                     onClick = { onDayClick(date) },
                     cellSize = cellSize,
-                    activityColors = activitiesForDate.map {it.second}
+                    activities = activitiesForDate // Pass complete activities list
                 )
             }
         }
@@ -220,95 +235,80 @@ fun CalendarView(
 }
 
 @Composable
-fun DayCell(date: LocalDate,
-            activityCount: Int,
-            isSelected: Boolean,
-            onClick: () -> Unit,
-            cellSize: Dp,
-            activityColors: List<Color> = modernGradientDarkColor ){
+fun DayCell(
+    date: LocalDate,
+    activityCount: Int,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    cellSize: Dp,
+    activities: List<Triple<String, String, Color>> // Liste des activités (titre, heure, couleur)
+) {
+    // Trier les activités par leur heure de début (heure:min)
+    val sortedActivities = activities.sortedBy { it.second }
+
     Box(
         modifier = Modifier
-            .size(cellSize) // Use consistent size for cells
+            .size(cellSize) // Taille fixe pour la cellule
             .background(
-                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
                 shape = MaterialTheme.shapes.small
             )
             .clickable { onClick() }
     ) {
-        // Day number in the upper-left corner
-        Box(
+        // Numéro du jour
+        Text(
+            text = date.dayOfMonth.toString(),
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold,
+            fontSize = 12.sp,
             modifier = Modifier
-                .fillMaxSize()
-                .zIndex(10f)
-                .padding(4.dp),
-            contentAlignment = Alignment.TopStart // Align to the top-left
-        ) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(2.dp)
-                    .size(20.dp) // Circle size
-                    .background(MaterialTheme.colorScheme.background , shape = CircleShape) // Circular background
-                    //.border(0.dp, MaterialTheme.colorScheme.onBackground, shape = CircleShape) // Optional border
-                    .zIndex(1f) // Ensure it stays on top
-            ) {
-                Text(
-                    text = date.dayOfMonth.toString(),
-                    color = MaterialTheme.colorScheme.primary ,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    modifier = Modifier.align(Alignment.Center ) // Center the day number inside the circle
-                )
-            }
-        }
+                .align(Alignment.TopStart)
+                .padding(2.dp)
+        )
 
-        // Activity indicators stacked from the top
+        // Lignes des activités (affichées dans l'ordre trié)
         Column(
-            verticalArrangement = Arrangement.Top,
+            verticalArrangement = Arrangement.spacedBy(2.dp), // Espacement entre les lignes
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 4.dp, vertical = 4.dp), // Padding to maintain spacing from edges
+                .padding(horizontal = 3.dp)
+                .zIndex(1f) // Pour afficher les lignes au-dessus du numéro du jour
+                .align(Alignment.Center)
         ) {
-            for (i in 0 until minOf(activityCount, 10)) {
+            sortedActivities.forEach { (_, time, color) ->
                 Box(
                     modifier = Modifier
-                        .height(6.dp)
+                        .height(4.dp) // Hauteur de la ligne
                         .fillMaxWidth()
-                        .background(
-                            color = activityColors[i % activityColors.size],
-                            shape = RoundedCornerShape(50))
-                        .padding(top = 3.dp) // Add some spacing between lines
-                        .zIndex(0f)
+                        .background(color, shape = RoundedCornerShape(50)) // Ligne arrondie
                 )
-                if (i < activityCount - 1) {
-                    Spacer(modifier = Modifier.height(1.dp)) // Add space between activities
-                }
             }
         }
     }
 }
 
 
+
 @Composable
-fun ActivitiesList(selectedDate: LocalDate, activities: List<Pair<String, Color>>) {
+fun ActivitiesList(selectedDate: LocalDate, activities: List<Triple<String, String, Color>>) {
+    val sortedActivities = activities.sortedBy { it.second } // Sort by time
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        
         Text(
-            text = selectedDate.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
+            text = selectedDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy")),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(vertical = 8.dp)
                 .fillMaxWidth(),
-            textAlign = TextAlign.Start 
+            textAlign = TextAlign.Start
         )
 
-        
-        if (activities.isEmpty()) {
+        if (sortedActivities.isEmpty()) {
             Text(
                 text = "No activities for this day.",
                 style = MaterialTheme.typography.bodyMedium,
@@ -316,46 +316,40 @@ fun ActivitiesList(selectedDate: LocalDate, activities: List<Pair<String, Color>
                 textAlign = TextAlign.Start
             )
         } else {
-            
-            activities.forEach { (activity, color) ->
+            sortedActivities.forEach { (activity, time, color) ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp), 
+                        .padding(vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    
                     Box(
                         modifier = Modifier
                             .size(10.dp)
-                            .background(color, shape = CircleShape) 
+                            .background(color, shape = CircleShape)
                     )
-
-                    Spacer(modifier = Modifier.width(12.dp)) 
-
-                    
+                    Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = activity,
+                        text = "$time - $activity",
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1f) 
+                        modifier = Modifier.weight(1f)
                     )
                 }
 
                 Divider(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
                     thickness = 1.dp
-                ) 
+                )
             }
         }
     }
 }
 
 
-
 @Composable
 fun ShowAddActivityDialog(
     selectedDate: LocalDate,
-    activities: MutableMap<LocalDate, MutableList<Pair<String, Color>>>, // Update type to include color
+    activities: SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>>, // Update type to include color
     onDismiss: () -> Unit
 ) {
     var activityText by remember { mutableStateOf("") }
@@ -439,9 +433,10 @@ fun ShowAddActivityDialog(
                     if (activityText.isNotBlank()) {
                         val time = if (selectedTime.isNotEmpty()) " at $selectedTime" else ""
                         val activityWithTime = "$activityText$time"
+
                         // Save activity with chosen color
                         activities.getOrPut(selectedDate) { mutableListOf() }
-                            .add(activityWithTime to selectedColor)
+                            .add(Triple(activityText, selectedTime, selectedColor))
                     }
                     onDismiss()
                 }) {
