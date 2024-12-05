@@ -288,51 +288,63 @@ fun DayCell(date: LocalDate,
     }
 }
 
+
 @Composable
-fun ActivitiesListStyled(selectedDate: LocalDate, activities: List<String>) {
+fun ActivitiesList(selectedDate: LocalDate, activities: List<Pair<String, Color>>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
             .padding(8.dp)
     ) {
         
         Text(
-            text = selectedDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy")),
+            text = selectedDate.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Start 
         )
 
+        
         if (activities.isEmpty()) {
             Text(
                 text = "No activities for this day.",
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(vertical = 4.dp),
+                textAlign = TextAlign.Start
             )
         } else {
-            activities.forEach { activity ->
-                
-                Box(
+            
+            activities.forEach { (activity, color) ->
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp) 
-                        .background(MaterialTheme.colorScheme.surface) 
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f), 
-                            shape = RoundedCornerShape(4.dp) 
-                        )
-                        .padding(12.dp) 
+                        .padding(vertical = 8.dp), 
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    
+                    Box(
+                        modifier = Modifier
+                            .size(10.dp)
+                            .background(color, shape = CircleShape) 
+                    )
+
+                    Spacer(modifier = Modifier.width(12.dp)) 
+
+                    
                     Text(
                         text = activity,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        modifier = Modifier.weight(1f) 
                     )
                 }
+
+                Divider(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                    thickness = 1.dp
+                ) 
             }
         }
     }
