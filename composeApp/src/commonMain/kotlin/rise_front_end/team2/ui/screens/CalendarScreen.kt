@@ -289,44 +289,55 @@ fun DayCell(date: LocalDate,
 }
 
 @Composable
-fun ActivitiesList(selectedDate: LocalDate, activities: List<Pair<String,Color>>) {
+fun ActivitiesListStyled(selectedDate: LocalDate, activities: List<String>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .padding(8.dp)
     ) {
+        
         Text(
-            text = selectedDate.toString(),
+            text = selectedDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy")),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
         )
+
         if (activities.isEmpty()) {
-            Text("No activities for this day.", style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = "No activities for this day.",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(8.dp)
+            )
         } else {
-            activities.forEach { (activity, color) ->
-                Row(
+            activities.forEach { activity ->
+                
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(vertical = 4.dp) 
+                        .background(MaterialTheme.colorScheme.surface) 
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f), 
+                            shape = RoundedCornerShape(4.dp) 
+                        )
+                        .padding(12.dp) 
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .background(color, shape = MaterialTheme.shapes.small)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = activity,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
         }
     }
 }
+
 
 
 @Composable
