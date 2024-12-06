@@ -1,0 +1,12 @@
+[
+  {
+    "objectID": 1,
+    "userName": "Paul",
+    "mail": "Paul@ecam.be",
+    "password": "*********",
+    "className": "4MIN",
+    "option": "Informatique",
+    "year": 2025,
+    "points": 150
+  }
+]

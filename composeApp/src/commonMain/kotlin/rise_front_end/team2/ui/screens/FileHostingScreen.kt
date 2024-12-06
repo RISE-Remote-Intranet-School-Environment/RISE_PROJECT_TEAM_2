@@ -1,22 +1,23 @@
+// CommonMain/FileSharingScreen.kt
 package rise_front_end.team2.ui.screens
+
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.Box
-import androidx.compose.ui.Modifier
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import rise_front_end.team2.ui.theme.AppTheme
 
-
 @Composable
-fun GradeScreen(){
+fun FileHostingScreen() {
     AppTheme {
         Box(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "GradeScreen")
+            Text(text = "FileHostingScreen")
         }
     }
 }

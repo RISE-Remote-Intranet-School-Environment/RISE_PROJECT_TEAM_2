@@ -9,9 +9,12 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 kotlin {
+    // Commenting out the wasmJs configuration to focus only on Android
+    /*
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "composeApp"
@@ -31,14 +34,17 @@ kotlin {
         }
         binaries.executable()
     }
-    
+    */
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
+    // Commenting out iOS targets to keep only Android configuration active
+    /*
     listOf(
         iosX64(),
         iosArm64(),
@@ -49,17 +55,21 @@ kotlin {
             isStatic = true
         }
     }
-    
+    */
+
     sourceSets {
-        
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.material3)
+            implementation("com.squareup.okhttp3:okhttp:4.11.0")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
             implementation("androidx.navigation:navigation-compose:2.7.3")
-            implementation ("androidx.compose.material:material-icons-extended:1.7.5")
-
-
+            implementation("androidx.compose.material:material-icons-extended:1.7.5")
+            implementation("com.squareup.retrofit2:retrofit:2.9.0")
+            implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+            implementation( "io.coil-kt:coil-compose:2.4.0")
+            implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -72,6 +82,21 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.materialKolor)
+            implementation("network.chaintech:kmp-date-time-picker:1.0.6")
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.okhttp)
+
+
+
+            implementation(libs.kamel)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.navigation.compose)
+
+
         }
     }
 }
@@ -131,4 +156,3 @@ dependencies {
     // Coroutines (for using `launch` and coroutines with Compose)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
-
