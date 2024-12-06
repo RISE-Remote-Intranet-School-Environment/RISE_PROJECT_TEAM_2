@@ -24,14 +24,3 @@ fun App() {
         PlatformNavigation()
     }
 }
-
-/*
-@Composable
-expect fun TimePicker(
-    initialHour: Int,
-    initialMinute: Int,
-    onTimeSelected: (hour: Int, minute: Int) -> Unit,
-    onDismiss: () -> Unit
-)
-
-*/

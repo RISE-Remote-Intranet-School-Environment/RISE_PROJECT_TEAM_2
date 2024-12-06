@@ -75,6 +75,36 @@ fun TimePicker
     }
 }
 
+@Composable
+fun EventList(events: List<Event>) {
+    if (events.isEmpty()) {
+        Text("No events to display", modifier = Modifier.padding(16.dp))
+    } else {
+        // Display the list of events
+        events.forEach { event ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "${event.date}: ${event.title}",
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Box(
+                    modifier = Modifier
+                        .width(16.dp)
+                        .height(16.dp)
+                        .background(Color(android.graphics.Color.parseColor(event.color)))
+                )
+            }
+        }
+    }
+}
+
+
 fun mapEventsToActivities(events: List<Event>): SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>> {
     val activities = mutableStateMapOf<LocalDate, MutableList<Triple<String, String, Color>>>()
     events.forEach { event ->
