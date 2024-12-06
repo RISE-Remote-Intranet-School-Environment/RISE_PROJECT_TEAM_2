@@ -13,7 +13,7 @@ interface StudentHelpForumApi {
 class KtorStudentHelpForumApi(private val client: HttpClient) : StudentHelpForumApi {
     companion object {
         private const val API_URL =
-            "https://raw.githubusercontent.com/RISE-Remote-Intranet-School-Environment/RISE_PROJECT_TEAM_2/refs/heads/Tanguy/composeApp/src/commonMain/kotlin/rise_front_end/team2/data/studentHelp/forum/studentHelpForum.json"
+            "https://raw.githubusercontent.com/RISE-Remote-Intranet-School-Environment/RISE_PROJECT_TEAM_2/refs/heads/master/composeApp/src/commonMain/kotlin/rise_front_end/team2/data/studentHelp/forum/studentHelpForum.json"
     }
 
     override suspend fun getData(): List<Course> {

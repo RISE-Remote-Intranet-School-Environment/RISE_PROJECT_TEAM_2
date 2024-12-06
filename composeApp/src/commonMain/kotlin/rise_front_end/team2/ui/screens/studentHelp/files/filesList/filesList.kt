@@ -19,9 +19,11 @@ import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.automirrored.filled.TextSnippet
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.InsertDriveFile
+import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material.icons.filled.TextSnippet
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -119,6 +121,9 @@ private fun FileFrame(
     val screenHeight = with(LocalDensity.current) { LocalContext.current.resources.displayMetrics.heightPixels.toDp() }
     var isExpanded by remember { mutableStateOf(false) }
 
+    // Find the most liked message
+    val mostLikedMessage = courseFile.messages.maxByOrNull { it.likes ?: 0 }
+
     Column(
         modifier
             .fillMaxWidth()
@@ -127,22 +132,94 @@ private fun FileFrame(
             .clickable { isExpanded = !isExpanded }
             .padding(16.dp)
     ) {
-        // File icon and title
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = getFileIcon(courseFile.fileName),
-                contentDescription = "File type icon",
-                modifier = Modifier.padding(end = 8.dp)
-            )
-            Text(
-                text = courseFile.fileName,
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
-            )
+        // File icon and title row
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            // Left side: Icon and filename
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = getFileIcon(courseFile.fileName),
+                    contentDescription = "File type icon",
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(
+                    text = courseFile.fileName,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                )
+            }
+
+            // Right side: Likes and message count (when not expanded)
+            if (!isExpanded) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.ThumbUp,
+                        contentDescription = "Likes",
+                        modifier = Modifier.size(16.dp).padding(end = 4.dp)
+                    )
+                    Text(
+                        text = "${courseFile.fileLikes}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        imageVector = Icons.Default.Message,
+                        contentDescription = "Messages",
+                        modifier = Modifier.size(16.dp).padding(end = 4.dp)
+                    )
+                    Text(
+                        text = "${courseFile.messages.size}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
         }
 
         // Expandable preview section
         if (isExpanded) {
             Spacer(modifier = Modifier.height(8.dp))
+
+            // File details when expanded
+            Row(modifier = Modifier.padding(vertical = 8.dp)) {
+                Column {
+                    Text(
+                        text = "Author: ${courseFile.fileAuthor}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "Date: ${courseFile.fileDate}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+
+            // Most liked message
+            mostLikedMessage?.let { message ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = "Most Liked Discussion:",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Text(
+                        text = "${message.author}: ${message.content}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "Likes: ${message.likes}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            // Preview section
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -158,20 +235,24 @@ private fun FileFrame(
                 }
             }
 
-            // Discussion button
-            Button(
-                onClick = onClick,
-                modifier = Modifier.padding(top = 8.dp)
+            // Action buttons
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("Go to Discussion")
-            }
+                Button(
+                    onClick = onClick,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Go to Discussion")
+                }
 
-            // Download button
-            Button(
-                onClick = { downloadFile(context, courseFile.fileUrl, courseFile.fileName) },
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                Text("Download")
+                Button(
+                    onClick = { downloadFile(context, courseFile.fileUrl, courseFile.fileName) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Download")
+                }
             }
         }
     }
