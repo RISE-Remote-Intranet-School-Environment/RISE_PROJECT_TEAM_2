@@ -28,7 +28,7 @@ object NavigationItems {
         NavItem(
             label = "Favorites",
             icon = Icons.Default.Star,
-            route = Screens.FavoriteScreen.route
+            route = Screens.FavoritesScreen.route
         ),
         NavItem(
             label = "Calendar",

@@ -1,117 +1,158 @@
 [
   {
-    "courseID": 436535,
+    "courseID": 100001,
     "courseName": "Thermodynamics",
     "teacherName": "Therm O Dynamo",
     "courseYear": "BA3",
     "forum": [
       {
-        "messageID": 1,
+        "messageID": 200001,
         "content": "What is the first law of thermodynamics?",
         "author": "Student123",
         "timestamp": "2024-11-28T10:00:00Z",
         "answers": [
           {
-            "answerID": 1,
+            "answerID": 300001,
             "content": "The first law is about energy conservation: energy cannot be created or destroyed.",
             "author": "TeacherMarc",
             "timestamp": "2024-11-28T12:00:00Z",
             "likes": 15
+          }
+        ]
+      }
+    ],
+    "courseFiles": [
+      {
+        "fileID": 400001,
+        "fileName": "Thermodynamics Basics.pdf",
+        "fileUrl": "https://www.stewartcalculus.com/data/ESSENTIAL%20CALCULUS%20Early%20Transcendentals/upfiles/ess-reviewofalgebra.pdf",
+        "messages": [
+          {
+            "messageID": 500001,
+            "content": "Is this file enough to understand the first law?",
+            "author": "Student987",
+            "timestamp": "2024-11-27T14:00:00Z",
+            "likes": 10
           },
           {
-            "answerID": 2,
-            "content": "It's like a fundamental rule for energy transfer in systems.",
-            "author": "Student456",
-            "timestamp": "2024-11-28T13:00:00Z",
-            "likes": 7
+            "messageID": 500002,
+            "content": "Yes, this file provides a solid foundation.",
+            "author": "TeacherMarc",
+            "timestamp": "2024-11-27T15:00:00Z",
+            "likes": 5
           }
         ]
       },
       {
-        "messageID": 2,
-        "content": "Can someone explain entropy?",
-        "author": "Student789",
-        "timestamp": "2024-11-27T09:00:00Z",
-        "answers": [
+        "fileID": 102,
+        "fileName": "Thermodynamics Synthese.pdf",
+        "fileUrl": "https://wagner.nyu.edu/files/students/Math_Review_-_Algebra_Operations.pdf",
+        "messages": [
           {
-            "answerID": 1,
-            "content": "Entropy is a measure of system disorder or randomness.",
+            "messageID": 500003,
+            "content": "This is a test for docx files",
+            "author": "Student987",
+            "timestamp": "2024-11-27T14:00:00Z",
+            "likes": 7
+          },
+          {
+            "messageID": 500004,
+            "content": "Hell yeah, it works!",
             "author": "TeacherMarc",
-            "timestamp": "2024-11-27T10:00:00Z",
-            "likes": 20
-          },
-          {
-            "answerID": 2,
-            "content": "It's like how spread out energy becomes over time.",
-            "author": "Student321",
-            "timestamp": "2024-11-27T11:30:00Z",
-            "likes": 10
-          },
-          {
-            "answerID": 3,
-            "content": "Think of it like a messy room; entropy increases unless you clean it.",
-            "author": "Student654",
-            "timestamp": "2024-11-27T15:45:00Z",
-            "likes": 8
+            "timestamp": "2024-11-27T15:00:00Z",
+            "likes": 5
           }
         ]
       }
     ]
   },
   {
-    "courseID": 436536,
-    "courseName": "Architecture and Software Quality",
-    "teacherName": "Jean-Guillaume Louis",
-    "courseYear": "MA1",
+    "courseID": 100002,
+    "courseName": "Introduction to Machine Learning",
+    "teacherName": "Dr. Al Gorithm",
+    "courseYear": "BA4",
     "forum": [
       {
-        "messageID": 1,
-        "content": "What the fuck is github",
-        "author": "Student123",
-        "timestamp": "2024-11-28T10:00:00Z",
+        "messageID": 200002,
+        "content": "What is supervised learning?",
+        "author": "StudentML",
+        "timestamp": "2024-11-29T10:00:00Z",
         "answers": [
           {
-            "answerID": 1,
-            "content": "Dude you're fucked for the exam",
-            "author": "JGL",
-            "timestamp": "2024-11-28T12:00:00Z",
-            "likes": 15
-          },
-          {
-            "answerID": 2,
-            "content": "Tbh I have no idea either",
-            "author": "Student456",
-            "timestamp": "2024-11-28T13:00:00Z",
-            "likes": 7
+            "answerID": 300001,
+            "content": "Supervised learning involves training a model on labeled data.",
+            "author": "TeacherGorithm",
+            "timestamp": "2024-11-29T12:00:00Z",
+            "likes": 20
           }
         ]
-      },
+      }
+    ],
+    "courseFiles": [
       {
-        "messageID": 2,
-        "content": "Why is AndroidApp so slow on my computer",
-        "author": "Student789",
-        "timestamp": "2024-11-27T09:00:00Z",
+        "fileID": 400001,
+        "fileName": "ML Basics.pdf",
+        "fileUrl": "https://www.physics.ox.ac.uk/system/files/file_attachments/basic_thermo.pdf",
+        "messages": [
+          {
+            "messageID": 500005,
+            "content": "Does this include examples of supervised learning?",
+            "author": "StudentML",
+            "timestamp": "2024-11-28T14:00:00Z",
+            "likes": 8
+          },
+          {
+            "messageID": 500006,
+            "content": "Yes, it covers classification and regression examples.",
+            "author": "TeacherGorithm",
+            "timestamp": "2024-11-28T15:00:00Z",
+            "likes": 6
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "courseID": 100003,
+    "courseName": "Advanced Mathematics",
+    "teacherName": "Prof. Calc U. Lator",
+    "courseYear": "BA4",
+    "forum": [
+      {
+        "messageID": 200003,
+        "content": "How do you solve differential equations?",
+        "author": "MathEnthusiast",
+        "timestamp": "2024-11-30T09:00:00Z",
         "answers": [
           {
-            "answerID": 1,
-            "content": "Because it sucks",
-            "author": "TeacherMarc",
-            "timestamp": "2024-11-27T10:00:00Z",
-            "likes": 520
+            "answerID": 300003,
+            "content": "You can use methods like separation of variables or integrating factors.",
+            "author": "ProfLator",
+            "timestamp": "2024-11-30T11:00:00Z",
+            "likes": 12
+          }
+        ]
+      }
+    ],
+    "courseFiles": [
+      {
+        "fileID": 400003,
+        "fileName": "Differential Equations Guide.pdf",
+        "fileUrl": "https://www.hood.edu/sites/default/files/A%20Quick%20Algebra%20Review.pdf",
+        "messages": [
+          {
+            "messageID": 500007,
+            "content": "Is this guide enough for BA4 exams?",
+            "author": "ExamPrepper",
+            "timestamp": "2024-11-29T14:00:00Z",
+            "likes": 9
           },
           {
-            "answerID": 2,
-            "content": "Yeah, fuck that app",
-            "author": "Student321",
-            "timestamp": "2024-11-27T11:30:00Z",
+            "messageID": 500008,
+            "content": "Yes, it is quite comprehensive.",
+            "author": "ProfLator",
+            "timestamp": "2024-11-29T15:00:00Z",
             "likes": 10
-          },
-          {
-            "answerID": 3,
-            "content": "You tell them boy! ",
-            "author": "Student654",
-            "timestamp": "2024-11-27T15:45:00Z",
-            "likes": 8
           }
         ]
       }
