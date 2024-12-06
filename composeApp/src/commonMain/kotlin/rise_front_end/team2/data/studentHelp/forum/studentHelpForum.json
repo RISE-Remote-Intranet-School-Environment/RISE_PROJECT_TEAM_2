@@ -26,6 +26,9 @@
         "fileID": 400001,
         "fileName": "Thermodynamics Basics.pdf",
         "fileUrl": "https://www.stewartcalculus.com/data/ESSENTIAL%20CALCULUS%20Early%20Transcendentals/upfiles/ess-reviewofalgebra.pdf",
+        "fileAuthor": "Another Author",
+        "fileDate": "17-04/2013",
+        "fileLikes": 21,
         "messages": [
           {
             "messageID": 500001,
@@ -47,6 +50,9 @@
         "fileID": 102,
         "fileName": "Thermodynamics Synthese.pdf",
         "fileUrl": "https://wagner.nyu.edu/files/students/Math_Review_-_Algebra_Operations.pdf",
+        "fileAuthor": "Le Z tmtc",
+        "fileDate": "17-04/2023",
+        "fileLikes": 18,
         "messages": [
           {
             "messageID": 500003,
@@ -93,6 +99,9 @@
         "fileID": 400001,
         "fileName": "ML Basics.pdf",
         "fileUrl": "https://www.physics.ox.ac.uk/system/files/file_attachments/basic_thermo.pdf",
+        "fileAuthor": "Yeah Yeah Yeah",
+        "fileDate": "18-04/2023",
+        "fileLikes": 181,
         "messages": [
           {
             "messageID": 500005,
@@ -139,6 +148,9 @@
         "fileID": 400003,
         "fileName": "Differential Equations Guide.pdf",
         "fileUrl": "https://www.hood.edu/sites/default/files/A%20Quick%20Algebra%20Review.pdf",
+        "fileAuthor": "Le T tmtc",
+        "fileDate": "17-04/2023",
+        "fileLikes": 108,
         "messages": [
           {
             "messageID": 500007,
