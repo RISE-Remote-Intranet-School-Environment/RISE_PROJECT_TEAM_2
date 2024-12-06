@@ -20,26 +20,40 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.ui.Alignment
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.*
+
+data class Event(val title: String, val time: String, val color: String, val date: String)
 
 class CalendarFile {
 
+    // Button for file picker
     @Composable
     fun FilePicker(onFileSelected: (Uri) -> Unit) {
-        // Launcher for file selection
+
         val filePickerLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.GetContent()
-        ) { uri: Uri? ->
-            uri?.let { onFileSelected(it) } // Pass the selected file's URI
-        }
-
+            contract = ActivityResultContracts.GetContent(),
+            onResult = { uri ->
+                System.out.println("File picker result: $uri")
+                if (uri != null) {
+                    onFileSelected(uri)
+                } else {
+                    System.out.println("No file selected.")
+                }
+            }
+        )
         // Button to open file picker
-        Button(onClick = { filePickerLauncher.launch("application/json") },
-                modifier = Modifier
-                    .width(65.dp)
-                    .height(40.dp)
-                    .padding(0.dp)
-
-            ) {
+        Button(onClick = { System.out.println("button clicked. Launching file picker")
+            filePickerLauncher.launch("application/json") },
+            modifier = Modifier
+                .width(65.dp)
+                .height(40.dp)
+                .padding(0.dp)
+        ) {
+            System.out.println("Button Displayed")
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Filled.FileOpen , contentDescription = "Folder Icon")
                 Spacer(modifier = Modifier.fillMaxWidth())
@@ -48,26 +62,28 @@ class CalendarFile {
         }
     }
 
-    fun handleSelectedFile(context: Context, uri: Uri) {
-        // Open the InputStream from the selected URI
-        val inputStream = context.contentResolver.openInputStream(uri)
-        inputStream?.let {
+    fun parseJsonFile(uri: Uri, context: Context): List<Event> {
+        val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+
+        return inputStream?.let {
             val jsonString = it.reader().readText()
-            println(jsonString) // Process your JSON here
-        }
+            println("Loaded JSON: $jsonString") // Print the JSON content
+            System.out.println("Loaded JSON: $jsonString")
+
+            // Parse the JSON into a list of Event objects
+            try {
+                val events = Json.decodeFromString<List<Event>>(jsonString)
+                println("Parsed Events: $events") // Print the parsed events
+                System.out.println("Events: $events")
+                events
+            } catch (e: Exception) {
+                println("Error parsing JSON: $e") // Handle error and print
+                System.out.println("Error parsing JSON: $e")
+                emptyList<Event>() // Return an empty list in case of error
+            }
+        } ?: emptyList()
     }
+
 }
 
-@Composable
-fun CalendarScreen() {
-    val context = LocalContext.current
-    val calendarFile = CalendarFile()
 
-    // Define what happens when a file is selected
-    val onFileSelected: (Uri) -> Unit = { uri ->
-        calendarFile.handleSelectedFile(context, uri) // Handle the selected file
-    }
-
-    // Use the FilePicker composable, passing the callback
-    calendarFile.FilePicker(onFileSelected = onFileSelected)
-}

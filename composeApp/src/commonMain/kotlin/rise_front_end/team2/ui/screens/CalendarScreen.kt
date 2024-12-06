@@ -35,7 +35,11 @@ import java.util.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
+import kotlinx.serialization.json.Json
+
 import CalendarFile
+import Event
+
 
 
 val modernGradientDarkColor = listOf(
@@ -71,6 +75,23 @@ fun TimePicker
     }
 }
 
+fun mapEventsToActivities(events: List<Event>): SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>> {
+    val activities = mutableStateMapOf<LocalDate, MutableList<Triple<String, String, Color>>>()
+    events.forEach { event ->
+        val color = Color(android.graphics.Color.parseColor(event.color)) // Ensure color parsing is correct
+        val date = LocalDate.parse(event.date) // Assuming date is in a valid format (e.g. "2024-12-06")
+        val activity = Triple(event.title, event.time, color)
+
+        activities.getOrPut(date) { mutableListOf() }.add(activity)
+    }
+
+    println("Mapped Activities: $activities") // Check the mapping of activities to dates
+    System.out.print("Mapped Activities: $activities")
+    return activities
+}
+
+
+
 @Composable
 fun CalendarScreen() {
     AppTheme {
@@ -79,17 +100,34 @@ fun CalendarScreen() {
             color = MaterialTheme.colorScheme.background
         ) {
             var selectedMonth by remember { mutableStateOf(YearMonth.now()) }
-            val activities = remember { mutableStateMapOf<LocalDate, MutableList<Triple<String, String, Color>>>() } // Stores activities for dates
             var selectedDate by remember { mutableStateOf(LocalDate.now()) } // Track the selected date
             var showDialog by remember { mutableStateOf(false) } // State to control the dialog
             val context = LocalContext.current
             val calendarFile = CalendarFile()
 
-            val onFileSelected = { uri: Uri ->
-                calendarFile.handleSelectedFile(context, uri)
+
+            // Define a list of events that you can update once a file is selected
+            var events by remember { mutableStateOf<List<Event>>(emptyList()) }
+
+            val onFileSelected: (Uri) -> Unit = { uri ->
+                System.out.println("File picker triggered with URI: $uri")
+                if (uri != null) {
+                    events = calendarFile.parseJsonFile(uri, context)
+                    System.out.println("Events loaded: $events")
+                } else {
+                    System.out.println("No file selected.")
+                }
             }
 
-            //calendarFile.FilePicker(onFileSelected = onFileSelected)
+            // Show the events (for example)
+            events.forEach { event ->
+                Text(text = "${event.title} at ${event.time}")
+            }
+
+            // Map events to activities (this could also be done when events are first parsed)
+            //val activities = mapEventsToActivities(events)
+            val activities by remember { mutableStateOf(SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>>()) }
+
 
             Column(
                 modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -105,7 +143,8 @@ fun CalendarScreen() {
                     currentMonth = selectedMonth,
                     activities = activities,
                     selectedDate = selectedDate,
-                    onDayClick = { date -> selectedDate = date }
+                    onDayClick = { date -> selectedDate = date },
+                    events = events // Pass empty list for now
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -177,13 +216,17 @@ fun CalendarView(
     currentMonth: YearMonth,
     activities: SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>>,
     selectedDate: LocalDate,
-    onDayClick: (LocalDate) -> Unit
+    onDayClick: (LocalDate) -> Unit,
+    events: List<Event>
 ) {
     val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
     val daysInMonth = currentMonth.lengthOfMonth()
     val startDayOfWeek = (currentMonth.atDay(1).dayOfWeek.value + 5) % 7 // Adjust for Monday = 0
-    val screenWidth = LocalContext.current.resources.displayMetrics.widthPixels / LocalContext.current.resources.displayMetrics.density
+    val screenWidth =
+        LocalContext.current.resources.displayMetrics.widthPixels / LocalContext.current.resources.displayMetrics.density
     val cellSize = (screenWidth / 7).dp
+
+    System.out.print("Cell Size: $cellSize")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         // Weekday headers without grid borders
@@ -204,19 +247,13 @@ fun CalendarView(
 
         Spacer(modifier = Modifier.height(8.dp)) // Space between weekdays and grid
 
-        // Grid for days
+        // Loop through the activities and display them in each day cell
         LazyVerticalGrid(
             columns = GridCells.Fixed(7),
-            verticalArrangement = Arrangement.spacedBy(0.dp), // Ensure no extra space
+            verticalArrangement = Arrangement.spacedBy(0.dp),
             horizontalArrangement = Arrangement.spacedBy(0.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            // Empty cells for alignment at the start of the month
-            items(startDayOfWeek) {
-                Spacer(modifier = Modifier.size(cellSize)) // Same size as day cells, no border
-            }
-
-            // Days of the month
             items(daysInMonth) { day ->
                 val date = currentMonth.atDay(day + 1)
                 val activitiesForDate = activities[date].orEmpty()
@@ -264,6 +301,7 @@ fun DayCell(
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(2.dp)
+                .zIndex(1f)
         )
 
         // Lignes des activités (affichées dans l'ordre trié)
@@ -272,7 +310,7 @@ fun DayCell(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 3.dp)
-                .zIndex(1f) // Pour afficher les lignes au-dessus du numéro du jour
+                .zIndex(0f) // Pour afficher les lignes au-dessus du numéro du jour
                 .align(Alignment.Center)
         ) {
             sortedActivities.forEach { (_, time, color) ->
@@ -434,7 +472,6 @@ fun ShowAddActivityDialog(
                         val time = if (selectedTime.isNotEmpty()) " at $selectedTime" else ""
                         val activityWithTime = "$activityText$time"
 
-                        // Save activity with chosen color
                         activities.getOrPut(selectedDate) { mutableListOf() }
                             .add(Triple(activityText, selectedTime, selectedColor))
                     }
