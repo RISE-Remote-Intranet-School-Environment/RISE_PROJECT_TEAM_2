@@ -107,12 +107,13 @@ private fun ObjectDetails(
                     Spacer(modifier = Modifier.height(6.dp))
 
                     val details = listOf(
-                        "Artist" to obj.artistDisplayName,
+                        "Title" to obj.title,
+                        "Auteur" to obj.artistDisplayName,
                         "Date" to obj.objectDate,
-                        "Dimensions" to obj.dimensions,
-                        "Medium" to obj.medium,
+                        "Duration" to obj.duration,
+                        "Type" to obj.medium,
                         "Department" to obj.department,
-                        "Repository" to obj.repository,
+                        "University" to obj.university,
                         "Credits" to obj.creditLine
                     )
 
