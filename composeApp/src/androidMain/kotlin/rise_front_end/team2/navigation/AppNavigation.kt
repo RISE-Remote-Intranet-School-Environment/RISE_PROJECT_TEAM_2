@@ -110,9 +110,6 @@ actual fun PlatformNavigation() {
                     CalendarScreen()
                 }
 
-                composable(route = Screens.SyllabusScreen.route) {
-                    SyllabusScreen()
-                }
 
                 composable(route = Screens.FileHostingScreen.route) {
                     FileHostingScreen()
@@ -213,8 +210,8 @@ fun getScreenTitle(route: String?): String {
         Screens.ProfileScreen.route -> "Profile"
         Screens.FavoriteScreen.route -> "Favorites"
         Screens.CalendarScreen.route -> "Calendar"
-        Screens.SyllabusScreen.route -> "Syllabus"
-        Screens.FileHostingScreen.route -> "File Hosting"
+        Screens.SyllabusListDestination.route -> "Syllabus"
+        Screens.SyllabusDetailDestination.route -> "Syllabus"
         else -> "App"
     }
 }

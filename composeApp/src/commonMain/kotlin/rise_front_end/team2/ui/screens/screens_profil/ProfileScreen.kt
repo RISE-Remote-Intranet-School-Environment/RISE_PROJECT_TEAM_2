@@ -21,18 +21,23 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingBasket
 import androidx.compose.material3.Icon
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.ui.theme.AppTheme
 
 
 @Composable
 fun ProfileScreen(){
     AppTheme {
+        val viewModel = koinViewModel<ProfileViewModel>()
+        val objects by viewModel.objects.collectAsState()
         Column(
             modifier = Modifier
                 .fillMaxSize()

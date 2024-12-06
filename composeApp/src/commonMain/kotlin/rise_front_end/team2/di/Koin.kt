@@ -10,6 +10,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import rise_front_end.team2.Repo.GradesRepository
+import rise_front_end.team2.Repo.ProfileRepository
 import rise_front_end.team2.Repo.StudentHelpForumRepository
 import rise_front_end.team2.Repo.SyllabusRepository
 
@@ -17,8 +18,13 @@ import rise_front_end.team2.data.data_grades.GradeStorage
 import rise_front_end.team2.data.data_grades.GradesApi
 import rise_front_end.team2.data.data_grades.InMemoryGradeStorage
 import rise_front_end.team2.data.data_grades.KtorGradesApi
+import rise_front_end.team2.data.data_profile.InMemoryProfileStorage
+import rise_front_end.team2.data.data_profile.KtorProfileApi
+import rise_front_end.team2.data.data_profile.ProfileApi
+import rise_front_end.team2.data.data_profile.ProfileStorage
 
 import rise_front_end.team2.ui.screens.screens_grades.GradeViewModel
+import rise_front_end.team2.ui.screens.screens_profil.ProfileViewModel
 
 
 
@@ -50,13 +56,15 @@ val dataModule = module {
     // Ensure the correct SyllabusApi implementation is injected
     single<SyllabusApi> { KtorSyllabusApi(get()) }
     single<StudentHelpForumApi> { KtorStudentHelpForumApi(get()) }
+    single<GradesApi> { KtorGradesApi(get()) }
+    single<ProfileApi> { KtorProfileApi(get()) }
 
 
     // Storages
     single<SyllabusStorage> { InMemorySyllabusStorage() }
     single<StudentHelpForumStorage> { InMemoryStudentHelpForumStorage() }
-    single<GradesApi> { KtorGradesApi(get()) }
     single<GradeStorage> { InMemoryGradeStorage() }
+    single<ProfileStorage> { InMemoryProfileStorage() }
 
 
     // Repositories
@@ -65,11 +73,15 @@ val dataModule = module {
     single {
         GradesRepository(get(), get()).apply { initialize() }
     }
+    single {
+        ProfileRepository(get(), get()).apply { initialize() }
+    }
 }
 
 
 val viewModelModule = module {
     factoryOf(::GradeViewModel)
+    factoryOf(::ProfileViewModel)
     // Factory for Syllabus-related view models
     factoryOf(::SyllabusListViewModel)
     factoryOf(::SyllabusDetailViewModel)
