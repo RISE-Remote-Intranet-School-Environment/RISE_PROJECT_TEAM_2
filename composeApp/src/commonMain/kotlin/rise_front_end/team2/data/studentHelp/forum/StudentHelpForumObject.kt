@@ -36,7 +36,7 @@ data class CourseFile(
     val fileID: Int,
     val fileName: String,
     val fileUrl: String,
-    val messages: List<FileMessage> // Messages related to this file
+    val messages: List<FileMessage> // Discussion related to this file
 )
 
 @Serializable

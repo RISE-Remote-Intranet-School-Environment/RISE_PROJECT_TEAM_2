@@ -12,6 +12,7 @@ import rise_front_end.team2.Repo.GradesRepository
 import rise_front_end.team2.Repo.ProfileRepository
 import rise_front_end.team2.Repo.StudentHelpForumRepository
 import rise_front_end.team2.Repo.SyllabusRepository
+import rise_front_end.team2.Repo.FavoritesRepository
 
 import rise_front_end.team2.data.data_grades.GradeStorage
 import rise_front_end.team2.data.data_grades.GradesApi
