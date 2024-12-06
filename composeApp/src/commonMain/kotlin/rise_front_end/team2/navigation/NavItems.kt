@@ -1,6 +1,7 @@
 package rise_front_end.team2.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
@@ -28,7 +29,7 @@ object NavigationItems {
         NavItem(
             label = "Favorites",
             icon = Icons.Default.Star,
-            route = Screens.FavoriteScreen.route
+            route = Screens.FavoritesScreen.route
         ),
         NavItem(
             label = "Calendar",

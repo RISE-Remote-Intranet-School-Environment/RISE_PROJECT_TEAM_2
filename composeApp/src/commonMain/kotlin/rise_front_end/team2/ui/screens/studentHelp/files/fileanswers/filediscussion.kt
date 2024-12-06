@@ -1,8 +1,7 @@
-package rise_front_end.team2.ui.screens.StudentHelpForum.posts
+package rise_front_end.team2.ui.screens.studentHelp.files.fileanswers
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,26 +21,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
-import rise_front_end.team2.data.studentHelp.forum.ForumMessage
+import rise_front_end.team2.data.studentHelp.forum.FileMessage
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
-fun StudentHelpForumPostsScreen(
+fun FileDiscussionsScreen(
     courseId: Int,
-    navigateToAnswers: (courseId: Int, messageId: Int) -> Unit,
+    fileId: Int,
     navigateBack: () -> Unit,
 ) {
     AppTheme {
-        val viewModel = koinViewModel<StudentHelpForumDetailViewModel>()
-        val course by viewModel.getCourse(courseId).collectAsState(initial = null)
+        val viewModel = koinViewModel<FileDiscussionsViewModel>()
+        val file by viewModel.getFile(courseId, fileId).collectAsState(initial = null)
 
-        AnimatedContent(course != null) { courseAvailable ->
-            if (courseAvailable) {
-                ForumMessageList(
-                    messages = course!!.forum,
-                    courseId = courseId, // Pass courseId explicitly
-                    navigateToAnswers = navigateToAnswers,
+        AnimatedContent(file != null) { fileAvailable ->
+            if (fileAvailable) {
+                FileMessageList(
+                    messages = file!!.messages,
                     navigateBack = navigateBack
                 )
             } else {
@@ -53,16 +50,14 @@ fun StudentHelpForumPostsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ForumMessageList(
-    messages: List<ForumMessage>,
-    courseId: Int, // Include courseId
-    navigateToAnswers: (courseId: Int, messageId: Int) -> Unit,
+private fun FileMessageList(
+    messages: List<FileMessage>,
     navigateBack: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = "Forum Messages") },
+                title = { Text(text = "File Discussions") },
                 navigationIcon = {
                     IconButton(onClick = navigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -77,26 +72,21 @@ private fun ForumMessageList(
                 .verticalScroll(rememberScrollState())
         ) {
             messages.forEach { message ->
-                MessageFrame(
-                    message = message,
-                    onClick = { navigateToAnswers(courseId, message.messageID) }
-                )
+                FileMessageFrame(message)
             }
         }
     }
 }
 
 @Composable
-private fun MessageFrame(
-    message: ForumMessage,
-    onClick: () -> Unit,
+private fun FileMessageFrame(
+    message: FileMessage,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { onClick() }
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(16.dp)
     ) {
@@ -110,3 +100,6 @@ private fun MessageFrame(
         )
     }
 }
+
+
+//TODO: ADD Answering box

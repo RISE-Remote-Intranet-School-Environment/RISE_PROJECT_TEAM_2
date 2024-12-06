@@ -9,8 +9,9 @@ interface StudentHelpForumStorage {
     fun getCourses(): Flow<List<Course>>
     fun getCourseById(courseId: Int): Flow<Course?>
     fun getForumMessageById(courseId: Int, messageId: Int): Flow<ForumMessage?>
+    fun getFileById(courseId: Int, fileId: Int): Flow<CourseFile?>
+    fun getFileMessageById(courseId: Int, fileId: Int, messageId: Int): Flow<FileMessage?>
 }
-
 
 class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
     private val storedCourses = MutableStateFlow(emptyList<Course>())
@@ -32,5 +33,22 @@ class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
                 ?.find { it.messageID == messageId }
         }
     }
-}
 
+    override fun getFileById(courseId: Int, fileId: Int): Flow<CourseFile?> {
+        return storedCourses.map { courses ->
+            courses.find { it.courseID == courseId }
+                ?.courseFiles
+                ?.find { it.fileID == fileId }
+        }
+    }
+
+    override fun getFileMessageById(courseId: Int, fileId: Int, messageId: Int): Flow<FileMessage?> {
+        return storedCourses.map { courses ->
+            courses.find { it.courseID == courseId }
+                ?.courseFiles
+                ?.find { it.fileID == fileId }
+                ?.messages
+                ?.find { it.messageID == messageId }
+        }
+    }
+}

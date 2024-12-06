@@ -15,5 +15,6 @@ data class SyllabusObject(
     val primaryImageSmall: String,
     val university: String,
     val department: String,
-    val creditLine: String
+    val creditLine: String,
+    val price : Int
 )

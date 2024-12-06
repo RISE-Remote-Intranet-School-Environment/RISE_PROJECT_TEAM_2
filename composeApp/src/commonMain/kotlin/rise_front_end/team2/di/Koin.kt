@@ -1,6 +1,5 @@
 package rise_front_end.team2.di
 
-
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -13,6 +12,7 @@ import rise_front_end.team2.Repo.GradesRepository
 import rise_front_end.team2.Repo.ProfileRepository
 import rise_front_end.team2.Repo.StudentHelpForumRepository
 import rise_front_end.team2.Repo.SyllabusRepository
+import rise_front_end.team2.Repo.FavoritesRepository
 
 import rise_front_end.team2.data.data_grades.GradeStorage
 import rise_front_end.team2.data.data_grades.GradesApi
@@ -34,6 +34,10 @@ import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumApi
 import rise_front_end.team2.data.syllabus.SyllabusApi
 import rise_front_end.team2.data.studentHelp.forum.InMemoryStudentHelpForumStorage
 import rise_front_end.team2.data.syllabus.InMemorySyllabusStorage
+import rise_front_end.team2.data.favorites.FavoriteApi
+import rise_front_end.team2.data.favorites.FavoriteStorage
+import rise_front_end.team2.data.favorites.InMemoryFavoritesStorage
+import rise_front_end.team2.data.favorites.KtorFavoriteApi
 import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumStorage
 import rise_front_end.team2.data.syllabus.SyllabusStorage
 import rise_front_end.team2.ui.screens.syllabus.detail.SyllabusDetailViewModel
@@ -41,6 +45,10 @@ import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListViewModel
 import rise_front_end.team2.ui.screens.StudentHelpForum.courseslist.StudentHelpForumListViewModel
 import rise_front_end.team2.ui.screens.StudentHelpForum.answer.ForumMessageAnswersViewModel
 import rise_front_end.team2.ui.screens.StudentHelpForum.posts.StudentHelpForumDetailViewModel
+import rise_front_end.team2.ui.screens.studentHelp.files.filesList.CourseFilesViewModel
+import rise_front_end.team2.ui.screens.studentHelp.files.fileanswers.FileDiscussionsViewModel
+import rise_front_end.team2.ui.screens.favorites.FavoritesViewModel
+
 
 // Data module - Dependency registration for APIs, storages, and repositories
 val dataModule = module {
@@ -53,9 +61,11 @@ val dataModule = module {
         }
     }
 
-    // Ensure the correct SyllabusApi implementation is injected
+    // APIs
     single<SyllabusApi> { KtorSyllabusApi(get()) }
     single<StudentHelpForumApi> { KtorStudentHelpForumApi(get()) }
+    single<GradesApi> { KtorGradesApi(get()) }
+    single<FavoriteApi> { KtorFavoriteApi(get()) }
     single<GradesApi> { KtorGradesApi(get()) }
     single<ProfileApi> { KtorProfileApi(get()) }
 
@@ -64,12 +74,15 @@ val dataModule = module {
     single<SyllabusStorage> { InMemorySyllabusStorage() }
     single<StudentHelpForumStorage> { InMemoryStudentHelpForumStorage() }
     single<GradeStorage> { InMemoryGradeStorage() }
+    single<FavoriteStorage> { InMemoryFavoritesStorage() }
     single<ProfileStorage> { InMemoryProfileStorage() }
 
 
     // Repositories
     single { SyllabusRepository(get(), get()).apply { initialize() } }
     single { StudentHelpForumRepository(get(), get()).apply { initialize() } }
+    single { GradesRepository(get(), get()).apply { initialize() } }
+    single { FavoritesRepository(get(), get()).apply { initialize() } }
     single {
         GradesRepository(get(), get()).apply { initialize() }
     }
@@ -80,8 +93,10 @@ val dataModule = module {
 
 
 val viewModelModule = module {
+    // Factory for Grades-related view models
     factoryOf(::GradeViewModel)
     factoryOf(::ProfileViewModel)
+
     // Factory for Syllabus-related view models
     factoryOf(::SyllabusListViewModel)
     factoryOf(::SyllabusDetailViewModel)
@@ -90,6 +105,13 @@ val viewModelModule = module {
     factoryOf(::StudentHelpForumListViewModel)
     factoryOf(::StudentHelpForumDetailViewModel)
     factoryOf(::ForumMessageAnswersViewModel)
+
+    // Factory for StuHelp files related view models
+    factoryOf(::CourseFilesViewModel)
+    factoryOf(::FileDiscussionsViewModel)
+
+    // Factory for Favorites-related view models
+    factoryOf(::FavoritesViewModel)
 
 }
 
