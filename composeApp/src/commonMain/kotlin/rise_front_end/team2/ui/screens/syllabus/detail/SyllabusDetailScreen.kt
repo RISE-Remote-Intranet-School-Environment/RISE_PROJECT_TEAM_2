@@ -115,7 +115,7 @@ private fun ObjectDetails(
                         "Department" to obj.department,
                         "University" to obj.university,
                         "Credits" to obj.creditLine,
-                        "Price" to obj.price
+                        "Price" to obj.price.toString() + "€"
                     )
 
                     details.forEach { (label, value) ->
@@ -132,7 +132,7 @@ private fun ObjectDetails(
                             .padding(top = 16.dp),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("Buy")
+                        Text("BUY")
                     }
                 }
             }
