@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material.icons.filled.TextSnippet
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -108,40 +109,44 @@ private fun FileList(
 }
 
 @Composable
-private fun FileFrame( //The frame in which each pdf are displayed
+private fun FileFrame(
     courseFile: CourseFile,
-    courseId: Int, //Might need to pass the courseID if files in different courses can have the same ID
+    courseId: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val screenHeight = with(LocalDensity.current) { LocalContext.current.resources.displayMetrics.heightPixels.toDp() }
+    var isExpanded by remember { mutableStateOf(false) }
 
-    Row(
+    Column(
         modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 8.dp) // 10px padding from both ends of the screen.
-            .clickable { onClick() }
+            .padding(horizontal = 10.dp, vertical = 8.dp)
             .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable { isExpanded = !isExpanded }
             .padding(16.dp)
     ) {
-        Icon(
-            imageVector = getFileIcon(courseFile.fileName),
-            contentDescription = "File type icon",
-            modifier = Modifier.padding(end = 8.dp)
-        )
-        Column(modifier = Modifier.weight(1f)) {
+        // File icon and title
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = getFileIcon(courseFile.fileName),
+                contentDescription = "File type icon",
+                modifier = Modifier.padding(end = 8.dp)
+            )
             Text(
                 text = courseFile.fileName,
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
             )
-            Spacer(modifier = Modifier.height(8.dp))
+        }
 
-            // Box for the preview with rounded corners
+        // Expandable preview section
+        if (isExpanded) {
+            Spacer(modifier = Modifier.height(8.dp))
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(screenHeight / 4) // Restrict height to 1/4th of the screen. Not sure it works tbh
+                    .height(screenHeight / 4)
                     .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.surface)
                     .padding(10.dp)
@@ -153,7 +158,15 @@ private fun FileFrame( //The frame in which each pdf are displayed
                 }
             }
 
-            // Download Button
+            // Discussion button
+            Button(
+                onClick = onClick,
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text("Go to Discussion")
+            }
+
+            // Download button
             Button(
                 onClick = { downloadFile(context, courseFile.fileUrl, courseFile.fileName) },
                 modifier = Modifier.padding(top = 8.dp)
@@ -164,12 +177,12 @@ private fun FileFrame( //The frame in which each pdf are displayed
     }
 }
 
-
 @Composable
 private fun PdfPreview(fileUrl: String) {
     val context = LocalContext.current
     var pdfFile by remember { mutableStateOf<File?>(null) }
 
+    // Preload the PDF on initial render
     LaunchedEffect(fileUrl) {
         if (fileUrl.isNotBlank() && Uri.parse(fileUrl).scheme != null) {
             pdfFile = downloadPdf(context, fileUrl)
@@ -192,8 +205,9 @@ private fun PdfPreview(fileUrl: String) {
                 }
             }
         )
-    } ?: Text("Error loading PDF", color = MaterialTheme.colorScheme.error, modifier = Modifier.fillMaxSize())
+    } ?: Text("Preview is loading", color = MaterialTheme.colorScheme.error, modifier = Modifier.fillMaxSize())
 }
+
 
 @Composable
 private fun ImagePreview(fileUrl: String) {
