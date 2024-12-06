@@ -16,7 +16,7 @@ interface ProfileApi {
 class KtorProfileApi(private val client: HttpClient) : ProfileApi {
     companion object {
         private const val API_URL =
-            "https://raw.githubusercontent.com/RISE-Remote-Intranet-School-Environment/RISE_PROJECT_TEAM_2/refs/heads/master/composeApp/src/commonMain/kotlin/rise_front_end/team2/data/data_grades/grades.json"
+            "https://raw.githubusercontent.com/RISE-Remote-Intranet-School-Environment/RISE_PROJECT_TEAM_2/refs/heads/master/composeApp/src/commonMain/kotlin/rise_front_end/team2/data/data_profile/profile.json"
     }
 
     override suspend fun getData(): List<ProfileObject> {

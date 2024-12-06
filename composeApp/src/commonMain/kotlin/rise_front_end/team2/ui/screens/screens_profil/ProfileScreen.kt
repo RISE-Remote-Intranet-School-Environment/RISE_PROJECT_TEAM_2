@@ -43,11 +43,11 @@ fun ProfileScreen(){
                 .fillMaxSize()
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
-        ){
+        ){ objects.forEach { profileObject ->
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Info", fontSize = 20.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
-            Box (
+            Box(
                 modifier = Modifier
                     .background(
                         rise_front_end.team2.ui.theme.Primary,
@@ -55,50 +55,65 @@ fun ProfileScreen(){
                     )
                     .padding(30.dp)
                     .animateContentSize()
-            ){
+            ) {
                 Column(
                     modifier = Modifier.padding(horizontal = 40.dp)
                 ) {
-                    Row (
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Text(
                             "Class",
                             color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Text("class", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            profileObject.className,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Row (
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Text(
                             "Option",
                             color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Text("option", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            profileObject.option,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Row (
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Text(
                             "Year",
                             color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Text("2025", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            profileObject.year.toString(),
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
 
                 }
@@ -106,7 +121,7 @@ fun ProfileScreen(){
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "Store Point", fontSize = 20.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
@@ -115,17 +130,17 @@ fun ProfileScreen(){
                     )
                     .padding(16.dp)
                     .animateContentSize()
-            ){
+            ) {
                 Column(
                     modifier = Modifier.padding(horizontal = 40.dp)
                 ) {
-                    Row (
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Text(
-                            "150 points",
+                            profileObject.points.toString() +" points",
                             color = Color.White,
                             fontSize = 20.sp
                         )
@@ -140,6 +155,7 @@ fun ProfileScreen(){
 
                 }
             }
+        }
         }
     }
 }
