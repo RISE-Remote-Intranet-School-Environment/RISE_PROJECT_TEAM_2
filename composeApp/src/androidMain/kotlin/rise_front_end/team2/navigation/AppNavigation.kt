@@ -120,15 +120,12 @@ actual fun PlatformNavigation() {
                     CalendarScreen()
                 }
 
-                composable(route = Screens.SyllabusScreen.route) {
-                    SyllabusScreen()
-                }
 
                 composable(route = Screens.FileHostingScreen.route) {
                     FileHostingScreen()
                 }
 
-                // SyllabusList Screen
+// SyllabusList Screen
                 composable(route = Screens.SyllabusListDestination.route) {
                     SyllabusListScreen(
                         navigateToDetails = { objectId ->
@@ -137,7 +134,7 @@ actual fun PlatformNavigation() {
                     )
                 }
 
-                // SyllabusDetail Screen
+// SyllabusDetail Screen
                 composable(
                     route = Screens.SyllabusDetailDestination.route,
                     arguments = listOf(
@@ -268,8 +265,8 @@ fun getScreenTitle(route: String?): String {
         Screens.ProfileScreen.route -> "Profile"
         Screens.FavoritesScreen.route -> "Favorites"
         Screens.CalendarScreen.route -> "Calendar"
-        Screens.SyllabusScreen.route -> "Syllabus"
-        Screens.FileHostingScreen.route -> "File Hosting"
+        Screens.SyllabusListDestination.route -> "Syllabus"
+        Screens.SyllabusDetailDestination.route -> "Syllabus"
         else -> "App"
     }
 }

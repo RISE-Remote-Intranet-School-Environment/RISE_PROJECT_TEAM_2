@@ -12,7 +12,7 @@ interface SyllabusApi {
 class KtorSyllabusApi(private val client: HttpClient) : SyllabusApi {
     companion object {
         private const val API_URL =
-            "https://raw.githubusercontent.com/Kotlin/KMP-App-Template/main/list.json"
+            "https://raw.githubusercontent.com/Yossramess/syllabus-data/refs/heads/main/data_syllabus.json"
     }
 
     override suspend fun getData(): List<SyllabusObject> {

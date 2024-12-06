@@ -2,8 +2,10 @@ package rise_front_end.team2.ui.screens.syllabus.detail
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -13,29 +15,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.draw.clip
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.syllabus.SyllabusObject
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
-import rise_front_end_team2.composeapp.generated.resources.Res
-import rise_front_end_team2.composeapp.generated.resources.back
-import rise_front_end_team2.composeapp.generated.resources.label_artist
-import rise_front_end_team2.composeapp.generated.resources.label_credits
-import rise_front_end_team2.composeapp.generated.resources.label_date
-import rise_front_end_team2.composeapp.generated.resources.label_dimensions
-import rise_front_end_team2.composeapp.generated.resources.label_repository
-import rise_front_end_team2.composeapp.generated.resources.label_title
-import rise_front_end_team2.composeapp.generated.resources.label_medium
-import rise_front_end_team2.composeapp.generated.resources.label_department
 
 @Composable
 fun SyllabusDetailScreen(
@@ -56,7 +49,6 @@ fun SyllabusDetailScreen(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ObjectDetails(
@@ -70,7 +62,7 @@ private fun ObjectDetails(
                 title = { Text(text = obj.title, style = MaterialTheme.typography.titleMedium) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -84,31 +76,49 @@ private fun ObjectDetails(
             Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
+                .fillMaxWidth()
         ) {
-            KamelImage(
-                resource = asyncPainterResource(data = obj.primaryImageSmall),
-                contentDescription = obj.title,
-                contentScale = ContentScale.FillWidth,
+            Box(
                 modifier = Modifier
+                    .padding(16.dp)
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-            )
+                    .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
+                    .padding(16.dp)
+            ) {
+                Column {
+                    KamelImage(
+                        resource = asyncPainterResource(data = obj.primaryImage),
+                        contentDescription = obj.title,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
 
-            SelectionContainer {
-                Column(Modifier.padding(12.dp)) {
+                    Spacer(modifier = Modifier.height(12.dp))
+
                     Text(
                         obj.title,
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
-                    Spacer(Modifier.height(6.dp))
-                    LabeledInfo(stringResource(Res.string.label_title), obj.title)
-                    LabeledInfo(stringResource(Res.string.label_artist), obj.artistDisplayName)
-                    LabeledInfo(stringResource(Res.string.label_date), obj.objectDate)
-                    LabeledInfo(stringResource(Res.string.label_dimensions), obj.dimensions)
-                    LabeledInfo(stringResource(Res.string.label_medium), obj.medium)
-                    LabeledInfo(stringResource(Res.string.label_department), obj.department)
-                    LabeledInfo(stringResource(Res.string.label_repository), obj.repository)
-                    LabeledInfo(stringResource(Res.string.label_credits), obj.creditLine)
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    val details = listOf(
+                        "Artist" to obj.artistDisplayName,
+                        "Date" to obj.objectDate,
+                        "Dimensions" to obj.dimensions,
+                        "Medium" to obj.medium,
+                        "Department" to obj.department,
+                        "Repository" to obj.repository,
+                        "Credits" to obj.creditLine
+                    )
+
+                    details.forEach { (label, value) ->
+                        LabeledInfo(label, value)
+                    }
                 }
             }
         }

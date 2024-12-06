@@ -15,17 +15,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.ui.screens.screens_grades.CircularButton
+import rise_front_end.team2.ui.screens.screens_profil.ProfileViewModel
 import rise_front_end.team2.ui.theme.Primary
 
 @Composable
 fun TopBar(name: String, onProfilClick: () -> Unit,) {
+    val viewModel = koinViewModel<ProfileViewModel>()
+    val objects by viewModel.objects.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,46 +71,64 @@ fun TopBar(name: String, onProfilClick: () -> Unit,) {
                     )
                 }
                 CircularButton(onClick = onProfilClick, Icons.Default.Person, Primary, 45)
-                if(name == "Profile") {
-                    Row (modifier = Modifier.fillMaxWidth(),
+                if(name == "Profile") { objects.forEach { profileObject ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween){
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(
                             "User Name",
                             color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Text("Name", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            profileObject.userName,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Row (
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Text(
                             "Mail",
                             color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Text("mail", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            profileObject.mail,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Row (
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Text(
                             "Password",
                             color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Text("*****", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            profileObject.password,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
+                }
                 }
 
             }
