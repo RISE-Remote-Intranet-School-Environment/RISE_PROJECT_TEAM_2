@@ -14,8 +14,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import rise_front_end.team2.ui.screens.*
-import rise_front_end.team2.ui.screens.detail.DetailScreen
-import rise_front_end.team2.ui.screens.list.ListScreen
+import rise_front_end.team2.ui.screens.StudentHelpForum.answer.ForumMessageAnswersScreen
+import rise_front_end.team2.ui.screens.StudentHelpForum.courseslist.StudentHelpForumListScreen
+import rise_front_end.team2.ui.screens.StudentHelpForum.posts.StudentHelpForumDetailScreen
+import rise_front_end.team2.ui.screens.syllabus.detail.SyllabusDetailScreen
+import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListScreen
+import rise_front_end.team2.ui.screens.screens_grades.GradeScreen
+import rise_front_end.team2.ui.screens.screens_grades.RegistrationScreen
+import rise_front_end.team2.ui.screens.screens_profil.ProfileScreen
 import rise_front_end.team2.ui.theme.AppTheme
 
 @Composable
@@ -25,7 +31,16 @@ actual fun PlatformNavigation() {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
+
         Scaffold(
+
+            topBar = {
+
+                TopBar(getScreenTitle(currentRoute),
+                    onProfilClick = {
+                    navController.navigate(Screens.ProfileScreen.route)
+                })
+            },
             bottomBar = {
                 CommonNavigationBar(
                     currentRoute = currentRoute,
@@ -57,17 +72,34 @@ actual fun PlatformNavigation() {
                 composable(route = Screens.HomeScreen.route) {
                     HomeScreen(
                         onSyllabusClick = {
-                            navController.navigate(Screens.ListDestination.route)
+                            navController.navigate(Screens.SyllabusListDestination.route)
                         },
                         onFileHostingClick = {
                             navController.navigate(Screens.FileHostingScreen.route)
+                        },
+                        onStudentHelpForumClick = {
+                            navController.navigate(Screens.StudentHelpForumList.route)
+
                         }
+
                     )
                 }
 
                 // Main Navigation Screens
                 composable(route = Screens.GradeScreen.route) {
-                    GradeScreen()
+                    GradeScreen(
+                        onRegistrationClick = {
+                            navController.navigate(Screens.RegistrationScreen.route)
+                        }
+                    )
+                }
+
+                composable(route = Screens.RegistrationScreen.route) {
+                    RegistrationScreen()
+                }
+
+                composable(route = Screens.ProfileScreen.route) {
+                    ProfileScreen()
                 }
 
                 composable(route = Screens.FavoriteScreen.route) {
@@ -78,26 +110,23 @@ actual fun PlatformNavigation() {
                     CalendarScreen()
                 }
 
-                composable(route = Screens.SyllabusScreen.route) {
-                    SyllabusScreen()
-                }
 
                 composable(route = Screens.FileHostingScreen.route) {
                     FileHostingScreen()
                 }
 
-                // List Screen
-                composable(route = Screens.ListDestination.route) {
-                    ListScreen(
+// SyllabusList Screen
+                composable(route = Screens.SyllabusListDestination.route) {
+                    SyllabusListScreen(
                         navigateToDetails = { objectId ->
                             navController.navigate("detail/$objectId")
                         }
                     )
                 }
 
-                // Detail Screen
+// SyllabusDetail Screen
                 composable(
-                    route = Screens.DetailDestination.route,
+                    route = Screens.SyllabusDetailDestination.route,
                     arguments = listOf(
                         navArgument("objectId") {
                             type = NavType.IntType
@@ -105,14 +134,84 @@ actual fun PlatformNavigation() {
                     )
                 ) { backStackEntry ->
                     val objectId = backStackEntry.arguments?.getInt("objectId") ?: 0
-                    DetailScreen(
+                    SyllabusDetailScreen(
                         objectId = objectId,
                         navigateBack = {
                             navController.popBackStack()
                         }
                     )
                 }
+
+
+                // Student Help Forum List Screen
+                composable(route = Screens.StudentHelpForumList.route) {
+                    StudentHelpForumListScreen(
+                        navigateToCourseDetails = { courseId ->
+                            navController.navigate(Screens.StudentHelpForumDetail(courseId).route)
+                        }
+                    )
+                }
+
+                // Student Help Forum Detail Screen
+                composable(
+                    route = Screens.StudentHelpForumDetail.route,
+                    arguments = listOf(
+                        navArgument("courseId") { type = NavType.IntType }
+                    )
+                ) { backStackEntry ->
+                    val courseId = backStackEntry.arguments?.getInt("courseId") ?: 0
+                    StudentHelpForumDetailScreen(
+                        courseId = courseId,
+                        navigateToAnswers = { courseId, messageId ->
+                            navController.navigate(
+                                Screens.StudentHelpForumMessageAnswers(courseId, messageId).route
+                            )
+                        },
+                        navigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+
+                // Forum Message Answers Screen
+                composable(
+                    route = Screens.StudentHelpForumMessageAnswers.route,
+                    arguments = listOf(
+                        navArgument("courseId") { type = NavType.IntType },
+                        navArgument("messageId") { type = NavType.IntType }
+                    )
+                ) { backStackEntry ->
+                    val courseId = backStackEntry.arguments?.getInt("courseId") ?: 0
+                    val messageId = backStackEntry.arguments?.getInt("messageId") ?: 0
+                    ForumMessageAnswersScreen(
+                        courseId = courseId,
+                        messageId = messageId,
+                        navigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
             }
+
+            }
+
+
         }
+
+
+    }
+
+
+fun getScreenTitle(route: String?): String {
+    return when (route) {
+        Screens.HomeScreen.route -> "Home"
+        Screens.GradeScreen.route -> "Grades"
+        Screens.RegistrationScreen.route -> "Registration"
+        Screens.ProfileScreen.route -> "Profile"
+        Screens.FavoriteScreen.route -> "Favorites"
+        Screens.CalendarScreen.route -> "Calendar"
+        Screens.SyllabusListDestination.route -> "Syllabus"
+        Screens.SyllabusDetailDestination.route -> "Syllabus"
+        else -> "App"
     }
 }

@@ -1,4 +1,6 @@
-package rise_front_end.team2.ui.screens
+package rise_front_end.team2.ui.screens.screens_grades
+import android.content.Context
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,103 +28,105 @@ import rise_front_end.team2.ui.theme.AppTheme
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.DriveFileRenameOutline
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import org.koin.compose.viewmodel.koinViewModel
+import rise_front_end.team2.data.data_grades.GradesObject
+import rise_front_end.team2.data.data_grades.downloadFile
+import rise_front_end.team2.ui.screens.EmptyScreenContent
+import rise_front_end.team2.ui.theme.Neutral
+import rise_front_end.team2.ui.theme.Primary
+import rise_front_end.team2.ui.theme.Secondary
+import rise_front_end.team2.ui.theme.Tertiary
 
 
 @Composable
-fun GradeScreen() {
+fun GradeScreen(onRegistrationClick: () -> Unit,) {
     AppTheme {
+        val viewModel = koinViewModel<GradeViewModel>()
+        val objects by viewModel.objects.collectAsState()
+        val context = LocalContext.current
+        var searchText by remember { mutableStateOf("") }
+
+        // Filtrer les objets en fonction du texte de recherche
+        val filteredObjects = objects.filter {
+            it.nameUe.contains(searchText, ignoreCase = true)
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFEFF4FF))
                 .verticalScroll(rememberScrollState())
         ) {
-            TopBar("Grades") // La TopBar prend maintenant toute la largeur sans être affectée par un padding
             Spacer(modifier = Modifier.height(16.dp)) // Espacement entre la TopBar et les autres composants
-            Column(modifier = Modifier.padding(16.dp)) {
-                ButtonBar()
-                ExpandableCreditContainer()
-                CourseSection()
-            }
-        }
-    }
-}
 
-@Composable
-fun TopBar(name: String) {
-    Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = rise_front_end.team2.ui.theme.Secondary, // Couleur personnalisée de la TopBar
-                    shape = RoundedCornerShape(
-                        bottomStart = 50.dp,
-                        bottomEnd = 50.dp
-                    )// Coins inférieurs arrondis
-                )
-                .padding(bottom = 20.dp),
-    contentAlignment = Alignment.Center
-    ){
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = rise_front_end.team2.ui.theme.Primary, // Couleur personnalisée de la TopBar
-                    shape = RoundedCornerShape(
-                        bottomStart = 50.dp,
-                        bottomEnd = 50.dp
-                    ) // Coins inférieurs arrondis
-                )
-                .padding(vertical = 30.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(name, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    "Master 2024-2025",
-                    color = rise_front_end.team2.ui.theme.Secondary,
-                    fontSize = 20.sp
-                )
+            AnimatedContent(objects.isNotEmpty()) { objectsAvailable ->
+                if (objectsAvailable) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        ButtonBar(
+                            context = context,
+                            searchText = searchText,
+                            onSearchTextChange = { searchText = it },
+                            onRegistrationClick = onRegistrationClick)
+                        if (filteredObjects.isEmpty() && objects.isNotEmpty()) {
+                            Text(
+                                text = "Aucun résultat trouvé",
+                                modifier = Modifier.fillMaxSize(),
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray
+                            )
+                        } else {
+                            ExpandableCreditContainer(objects = filteredObjects)
+                            CourseSection(objects = filteredObjects)
+                        }
+
+                    }
+                } else {
+                    EmptyScreenContent(Modifier.fillMaxSize())
+                }
             }
+
+
         }
     }
 }
 
 
 
+
 @Composable
-fun ButtonBar() {
+fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String) -> Unit, onRegistrationClick: () -> Unit,) {
     var showSearchBar by remember { mutableStateOf(false) }
-    var searchText by remember { mutableStateOf("") }
     var isFocused by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
-        CircularButton({}, Icons.Default.Download, rise_front_end.team2.ui.theme.Primary, 45)
+        CircularButton(onClick = { downloadFile(context, "grades.json") }, Icons.Default.Download, Primary, 45)
         Spacer(modifier = Modifier.width(16.dp))
-        CircularButton({}, Icons.Default.DriveFileRenameOutline, rise_front_end.team2.ui.theme.Primary, 45)
+        CircularButton(onClick = onRegistrationClick, Icons.Default.DriveFileRenameOutline, Primary, 45)
+
         Spacer(modifier = Modifier.width(16.dp))
-        CircularButton({showSearchBar = !showSearchBar}, Icons.Default.Search, rise_front_end.team2.ui.theme.Primary, 45)
+        CircularButton({showSearchBar = !showSearchBar}, Icons.Default.Search, Primary, 45)
     }
     if (showSearchBar) {
         TextField(
             value = searchText,
-            onValueChange = { searchText = it },
+            onValueChange = onSearchTextChange,
             placeholder = {
                 Text(
-                    text = "Rechercher...",
+                    text = "Search...",
                     color = if (isFocused) Color.Black else Color.White // Couleur dynamique
                 )
             },
@@ -145,10 +149,10 @@ fun ButtonBar() {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        CircularButton({}, Icons.Default.ArrowBackIosNew, rise_front_end.team2.ui.theme.Secondary, 35)
+        CircularButton({}, Icons.Default.ArrowBackIosNew, Secondary, 35)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Années Précédentes",
+            text = "Previous years",
             textDecoration = TextDecoration.Underline,
             color = Color.Gray,
             fontSize = 14.sp,
@@ -161,17 +165,38 @@ fun ButtonBar() {
 }
 
 @Composable
-fun ExpandableCreditContainer() {
+fun ExpandableCreditContainer(objects: List<GradesObject>,) {
     var isExpanded by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(rise_front_end.team2.ui.theme.Primary, shape = MaterialTheme.shapes.medium)
+            .background(rise_front_end.team2.ui.theme.Primary, shape = RoundedCornerShape(20.dp))
             .padding(16.dp)
             .animateContentSize()
     ) {
         Column {
+            val totalEcts = objects.sumOf { it.ects }
+            val ectsNumber = objects.sumOf { gradesObject ->
+                gradesObject.list.sumOf {
+                    if(it.grades > 10){
+                        it.ectsNumber
+                    }
+                    else{
+                        0
+                    }
+                }
+            }
+            val moyenneGenerale = if (totalEcts > 0) {
+                objects.sumOf { gradesObject ->
+                    gradesObject.list.sumOf { it.grades * it.ectsNumber }
+                } /totalEcts
+            } else 0
+
+            val icon = if (ectsNumber > 30) Icons.Default.CheckCircleOutline else Icons.Default.Cancel
+            val text = if (ectsNumber > 30) "Accepted" else "Not Accepted"
+
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -181,12 +206,13 @@ fun ExpandableCreditContainer() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
                     Text(
-                        text = "Nombres de crédit",
+                        text = "Credit amount",
                         color = rise_front_end.team2.ui.theme.Secondary,
                         fontSize = 14.sp,
                     )
+
                     Text(
-                        text = "40/60",
+                        text = "$ectsNumber/$totalEcts",
                         color = Color.White,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
@@ -215,12 +241,12 @@ fun ExpandableCreditContainer() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ){
                         Text(
-                            text = "Moyenne Générale",
+                            text = "Grade point average",
                             color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 14.sp,
                         )
                         Text(
-                            text = "14/20",
+                            text = "$moyenneGenerale/20",
                             color = Color.White,
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold
@@ -230,7 +256,7 @@ fun ExpandableCreditContainer() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ){
                         Text(
-                            text = "Décision du jury",
+                            text = "Jury's decision",
                             color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 14.sp,
                         )
@@ -238,13 +264,13 @@ fun ExpandableCreditContainer() {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ){
                             Icon(
-                                imageVector = Icons.Default.CheckCircleOutline,
+                                imageVector = icon,
                                 contentDescription = null,
                                 tint = Color.White,
                                 modifier = Modifier.size(30.dp) // Taille de l'icône, indépendante de la Box
                             )
                             Text(
-                                text = "Admis",
+                                text = text,
                                 color = Color.White,
                                 fontSize = 12.sp,
                             )
@@ -259,37 +285,36 @@ fun ExpandableCreditContainer() {
 }
 
 @Composable
-fun CourseSection() {
+fun CourseSection(objects: List<GradesObject>,) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 16.dp)
-    ) { Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Gestion 1",   fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text(text = "6 ECTS", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        GradeCard(subject = "Sciences Humaines", grade = 4, maxGrade = 20, credits = 3, color = rise_front_end.team2.ui.theme.Neutral)
-        Spacer(modifier = Modifier.height(8.dp))
-        GradeCard(subject = "Ethics Lab", grade = 18, maxGrade = 20, credits = 1, color = rise_front_end.team2.ui.theme.Tertiary)
-        Spacer(modifier = Modifier.height(8.dp))
-        GradeCard(subject = "Projets Qualités", grade = 4, maxGrade = 20, credits = 2, color = rise_front_end.team2.ui.theme.Neutral)
-        Spacer(modifier = Modifier.height(24.dp))
-
+    ) { objects.forEach { gradesObject ->
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Architecture and\n software quality",   fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text(text = "4 ECTS", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text(text = gradesObject.nameUe, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text(text = (gradesObject.ects.toString() +" ECTS"), fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
         Spacer(modifier = Modifier.height(16.dp))
-        GradeCard(subject = "Software Architecture", grade = 4, maxGrade = 20, credits = 2, color = rise_front_end.team2.ui.theme.Neutral)
-        Spacer(modifier = Modifier.height(8.dp))
-        GradeCard(subject = "Software Architecture and Quality Lab", grade = 18, maxGrade = 20, credits = 2, color = rise_front_end.team2.ui.theme.Tertiary)
+        val list = gradesObject.list
+        list.forEach { element ->
+            val cardColor = if (element.grades > 10) Tertiary else Neutral
+            GradeCard(
+                subject = element.name,
+                grade = element.grades,
+                maxGrade = 20,
+                credits = element.ectsNumber,
+                color = cardColor
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+
+
+    }
     }
 }
 

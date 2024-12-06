@@ -1,4 +1,4 @@
-package rise_front_end.team2.data
+package rise_front_end.team2.data.syllabus
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

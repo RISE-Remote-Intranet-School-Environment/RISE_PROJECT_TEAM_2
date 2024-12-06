@@ -1,0 +1,120 @@
+[
+  {
+    "courseID": 436535,
+    "courseName": "Thermodynamics",
+    "teacherName": "Therm O Dynamo",
+    "courseYear": "BA3",
+    "forum": [
+      {
+        "messageID": 1,
+        "content": "What is the first law of thermodynamics?",
+        "author": "Student123",
+        "timestamp": "2024-11-28T10:00:00Z",
+        "answers": [
+          {
+            "answerID": 1,
+            "content": "The first law is about energy conservation: energy cannot be created or destroyed.",
+            "author": "TeacherMarc",
+            "timestamp": "2024-11-28T12:00:00Z",
+            "likes": 15
+          },
+          {
+            "answerID": 2,
+            "content": "It's like a fundamental rule for energy transfer in systems.",
+            "author": "Student456",
+            "timestamp": "2024-11-28T13:00:00Z",
+            "likes": 7
+          }
+        ]
+      },
+      {
+        "messageID": 2,
+        "content": "Can someone explain entropy?",
+        "author": "Student789",
+        "timestamp": "2024-11-27T09:00:00Z",
+        "answers": [
+          {
+            "answerID": 1,
+            "content": "Entropy is a measure of system disorder or randomness.",
+            "author": "TeacherMarc",
+            "timestamp": "2024-11-27T10:00:00Z",
+            "likes": 20
+          },
+          {
+            "answerID": 2,
+            "content": "It's like how spread out energy becomes over time.",
+            "author": "Student321",
+            "timestamp": "2024-11-27T11:30:00Z",
+            "likes": 10
+          },
+          {
+            "answerID": 3,
+            "content": "Think of it like a messy room; entropy increases unless you clean it.",
+            "author": "Student654",
+            "timestamp": "2024-11-27T15:45:00Z",
+            "likes": 8
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "courseID": 436536,
+    "courseName": "Architecture and Software Quality",
+    "teacherName": "Jean-Guillaume Louis",
+    "courseYear": "MA1",
+    "forum": [
+      {
+        "messageID": 1,
+        "content": "What the fuck is github",
+        "author": "Student123",
+        "timestamp": "2024-11-28T10:00:00Z",
+        "answers": [
+          {
+            "answerID": 1,
+            "content": "Dude you're fucked for the exam",
+            "author": "JGL",
+            "timestamp": "2024-11-28T12:00:00Z",
+            "likes": 15
+          },
+          {
+            "answerID": 2,
+            "content": "Tbh I have no idea either",
+            "author": "Student456",
+            "timestamp": "2024-11-28T13:00:00Z",
+            "likes": 7
+          }
+        ]
+      },
+      {
+        "messageID": 2,
+        "content": "Why is AndroidApp so slow on my computer",
+        "author": "Student789",
+        "timestamp": "2024-11-27T09:00:00Z",
+        "answers": [
+          {
+            "answerID": 1,
+            "content": "Because it sucks",
+            "author": "TeacherMarc",
+            "timestamp": "2024-11-27T10:00:00Z",
+            "likes": 520
+          },
+          {
+            "answerID": 2,
+            "content": "Yeah, fuck that app",
+            "author": "Student321",
+            "timestamp": "2024-11-27T11:30:00Z",
+            "likes": 10
+          },
+          {
+            "answerID": 3,
+            "content": "You tell them boy! ",
+            "author": "Student654",
+            "timestamp": "2024-11-27T15:45:00Z",
+            "likes": 8
+          }
+        ]
+      }
+    ]
+  }
+]

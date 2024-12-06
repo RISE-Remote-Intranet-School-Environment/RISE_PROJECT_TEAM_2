@@ -4,24 +4,45 @@ package rise_front_end.team2.di
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
+import rise_front_end.team2.Repo.GradesRepository
+import rise_front_end.team2.Repo.ProfileRepository
+import rise_front_end.team2.Repo.StudentHelpForumRepository
 import rise_front_end.team2.Repo.SyllabusRepository
-import rise_front_end.team2.data.InMemorySyllabusStorage
-import rise_front_end.team2.data.KtorSyllabusApi
-import rise_front_end.team2.data.SyllabusApi
-import rise_front_end.team2.data.SyllabusStorage
+
+import rise_front_end.team2.data.data_grades.GradeStorage
+import rise_front_end.team2.data.data_grades.GradesApi
+import rise_front_end.team2.data.data_grades.InMemoryGradeStorage
+import rise_front_end.team2.data.data_grades.KtorGradesApi
+import rise_front_end.team2.data.data_profile.InMemoryProfileStorage
+import rise_front_end.team2.data.data_profile.KtorProfileApi
+import rise_front_end.team2.data.data_profile.ProfileApi
+import rise_front_end.team2.data.data_profile.ProfileStorage
+
+import rise_front_end.team2.ui.screens.screens_grades.GradeViewModel
+import rise_front_end.team2.ui.screens.screens_profil.ProfileViewModel
 
 
-import rise_front_end.team2.ui.screens.detail.DetailViewModel
-import rise_front_end.team2.ui.screens.list.ListViewModel
 
+import rise_front_end.team2.data.studentHelp.forum.KtorStudentHelpForumApi
+import rise_front_end.team2.data.syllabus.KtorSyllabusApi
+import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumApi
+import rise_front_end.team2.data.syllabus.SyllabusApi
+import rise_front_end.team2.data.studentHelp.forum.InMemoryStudentHelpForumStorage
+import rise_front_end.team2.data.syllabus.InMemorySyllabusStorage
+import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumStorage
+import rise_front_end.team2.data.syllabus.SyllabusStorage
+import rise_front_end.team2.ui.screens.syllabus.detail.SyllabusDetailViewModel
+import rise_front_end.team2.ui.screens.syllabus.list.SyllabusListViewModel
+import rise_front_end.team2.ui.screens.StudentHelpForum.courseslist.StudentHelpForumListViewModel
+import rise_front_end.team2.ui.screens.StudentHelpForum.answer.ForumMessageAnswersViewModel
+import rise_front_end.team2.ui.screens.StudentHelpForum.posts.StudentHelpForumDetailViewModel
 
-
+// Data module - Dependency registration for APIs, storages, and repositories
 val dataModule = module {
     single {
         // Initialize Ktor HTTP Client with Content Negotiation for JSON serialization
@@ -34,18 +55,42 @@ val dataModule = module {
 
     // Ensure the correct SyllabusApi implementation is injected
     single<SyllabusApi> { KtorSyllabusApi(get()) }
-    single<SyllabusStorage> { InMemorySyllabusStorage() }
+    single<StudentHelpForumApi> { KtorStudentHelpForumApi(get()) }
+    single<GradesApi> { KtorGradesApi(get()) }
+    single<ProfileApi> { KtorProfileApi(get()) }
 
-    // Syllabus repository with initialization
+
+    // Storages
+    single<SyllabusStorage> { InMemorySyllabusStorage() }
+    single<StudentHelpForumStorage> { InMemoryStudentHelpForumStorage() }
+    single<GradeStorage> { InMemoryGradeStorage() }
+    single<ProfileStorage> { InMemoryProfileStorage() }
+
+
+    // Repositories
+    single { SyllabusRepository(get(), get()).apply { initialize() } }
+    single { StudentHelpForumRepository(get(), get()).apply { initialize() } }
     single {
-        SyllabusRepository(get(), get()).apply { initialize() }
+        GradesRepository(get(), get()).apply { initialize() }
+    }
+    single {
+        ProfileRepository(get(), get()).apply { initialize() }
     }
 }
 
 
 val viewModelModule = module {
-    factoryOf(::ListViewModel)
-    factoryOf(::DetailViewModel)
+    factoryOf(::GradeViewModel)
+    factoryOf(::ProfileViewModel)
+    // Factory for Syllabus-related view models
+    factoryOf(::SyllabusListViewModel)
+    factoryOf(::SyllabusDetailViewModel)
+
+    // Factory for Student Help Forum-related view models
+    factoryOf(::StudentHelpForumListViewModel)
+    factoryOf(::StudentHelpForumDetailViewModel)
+    factoryOf(::ForumMessageAnswersViewModel)
+
 }
 
 fun initKoin() {
