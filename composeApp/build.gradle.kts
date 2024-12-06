@@ -150,9 +150,6 @@ dependencies {
     // Activity Compose
     implementation("androidx.activity:activity-compose:1.7.0")
 
-    // Calendar library by kizitonwose
-    implementation("com.kizitonwose.calendar:compose:0.6.1")
-
     // Coroutines (for using `launch` and coroutines with Compose)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
