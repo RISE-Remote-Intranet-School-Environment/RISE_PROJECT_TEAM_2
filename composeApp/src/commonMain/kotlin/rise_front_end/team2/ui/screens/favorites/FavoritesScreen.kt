@@ -17,6 +17,8 @@ import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.favorites.FavoritesObject
 import rise_front_end.team2.data.favorites.FavoritesCourseObject
 import rise_front_end.team2.data.favorites.FavoritesFileObject
+import rise_front_end.team2.data.studentHelp.forum.Course
+import rise_front_end.team2.data.studentHelp.forum.CourseFile
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 
@@ -43,6 +45,31 @@ fun FavoritesScreen(
     }
 }
 
+//@Composable
+//private fun AddFavoriteButtons(viewModel: FavoritesViewModel) {
+//    // Example course and file to add as favorites
+//    val course = Course(courseID = 1000000, courseName = "Sample Course", teacherName = "John Doe", courseYear = "2024", forum = emptyList(), courseFiles = emptyList())
+//    val courseFile = CourseFile(fileID = 400000, fileName = "Sample File", fileUrl = "https://example.com/file", messages = emptyList())
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(16.dp)
+//    ) {
+//        // Add Course Button
+//        Button(onClick = { viewModel.addCourseToFavorites(course) }) {
+//            Text("Add Course to Favorites")
+//        }
+//
+//        Spacer(modifier = Modifier.height(8.dp))
+//
+//        // Add File Button
+//        Button(onClick = { viewModel.addFileToFavorites(course, courseFile) }) {
+//            Text("Add File to Favorites")
+//        }
+//    }
+//}
+
 @Composable
 private fun FavouritesGrid(
     favorites: List<FavoritesObject>,
@@ -57,7 +84,15 @@ private fun FavouritesGrid(
             .padding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()),
         contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical).asPaddingValues(),
     ) {
-        items(favorites, key = { it.courseID }) { favorite ->
+        items(
+            favorites,
+            key = { favorite ->
+                when (favorite) {
+                    is FavoritesCourseObject -> "course-${favorite.courseID}"
+                    is FavoritesFileObject -> "file-${favorite.courseID}-${favorite.fileID}"
+                }
+            }
+        ) { favorite ->
             FavoriteFrame(
                 favorite = favorite,
                 onCourseClick = onCourseClick,
@@ -81,7 +116,7 @@ private fun FavoriteFrame(
         when (favorite) {
             is FavoritesCourseObject -> {
                 Text(
-                    text = "Course: ${favorite.courseID}",
+                    text = "Course: ${favorite.courseName}",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Button(onClick = { onCourseClick(favorite.courseID) }) {
@@ -90,7 +125,7 @@ private fun FavoriteFrame(
             }
             is FavoritesFileObject -> {
                 Text(
-                    text = "File: ${favorite.fileID} (Course: ${favorite.courseID})",
+                    text = "File: ${favorite.fileName} (Course: ${favorite.courseName})",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Button(onClick = { onFileClick(favorite.courseID, favorite.fileID) }) {

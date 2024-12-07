@@ -68,8 +68,9 @@ kotlin {
             implementation("androidx.compose.material:material-icons-extended:1.7.5")
             implementation("com.squareup.retrofit2:retrofit:2.9.0")
             implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-            implementation( "io.coil-kt:coil-compose:2.4.0")
+            implementation("io.coil-kt:coil-compose:2.4.0")
             implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -88,8 +89,6 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.okhttp)
-
-
 
             implementation(libs.kamel)
             implementation(libs.koin.core)

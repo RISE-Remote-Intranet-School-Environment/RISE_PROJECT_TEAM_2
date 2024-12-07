@@ -1,5 +1,7 @@
 package rise_front_end.team2.di
 
+import android.content.Context
+
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -65,7 +67,7 @@ val dataModule = module {
     single<SyllabusApi> { KtorSyllabusApi(get()) }
     single<StudentHelpForumApi> { KtorStudentHelpForumApi(get()) }
     single<GradesApi> { KtorGradesApi(get()) }
-    single<FavoriteApi> { KtorFavoriteApi(get()) }
+    //single<FavoriteApi> { KtorFavoriteApi(get()) }
     single<GradesApi> { KtorGradesApi(get()) }
     single<ProfileApi> { KtorProfileApi(get()) }
 
