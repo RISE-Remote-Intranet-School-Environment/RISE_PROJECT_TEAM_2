@@ -48,4 +48,14 @@ class StudentHelpForumRepository(
     // Get a specific file message by course ID, file ID, and message ID.
     fun getFileMessageById(courseId: Int, fileId: Int, messageId: Int): Flow<FileMessage?> =
         studentHelpForumStorage.getFileMessageById(courseId, fileId, messageId)
+
+    //Add a forum post
+    suspend fun addForumMessage(courseId: Int, message: ForumMessage): Boolean {
+        return studentHelpForumStorage.addForumMessage(courseId, message)
+    }
+
+    //Update forum posts
+    suspend fun updateForumMessage(courseId: Int, messageId: Int, newContent: String): Boolean {
+        return studentHelpForumStorage.updateForumMessage(courseId, messageId, newContent)
+    }
 }

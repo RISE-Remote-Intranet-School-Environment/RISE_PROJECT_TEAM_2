@@ -70,6 +70,8 @@ kotlin {
             implementation("com.squareup.retrofit2:converter-gson:2.9.0")
             implementation( "io.coil-kt:coil-compose:2.4.0")
             implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
+            implementation("io.insert-koin:koin-android:3.5.0")
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -83,6 +85,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.materialKolor)
             implementation("network.chaintech:kmp-date-time-picker:1.0.6")
+
 
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
