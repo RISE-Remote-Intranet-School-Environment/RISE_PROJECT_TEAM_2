@@ -5,6 +5,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -24,6 +25,9 @@ import rise_front_end.team2.data.data_profile.InMemoryProfileStorage
 import rise_front_end.team2.data.data_profile.KtorProfileApi
 import rise_front_end.team2.data.data_profile.ProfileApi
 import rise_front_end.team2.data.data_profile.ProfileStorage
+import rise_front_end.team2.data.favorites.AndroidFavoritesFileHandler
+import rise_front_end.team2.data.favorites.AndroidLocalFileReader
+import rise_front_end.team2.data.favorites.AndroidLocalFileWriter
 
 import rise_front_end.team2.ui.screens.screens_grades.GradeViewModel
 import rise_front_end.team2.ui.screens.screens_profil.ProfileViewModel
@@ -38,8 +42,12 @@ import rise_front_end.team2.data.studentHelp.forum.InMemoryStudentHelpForumStora
 import rise_front_end.team2.data.syllabus.InMemorySyllabusStorage
 import rise_front_end.team2.data.favorites.FavoriteApi
 import rise_front_end.team2.data.favorites.FavoriteStorage
+import rise_front_end.team2.data.favorites.FavoritesFileHandler
 import rise_front_end.team2.data.favorites.InMemoryFavoritesStorage
 import rise_front_end.team2.data.favorites.KtorFavoriteApi
+import rise_front_end.team2.data.favorites.LocalFavoriteApi
+import rise_front_end.team2.data.favorites.LocalFileReader
+import rise_front_end.team2.data.favorites.LocalFileWriter
 import rise_front_end.team2.data.studentHelp.forum.StudentHelpForumStorage
 import rise_front_end.team2.data.syllabus.SyllabusStorage
 import rise_front_end.team2.ui.screens.syllabus.detail.SyllabusDetailViewModel
@@ -67,7 +75,7 @@ val dataModule = module {
     single<SyllabusApi> { KtorSyllabusApi(get()) }
     single<StudentHelpForumApi> { KtorStudentHelpForumApi(get()) }
     single<GradesApi> { KtorGradesApi(get()) }
-    single<FavoriteApi> { KtorFavoriteApi(get()) }
+    single<FavoriteApi> { LocalFavoriteApi(get()) }
     single<GradesApi> { KtorGradesApi(get()) }
     single<ProfileApi> { KtorProfileApi(get()) }
 
@@ -90,6 +98,13 @@ val dataModule = module {
     }
     single {
         ProfileRepository(get(), get()).apply { initialize() }
+    }
+
+    // Favorites File Handlers
+    single<LocalFileReader> { AndroidLocalFileReader(get()) }
+    single<LocalFileWriter> { AndroidLocalFileWriter(get()) }
+    single<FavoritesFileHandler> { (coroutineScope: CoroutineScope) ->
+        AndroidFavoritesFileHandler(get(), get(), coroutineScope, "favorites.json")
     }
 }
 
