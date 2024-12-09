@@ -167,22 +167,24 @@ private fun FileFrame( //The frame in which each pdf are displayed
         }
         // Favorite toggle button
         Column(
-            modifier = Modifier.padding(start = 8.dp) // Add padding to the left of the star
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .width(48.dp)
         ) {
             IconButton(
                 onClick = {
-                    isFavorite = !isFavorite // Toggle favorite state
+                    isFavorite = !isFavorite
                     if (isFavorite) {
-                        viewModel.addToFavorites(courseFile.fileID) // Add to favorites
+                        viewModel.addToFavorites(courseId, courseFile.fileID)
                     } else {
-                        viewModel.removeFromFavorites(courseFile.fileID) // Remove from favorites
+                        viewModel.removeFromFavorites(courseId, courseFile.fileID)
                     }
                 }
             ) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
                     contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
-                    tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }

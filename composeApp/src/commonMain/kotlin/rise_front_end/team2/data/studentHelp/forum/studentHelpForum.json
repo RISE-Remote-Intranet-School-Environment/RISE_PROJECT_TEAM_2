@@ -4,6 +4,7 @@
     "courseName": "Thermodynamics",
     "teacherName": "Therm O Dynamo",
     "courseYear": "BA3",
+    "inFavorites": true,
     "forum": [
       {
         "messageID": 200001,
@@ -73,6 +74,7 @@
     "courseName": "Introduction to Machine Learning",
     "teacherName": "Dr. Al Gorithm",
     "courseYear": "BA4",
+    "inFavorites": false,
     "forum": [
       {
         "messageID": 200002,
@@ -120,6 +122,7 @@
     "courseName": "Advanced Mathematics",
     "teacherName": "Prof. Calc U. Lator",
     "courseYear": "BA4",
+    "inFavorites": false,
     "forum": [
       {
         "messageID": 200003,

@@ -8,6 +8,7 @@ data class Course(
     val courseName: String,
     val teacherName: String,
     val courseYear: String,
+    val inFavorites: Boolean,
     val forum: List<ForumMessage>,
     val courseFiles: List<CourseFile>
 
