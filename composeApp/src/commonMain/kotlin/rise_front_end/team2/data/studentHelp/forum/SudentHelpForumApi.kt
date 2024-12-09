@@ -1,8 +1,6 @@
 package rise_front_end.team2.data.studentHelp.forum
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
+import android.content.Context
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -10,20 +8,22 @@ interface StudentHelpForumApi {
     suspend fun getData(): List<Course>
 }
 
-class KtorStudentHelpForumApi(private val client: HttpClient) : StudentHelpForumApi {
-    companion object {
-        private const val API_URL =
-            "https://raw.githubusercontent.com/RISE-Remote-Intranet-School-Environment/RISE_PROJECT_TEAM_2/refs/heads/Tanguy/composeApp/src/commonMain/kotlin/rise_front_end/team2/data/studentHelp/forum/studentHelpForum.json"
-    }
-
+class KtorStudentHelpForumApi(private val context: Context) : StudentHelpForumApi {
     override suspend fun getData(): List<Course> {
         return try {
-            val responseBody = client.get(API_URL).body<String>()
-            Json.decodeFromString(responseBody)
+            // Open the JSON file from assets
+            val inputStream = context.assets.open("studentHelpForum.json")
+
+            // Read the file contents
+            val jsonString = inputStream.bufferedReader().use { it.readText() }
+
+            // Parse the JSON string into a list of Course objects
+            Json {
+                ignoreUnknownKeys = true // Helpful for handling additional JSON fields
+            }.decodeFromString(jsonString)
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
         }
     }
 }
-

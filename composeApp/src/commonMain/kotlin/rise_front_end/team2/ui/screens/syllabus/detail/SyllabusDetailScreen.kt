@@ -108,23 +108,38 @@ private fun ObjectDetails(
 
                     val details = listOf(
                         "Title" to obj.title,
-                        "Auteur" to obj.artistDisplayName,
+                        "Author" to obj.artistDisplayName,
                         "Date" to obj.objectDate,
                         "Duration" to obj.duration,
                         "Type" to obj.medium,
                         "Department" to obj.department,
                         "University" to obj.university,
-                        "Credits" to obj.creditLine
+                        "Credits" to obj.creditLine,
+                        "Price" to obj.price.toString() + "€"
                     )
 
                     details.forEach { (label, value) ->
                         LabeledInfo(label, value)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+
+                    Button(
+                        onClick = { /* Action of button buy */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("BUY")
                     }
                 }
             }
         }
     }
 }
+
 
 @Composable
 private fun LabeledInfo(
