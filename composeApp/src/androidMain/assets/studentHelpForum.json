@@ -4,6 +4,7 @@
     "courseName": "Thermodynamics",
     "teacherName": "Therm O Dynamo",
     "courseYear": "BA3",
+    "inFavorites": true,
     "forum": [
       {
         "messageID": 200001,
@@ -26,6 +27,7 @@
         "fileID": 400001,
         "fileName": "Thermodynamics Basics.pdf",
         "fileUrl": "https://www.stewartcalculus.com/data/ESSENTIAL%20CALCULUS%20Early%20Transcendentals/upfiles/ess-reviewofalgebra.pdf",
+        "inFavorites": true,
         "fileAuthor": "Another Author",
         "fileDate": "17-04/2013",
         "fileLikes": 21,
@@ -50,6 +52,7 @@
         "fileID": 102,
         "fileName": "Thermodynamics Synthese.pdf",
         "fileUrl": "https://wagner.nyu.edu/files/students/Math_Review_-_Algebra_Operations.pdf",
+        "inFavorites": false,
         "fileAuthor": "Le Z tmtc",
         "fileDate": "17-04/2023",
         "fileLikes": 18,
@@ -77,6 +80,7 @@
     "courseName": "Introduction to Machine Learning",
     "teacherName": "Dr. Al Gorithm",
     "courseYear": "BA4",
+    "inFavorites": false,
     "forum": [
       {
         "messageID": 200002,
@@ -99,6 +103,7 @@
         "fileID": 400001,
         "fileName": "ML Basics.pdf",
         "fileUrl": "https://www.physics.ox.ac.uk/system/files/file_attachments/basic_thermo.pdf",
+        "inFavorites": false,
         "fileAuthor": "Yeah Yeah Yeah",
         "fileDate": "18-04/2023",
         "fileLikes": 181,
@@ -126,6 +131,7 @@
     "courseName": "Advanced Mathematics",
     "teacherName": "Prof. Calc U. Lator",
     "courseYear": "BA4",
+    "inFavorites": false,
     "forum": [
       {
         "messageID": 200003,
@@ -148,6 +154,7 @@
         "fileID": 400003,
         "fileName": "Differential Equations Guide.pdf",
         "fileUrl": "https://www.hood.edu/sites/default/files/A%20Quick%20Algebra%20Review.pdf",
+        "inFavorites": false,
         "fileAuthor": "Le T tmtc",
         "fileDate": "17-04/2023",
         "fileLikes": 108,
