@@ -36,6 +36,7 @@ data class CourseFile(
     val fileID: Int,
     val fileName: String,
     val fileUrl: String,
+    val inFavorites: Boolean,
     val messages: List<FileMessage> // Discussion related to this file
 )
 

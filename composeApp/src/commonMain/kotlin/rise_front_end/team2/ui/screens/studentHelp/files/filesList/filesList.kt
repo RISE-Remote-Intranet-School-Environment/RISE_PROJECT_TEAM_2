@@ -20,6 +20,8 @@ import androidx.compose.material.icons.automirrored.filled.TextSnippet
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material.icons.filled.TextSnippet
 import androidx.compose.runtime.*
@@ -114,8 +116,10 @@ private fun FileFrame( //The frame in which each pdf are displayed
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val viewModel = koinViewModel<CourseFilesViewModel>()
     val context = LocalContext.current
     val screenHeight = with(LocalDensity.current) { LocalContext.current.resources.displayMetrics.heightPixels.toDp() }
+    var isFavorite by remember { mutableStateOf(courseFile.inFavorites) }
 
     Row(
         modifier
@@ -159,6 +163,27 @@ private fun FileFrame( //The frame in which each pdf are displayed
                 modifier = Modifier.padding(top = 8.dp)
             ) {
                 Text("Download")
+            }
+        }
+        // Favorite toggle button
+        Column(
+            modifier = Modifier.padding(start = 8.dp) // Add padding to the left of the star
+        ) {
+            IconButton(
+                onClick = {
+                    isFavorite = !isFavorite // Toggle favorite state
+                    if (isFavorite) {
+                        viewModel.addToFavorites(courseFile.fileID) // Add to favorites
+                    } else {
+                        viewModel.removeFromFavorites(courseFile.fileID) // Remove from favorites
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
+                    contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                    tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                )
             }
         }
     }
