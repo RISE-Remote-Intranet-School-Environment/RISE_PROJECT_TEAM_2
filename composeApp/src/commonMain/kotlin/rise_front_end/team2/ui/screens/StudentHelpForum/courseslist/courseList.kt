@@ -85,48 +85,55 @@ private fun CourseFrame(
     val viewModel = koinViewModel<StudentHelpForumListViewModel>()
     var isFavorite by remember { mutableStateOf(course.inFavorites) }
 
-    Column(
-        modifier
+    Box(
+        modifier = modifier
             .padding(8.dp)
+            .width(150.dp)
     ) {
-        Text(
-            text = course.courseName,
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-        )
-        Text(
-            text = course.teacherName,
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Text(
-            text = course.courseYear,
-            style = MaterialTheme.typography.bodySmall
-        )
-        Row(
-            modifier = Modifier.padding(top = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
         ) {
-            Button(onClick = onForumClick) {
-                Text("Forum")
-            }
-            Button(onClick = onFilesClick) {
-                Text("Files")
+            Text(
+                text = course.courseName,
+                modifier = Modifier.width(136.dp),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+            )
+            Text(
+                text = course.teacherName,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = course.courseYear,
+                style = MaterialTheme.typography.bodySmall
+            )
+
+            Row(
+                modifier = Modifier.padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(onClick = onForumClick) {
+                    Text("Forum")
+                }
+                Button(onClick = onFilesClick) {
+                    Text("Files")
+                }
             }
         }
-    }
-    Column(
-        modifier = Modifier
-            .padding(start = 8.dp)
-            .width(48.dp)
-    ) {
+
         IconButton(
             onClick = {
-                isFavorite = !isFavorite // Toggle favorite state
+                isFavorite = !isFavorite
                 if (isFavorite) {
                     viewModel.addToFavorites(course.courseID)
                 } else {
                     viewModel.removeFromFavorites(course.courseID)
                 }
-            }
+            },
+            modifier = Modifier
+                .padding(start = 142.dp, top = 4.dp)
+                .size(24.dp)
         ) {
             Icon(
                 imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
