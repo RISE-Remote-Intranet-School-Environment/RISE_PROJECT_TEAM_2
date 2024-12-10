@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingBasket
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.collectAsState
@@ -34,11 +35,12 @@ import rise_front_end.team2.ui.theme.AppTheme
 import androidx.compose.runtime.*
 import androidx.compose.material3.*
 import org.koin.core.logger.PrintLogger
+import rise_front_end.team2.ui.screens.screens_grades.CircularButton
 import rise_front_end.team2.ui.theme.Primary
 import rise_front_end.team2.ui.theme.Secondary
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(onShopClick: () -> Unit,) {
 
     // Apply the theme
     AppTheme {
@@ -138,7 +140,7 @@ fun ProfileScreen() {
                             MaterialTheme.colorScheme.primary,
                             shape = RoundedCornerShape(20.dp)
                         )
-                        .padding(16.dp)
+                        .padding(8.dp)
                         .animateContentSize()
                 ) {
                     Column(
@@ -155,12 +157,8 @@ fun ProfileScreen() {
                                 fontSize = 20.sp
                             )
                             Spacer(modifier = Modifier.width(16.dp))
-                            Icon(
-                                imageVector = Icons.Default.ShoppingBasket,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(25.dp)
-                            )
+                            CircularButton(onClick = onShopClick, Icons.Default.ShoppingBasket, MaterialTheme.colorScheme.primary, 45)
+
                         }
                     }
                 }
@@ -192,7 +190,7 @@ fun CustomSwitch(
 @Composable
 fun ThemeToggleSwitch() {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(text = if (AppTheme.isDarkMode) "Dark Mode" else "Light Mode")
+        Text(text = if (AppTheme.isDarkMode) "Dark Theme" else "Light Theme")
 
         Spacer(modifier = Modifier.width(8.dp))
 

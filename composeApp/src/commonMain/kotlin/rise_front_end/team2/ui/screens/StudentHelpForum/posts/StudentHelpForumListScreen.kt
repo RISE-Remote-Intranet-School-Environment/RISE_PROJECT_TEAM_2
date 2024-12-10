@@ -25,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
@@ -135,7 +136,7 @@ fun AddForumMessageButton(
     var messageContent by remember { mutableStateOf("") }
 
     Button(onClick = { showDialog = true }) {
-        Text("Add Message")
+        Text("Add Message", color = Color.White)
     }
 
     if (showDialog) {
@@ -163,12 +164,12 @@ fun AddForumMessageButton(
                         showDialog = false
                     }
                 ) {
-                    Text("Submit")
+                    Text("Submit", color = Color.White)
                 }
             },
             dismissButton = {
                 Button(onClick = { showDialog = false }) {
-                    Text("Cancel")
+                    Text("Cancel", color = Color.White)
                 }
             }
         )

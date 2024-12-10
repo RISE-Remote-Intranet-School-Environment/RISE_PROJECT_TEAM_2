@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
@@ -114,10 +115,10 @@ private fun CourseFrame(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(onClick = onForumClick) {
-                    Text("Forum")
+                    Text("Forum", color = Color.White)
                 }
                 Button(onClick = onFilesClick) {
-                    Text("Files")
+                    Text("Files", color = Color.White)
                 }
             }
         }

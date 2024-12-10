@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
 @Composable
 expect fun PlatformNavigation()
@@ -26,7 +27,11 @@ fun CommonNavigationBar(
                 },
                 label = {
                     Text(text = navItem.label)
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = MaterialTheme.colorScheme.secondary,// Couleur de l'indicateur de sélection (l'arrière-plan du bouton)
+                )
+
             )
         }
     }

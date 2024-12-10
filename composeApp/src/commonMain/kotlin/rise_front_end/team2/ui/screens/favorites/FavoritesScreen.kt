@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.favorites.FavoritesObject
@@ -120,7 +121,7 @@ private fun FavoriteFrame(
                     style = MaterialTheme.typography.bodySmall
                 )
                 Button(onClick = { onCourseClick(favorite.courseID) }) {
-                    Text("Go to Course")
+                    Text("Go to Course", color = Color.White)
                 }
             }
             is FavoritesFileObject -> {
@@ -129,7 +130,7 @@ private fun FavoriteFrame(
                     style = MaterialTheme.typography.bodySmall
                 )
                 Button(onClick = { onFileClick(favorite.courseID, favorite.fileID) }) {
-                    Text("Go to File")
+                    Text("Go to File", color = Color.White)
                 }
             }
         }

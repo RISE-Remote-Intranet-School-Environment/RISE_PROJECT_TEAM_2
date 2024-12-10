@@ -30,6 +30,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -254,14 +255,14 @@ private fun FileFrame(
                         onClick = onClick,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Go to Discussion")
+                        Text("Go to Discussion", color = Color.White)
                     }
 
                     Button(
                         onClick = { downloadFile(context, courseFile.fileUrl, courseFile.fileName) },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Download")
+                        Text("Download", color = Color.White)
                     }
                 }
             }

@@ -24,6 +24,7 @@ import rise_front_end.team2.ui.screens.favorites.FavoritesScreen
 import rise_front_end.team2.ui.screens.screens_grades.GradeScreen
 import rise_front_end.team2.ui.screens.screens_grades.RegistrationScreen
 import rise_front_end.team2.ui.screens.screens_profil.ProfileScreen
+import rise_front_end.team2.ui.screens.screens_profil.ShopScreen
 import rise_front_end.team2.ui.screens.studentHelp.files.fileanswers.FileDiscussionsScreen
 import rise_front_end.team2.ui.theme.AppTheme
 
@@ -102,7 +103,15 @@ actual fun PlatformNavigation() {
                 }
 
                 composable(route = Screens.ProfileScreen.route) {
-                    ProfileScreen()
+                    ProfileScreen(
+                        onShopClick = {
+                            navController.navigate(Screens.ShopScreen.route)
+                        }
+                    )
+                }
+
+                composable(route = Screens.ShopScreen.route) {
+                    ShopScreen()
                 }
 
                 composable(route = Screens.FavoritesScreen.route) {
@@ -267,6 +276,7 @@ fun getScreenTitle(route: String?): String {
         Screens.CalendarScreen.route -> "Calendar"
         Screens.SyllabusListDestination.route -> "Syllabus"
         Screens.SyllabusDetailDestination.route -> "Syllabus"
+        Screens.ShopScreen.route -> "Shop"
         else -> "App"
     }
 }
