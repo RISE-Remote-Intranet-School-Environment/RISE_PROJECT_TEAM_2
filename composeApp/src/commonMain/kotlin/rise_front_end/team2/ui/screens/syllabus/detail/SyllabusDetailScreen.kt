@@ -132,7 +132,7 @@ private fun ObjectDetails(
                             .padding(top = 16.dp),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("BUY")
+                        Text("BUY", color = Color.White)
                     }
                 }
             }

@@ -1,28 +1,43 @@
 package rise_front_end.team2.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import com.materialkolor.DynamicMaterialTheme
-import com.materialkolor.PaletteStyle
-import com.materialkolor.rememberDynamicMaterialThemeState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+
+object AppTheme {
+    // État observable pour le mode sombre
+    var isDarkMode by mutableStateOf(false)
+
+    // Détermine les couleurs en fonction de l'état
+    val colors
+        get() = if (isDarkMode) DarkColorScheme else LightColorScheme
+}
+
+// Couleurs personnalisées
+private val LightColorScheme = lightColorScheme(
+    primary = Primary,
+    secondary = Secondary,
+    tertiary = Tertiary,
+    onError = Neutral
+)
+
+private val DarkColorScheme = darkColorScheme(
+    primary = PrimaryDark,
+    secondary = SecondaryDark,
+    tertiary = TertiaryDark,
+    onError = NeutralDark
+)
 
 @Composable
-fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit,
-) {
-    val dynamicThemeState = rememberDynamicMaterialThemeState(
-        isDark = false,
-        style = PaletteStyle.TonalSpot,
-        primary = Primary,
-        secondary = Secondary,
-        tertiary = Tertiary,
-        neutral = Neutral,
-    )
-
-    DynamicMaterialTheme(
-        state = dynamicThemeState,
-        animate = true,
-        content = content,
+fun AppTheme(content: @Composable () -> Unit) {
+    // Applique les couleurs en fonction de l'état actuel
+    MaterialTheme(
+        colorScheme = AppTheme.colors,
+        content = content
     )
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,7 +37,7 @@ fun TopBar(name: String, onProfilClick: () -> Unit,) {
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = rise_front_end.team2.ui.theme.Secondary, // Couleur personnalisée de la TopBar
+                color = MaterialTheme.colorScheme.secondary, // Couleur personnalisée de la TopBar
                 shape = RoundedCornerShape(
                     bottomStart = 50.dp,
                     bottomEnd = 50.dp
@@ -49,7 +50,7 @@ fun TopBar(name: String, onProfilClick: () -> Unit,) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = rise_front_end.team2.ui.theme.Primary, // Couleur personnalisée de la TopBar
+                    color = MaterialTheme.colorScheme.primary, // Couleur personnalisée de la TopBar
                     shape = RoundedCornerShape(
                         bottomStart = 50.dp,
                         bottomEnd = 50.dp
@@ -70,7 +71,7 @@ fun TopBar(name: String, onProfilClick: () -> Unit,) {
 
                     )
                 }
-                CircularButton(onClick = onProfilClick, Icons.Default.Person, Primary, 45)
+                CircularButton(onClick = onProfilClick, Icons.Default.Person, MaterialTheme.colorScheme.primary, 45)
                 if(name == "Profile") { objects.forEach { profileObject ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),

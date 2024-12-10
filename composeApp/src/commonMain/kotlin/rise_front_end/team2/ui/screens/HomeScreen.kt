@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import rise_front_end.team2.ui.theme.AppTheme
 
@@ -35,7 +36,7 @@ fun HomeScreen(
                 onClick = onSyllabusClick,
                 modifier = Modifier.fillMaxWidth() // Make the button fill the width
             ) {
-                Text("Go to Syllabus")
+                Text("Go to Syllabus", color = Color.White)
             }
 
             Spacer(modifier = Modifier.height(16.dp)) // Add space between buttons
@@ -45,14 +46,14 @@ fun HomeScreen(
                 onClick = onFileHostingClick,
                 modifier = Modifier.fillMaxWidth() // Make the button fill the width
             ) {
-                Text("Go to File Sharing")
+                Text("Go to File Sharing", color = Color.White)
             }
 
             Button(
                 onClick = onStudentHelpForumClick,
                 modifier = Modifier.fillMaxWidth() // Make the button fill the width
             ) {
-                Text("Go to Student Help Forum")
+                Text("Go to Student Help Forum", color = Color.White)
             }
         }
 

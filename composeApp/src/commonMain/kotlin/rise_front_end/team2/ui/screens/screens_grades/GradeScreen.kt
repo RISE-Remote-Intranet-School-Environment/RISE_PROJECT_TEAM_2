@@ -46,10 +46,6 @@ import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.data_grades.GradesObject
 import rise_front_end.team2.data.data_grades.downloadFile
 import rise_front_end.team2.ui.screens.EmptyScreenContent
-import rise_front_end.team2.ui.theme.Neutral
-import rise_front_end.team2.ui.theme.Primary
-import rise_front_end.team2.ui.theme.Secondary
-import rise_front_end.team2.ui.theme.Tertiary
 
 
 @Composable
@@ -113,12 +109,12 @@ fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String)
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
-        CircularButton(onClick = { downloadFile(context, "grades.json") }, Icons.Default.Download, Primary, 45)
+        CircularButton(onClick = { downloadFile(context, "grades.json") }, Icons.Default.Download, MaterialTheme.colorScheme.primary, 45)
         Spacer(modifier = Modifier.width(16.dp))
-        CircularButton(onClick = onRegistrationClick, Icons.Default.DriveFileRenameOutline, Primary, 45)
+        CircularButton(onClick = onRegistrationClick, Icons.Default.DriveFileRenameOutline, MaterialTheme.colorScheme.primary, 45)
 
         Spacer(modifier = Modifier.width(16.dp))
-        CircularButton({showSearchBar = !showSearchBar}, Icons.Default.Search, Primary, 45)
+        CircularButton({showSearchBar = !showSearchBar}, Icons.Default.Search, MaterialTheme.colorScheme.primary, 45)
     }
     if (showSearchBar) {
         TextField(
@@ -136,7 +132,7 @@ fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String)
                 .onFocusChanged { focusState -> isFocused = focusState.isFocused }, // Met à jour l'état de focus
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.White,
-                unfocusedContainerColor = rise_front_end.team2.ui.theme.Primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.primary,
                 focusedIndicatorColor = Color.White,
                 cursorColor = Color.White
             ),
@@ -149,7 +145,7 @@ fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String)
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        CircularButton({}, Icons.Default.ArrowBackIosNew, Secondary, 35)
+        CircularButton({}, Icons.Default.ArrowBackIosNew, MaterialTheme.colorScheme.secondary, 35)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = "Previous years",
@@ -171,7 +167,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(rise_front_end.team2.ui.theme.Primary, shape = RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(20.dp))
             .padding(16.dp)
             .animateContentSize()
     ) {
@@ -207,7 +203,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                 ){
                     Text(
                         text = "Credit amount",
-                        color = rise_front_end.team2.ui.theme.Secondary,
+                        color = MaterialTheme.colorScheme.secondary,
                         fontSize = 14.sp,
                     )
 
@@ -242,7 +238,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                     ){
                         Text(
                             text = "Grade point average",
-                            color = rise_front_end.team2.ui.theme.Secondary,
+                            color = MaterialTheme.colorScheme.secondary,
                             fontSize = 14.sp,
                         )
                         Text(
@@ -257,7 +253,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                     ){
                         Text(
                             text = "Jury's decision",
-                            color = rise_front_end.team2.ui.theme.Secondary,
+                            color = MaterialTheme.colorScheme.secondary,
                             fontSize = 14.sp,
                         )
                         Column (
@@ -301,7 +297,7 @@ fun CourseSection(objects: List<GradesObject>,) {
         Spacer(modifier = Modifier.height(16.dp))
         val list = gradesObject.list
         list.forEach { element ->
-            val cardColor = if (element.grades > 10) Tertiary else Neutral
+            val cardColor = if (element.grades > 10) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onError
             GradeCard(
                 subject = element.name,
                 grade = element.grades,

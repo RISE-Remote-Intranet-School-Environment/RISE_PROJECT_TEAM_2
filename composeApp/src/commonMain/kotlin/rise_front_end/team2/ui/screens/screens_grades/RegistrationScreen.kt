@@ -2,7 +2,6 @@ package rise_front_end.team2.ui.screens.screens_grades
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -13,15 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.data_grades.GradesObject
 import rise_front_end.team2.ui.theme.AppTheme
-import rise_front_end.team2.ui.theme.Primary
-import rise_front_end.team2.ui.theme.Secondary
+
 
 @Composable
 fun RegistrationScreen() {
@@ -62,8 +59,8 @@ fun RegistrationScreen() {
                         }
                          },
                     colors = CheckboxDefaults.colors(
-                        checkedColor = Secondary,
-                        uncheckedColor = Primary,
+                        checkedColor = MaterialTheme.colorScheme.secondary,
+                        uncheckedColor = MaterialTheme.colorScheme.primary,
                         checkmarkColor = Color.White
                     ),
                     modifier = Modifier
@@ -98,7 +95,7 @@ fun CheckButton(objects: List<GradesObject>, checkedStates: MutableMap<String, B
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                rise_front_end.team2.ui.theme.Primary,
+                                MaterialTheme.colorScheme.primary,
                                 shape = RoundedCornerShape(20.dp)
                             )
                             .padding(16.dp)
@@ -112,7 +109,7 @@ fun CheckButton(objects: List<GradesObject>, checkedStates: MutableMap<String, B
                                 checked = isChecked,
                                 onCheckedChange = { checkedStates[element.name] = it },
                                         colors = CheckboxDefaults.colors(
-                                            checkedColor = Secondary,
+                                            checkedColor = MaterialTheme.colorScheme.secondary,
                                             uncheckedColor = Color.Gray,
                                             checkmarkColor = Color.White
                                          ),
