@@ -10,4 +10,12 @@ class CourseFilesViewModel(
 ) : ViewModel() {
     fun getCourse(courseId: Int): Flow<Course?> =
         repository.getCourseById(courseId)
+
+    fun addToFavorites(courseID: Int, courseFileID: Int){
+
+    }
+
+    fun removeFromFavorites(courseID: Int, courseFileID: Int){
+
+    }
 }

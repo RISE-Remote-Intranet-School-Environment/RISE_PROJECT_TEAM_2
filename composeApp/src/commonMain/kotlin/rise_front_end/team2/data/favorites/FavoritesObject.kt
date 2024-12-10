@@ -9,11 +9,14 @@ sealed class FavoritesObject {
 
 @Serializable
 data class FavoritesCourseObject(
-    override val courseID: Int
+    override val courseID: Int,
+    val courseName: String
 ) : FavoritesObject()
 
 @Serializable
 data class FavoritesFileObject(
     override val courseID: Int,
-    val fileID: Int
+    val courseName: String,
+    val fileID: Int,
+    val fileName: String
 ) : FavoritesObject()

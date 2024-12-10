@@ -8,6 +8,7 @@ data class Course(
     val courseName: String,
     val teacherName: String,
     val courseYear: String,
+    val inFavorites: Boolean,
     val forum: List<ForumMessage>,
     val courseFiles: List<CourseFile>
 
@@ -36,7 +37,11 @@ data class CourseFile(
     val fileID: Int,
     val fileName: String,
     val fileUrl: String,
-    val messages: List<FileMessage> // Discussion related to this file
+    val inFavorites: Boolean,
+    val fileLikes: Int = 0, // Default to 0 if missing
+    val fileAuthor: String = "Unknown Author", // Default to a placeholder if missing
+    val fileDate: String = "Unknown Date", // Default to a placeholder if missing
+    val messages: List<FileMessage> = emptyList() // Default to empty list if missing
 )
 
 @Serializable

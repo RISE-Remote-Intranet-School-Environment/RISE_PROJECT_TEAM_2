@@ -24,6 +24,7 @@ koin = "4.0.0"
 ktor = "2.3.12"
 navigationCompose = "2.8.0-alpha10"
 firebaseCrashlyticsBuildtools = "3.0.2"
+koinAndroid = "4.0.0"
 
 
 [libraries]
@@ -54,6 +55,7 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
+koin-android = "io.insert-koin:koin-android:4.0.0"
 
 
 [plugins]
