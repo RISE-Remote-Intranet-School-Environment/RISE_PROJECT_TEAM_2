@@ -37,10 +37,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import kotlinx.serialization.json.Json
 
-import CalendarFile
 import Event
-
-
+import android.content.Context
+import android.content.Intent
+import android.util.Log
+import androidx.compose.material.icons.filled.FileOpen
+import org.json.JSONArray
 
 val modernGradientDarkColor = listOf(
     Color(0xFF6a7ddcL),
@@ -50,7 +52,6 @@ val modernGradientDarkColor = listOf(
     Color(0xFFc9ab28L),
     Color(0xFF64B823L)
 )
-
 
 @Composable
 fun TimePicker
@@ -104,23 +105,48 @@ fun EventList(events: List<Event>) {
     }
 }
 
+fun parseJsonFile(uri: Uri, context: Context): List<Event> {
+    val events = mutableListOf<Event>()
+    try {
+        val inputStream = context.contentResolver.openInputStream(uri)
+        val jsonString = inputStream?.bufferedReader()?.use { it.readText() } ?: ""
 
-fun mapEventsToActivities(events: List<Event>): SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>> {
-    val activities = mutableStateMapOf<LocalDate, MutableList<Triple<String, String, Color>>>()
-    events.forEach { event ->
-        val color = Color(android.graphics.Color.parseColor(event.color)) // Ensure color parsing is correct
-        val date = LocalDate.parse(event.date) // Assuming date is in a valid format (e.g. "2024-12-06")
-        val activity = Triple(event.title, event.time, color)
+        val jsonArray = JSONArray(jsonString)
 
-        activities.getOrPut(date) { mutableListOf() }.add(activity)
+        for (i in 0 until jsonArray.length()) {
+            val jsonObject = jsonArray.getJSONObject(i)
+            val date = jsonObject.getString("date")
+            val title = jsonObject.getString("title")
+            val time = jsonObject.getString("time")
+            val color = jsonObject.getString("color")
+            events.add(Event(title, time, color, date))
+        }
+    } catch (e: Exception) {
+        Log.e("parseJsonFile", "Error parsing JSON file: ${e.message}", e)
+        e.printStackTrace()
     }
-
-    println("Mapped Activities: $activities") // Check the mapping of activities to dates
-    System.out.print("Mapped Activities: $activities")
-    return activities
+    return events
 }
 
 
+fun mapEventsToActivities(events: List<Event>): SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>> {
+    val activities = mutableStateMapOf<LocalDate, MutableList<Triple<String, String, Color>>>()
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+    events.forEach { event ->
+        try {
+            val color = Color(android.graphics.Color.parseColor(event.color))
+
+            val date = LocalDate.parse(event.date, formatter)
+            val activity = Triple(event.title, event.time, color)
+
+            activities.getOrPut(date) { mutableListOf() }.add(activity)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    return activities
+}
 
 @Composable
 fun CalendarScreen() {
@@ -133,31 +159,23 @@ fun CalendarScreen() {
             var selectedDate by remember { mutableStateOf(LocalDate.now()) } // Track the selected date
             var showDialog by remember { mutableStateOf(false) } // State to control the dialog
             val context = LocalContext.current
-            val calendarFile = CalendarFile()
-
 
             // Define a list of events that you can update once a file is selected
             var events by remember { mutableStateOf<List<Event>>(emptyList()) }
-
-            val onFileSelected: (Uri) -> Unit = { uri ->
-                System.out.println("File picker triggered with URI: $uri")
-                if (uri != null) {
-                    events = calendarFile.parseJsonFile(uri, context)
-                    System.out.println("Events loaded: $events")
-                } else {
-                    System.out.println("No file selected.")
-                }
-            }
-
-            // Show the events (for example)
-            events.forEach { event ->
-                Text(text = "${event.title} at ${event.time}")
-            }
-
-            // Map events to activities (this could also be done when events are first parsed)
-            //val activities = mapEventsToActivities(events)
             val activities by remember { mutableStateOf(SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>>()) }
 
+
+            val onFileSelected: (Uri) -> Unit = { uri ->
+                try {
+                    events = parseJsonFile(uri, context)
+
+                    activities.clear()
+                    activities.putAll(mapEventsToActivities(events))
+                } catch (e: Exception) {
+                    Log.e("CalendarScreen", "Error loading file: ${e.message}", e)
+                    e.printStackTrace()
+                }
+            }
 
             Column(
                 modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -166,7 +184,12 @@ fun CalendarScreen() {
                 CalendarHeader(
                     currentMonth = selectedMonth,
                     onPreviousMonth = { selectedMonth = selectedMonth.minusMonths(1) },
-                    onNextMonth = { selectedMonth = selectedMonth.plusMonths(1) }
+                    onNextMonth = { selectedMonth = selectedMonth.plusMonths(1) },
+                    onFileSelected = { uri ->
+                        events = parseJsonFile(uri, context)
+                        activities.clear()
+                        activities.putAll(mapEventsToActivities(events))
+                    }
                 )
 
                 CalendarView(
@@ -215,7 +238,8 @@ fun CalendarScreen() {
 fun CalendarHeader(
     currentMonth: YearMonth,
     onPreviousMonth: () -> Unit,
-    onNextMonth: () -> Unit
+    onNextMonth: () -> Unit,
+    onFileSelected: (Uri) -> Unit
 ) {
     val monthName = currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
     val year = currentMonth.year
@@ -236,7 +260,37 @@ fun CalendarHeader(
         Button(onClick = onNextMonth) {
             Text(">")
         }
-        CalendarFile().FilePicker(onFileSelected = {uri ->  })
+        FilePicker(onFileSelected = onFileSelected)
+    }
+}
+
+@Composable
+fun FilePicker(onFileSelected: (Uri) -> Unit) {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+        onResult = { uri ->
+            if (uri != null) {
+                try {
+                    // Log additional context about the selected file
+                    val contentResolver = context.contentResolver
+                    val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    contentResolver.takePersistableUriPermission(uri, takeFlags)
+
+                    onFileSelected(uri)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    )
+
+    Button(onClick = {
+        launcher.launch(arrayOf("application/json"))
+    }) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon")
+        }
     }
 }
 
@@ -255,8 +309,6 @@ fun CalendarView(
     val screenWidth =
         LocalContext.current.resources.displayMetrics.widthPixels / LocalContext.current.resources.displayMetrics.density
     val cellSize = (screenWidth / 7).dp
-
-    System.out.print("Cell Size: $cellSize")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         // Weekday headers without grid borders
@@ -355,8 +407,6 @@ fun DayCell(
     }
 }
 
-
-
 @Composable
 fun ActivitiesList(selectedDate: LocalDate, activities: List<Triple<String, String, Color>>) {
     val sortedActivities = activities.sortedBy { it.second } // Sort by time
@@ -412,7 +462,6 @@ fun ActivitiesList(selectedDate: LocalDate, activities: List<Triple<String, Stri
         }
     }
 }
-
 
 @Composable
 fun ShowAddActivityDialog(

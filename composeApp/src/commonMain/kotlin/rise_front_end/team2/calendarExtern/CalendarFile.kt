@@ -25,30 +25,35 @@ import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import com.google.gson.Gson
+import rise_front_end.team2.ui.screens.mapEventsToActivities
+
 
 data class Event(val title: String, val time: String, val color: String, val date: String)
 
 class CalendarFile {
 
-    // Button for file picker
-// File picker button
     @Composable
     fun FilePicker(onFileSelected: (Uri) -> Unit) {
         val context = LocalContext.current
+        System.out.println("IN fun FilePicker()")
 
         // File picker launcher
         val filePickerLauncher = rememberLauncherForActivityResult(
+
             contract = ActivityResultContracts.GetContent(),
             onResult = { uri ->
                 System.out.println("File picker result: $uri")
                 if (uri != null) {
-                    System.out.println("File URI received: $uri")
+                    System.out.println("File URI received (calendarFile.kts) : $uri")
                     onFileSelected(uri)
                 } else {
                     System.out.println("No file selected.")
                 }
             }
         )
+
+        System.out.println(" after filePickerLauncher -- ")
 
         // Button to open file picker
         Button(
@@ -69,28 +74,57 @@ class CalendarFile {
         }
     }
 
-    fun parseJsonFile(uri: Uri, context: Context): List<Event> {
-        System.out.println("Starting parseJsonFile for URI: $uri")
-        val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+    fun handleFileSelection(uri: Uri, context: Context) {
+        try {
+            println("Handling file selection for URI: $uri")
+            // Assuming parseJsonFile is a method to handle the URI and parse the JSON file
+            val events = parseJsonFile(uri, context)
+            println("Events loaded: $events")
 
-        return inputStream?.let {
-            val jsonString = it.reader().readText()
-            System.out.println("Loaded JSON: $jsonString") // Print JSON content
-
-            try {
-                // Attempt to parse JSON
-                val events = Json.decodeFromString<List<Event>>(jsonString)
-                System.out.println("Parsed Events: $events") // Print parsed events
-                events
-            } catch (e: Exception) {
-                // Log the error and return an empty list
-                System.out.println("Error parsing JSON: $e")
-                emptyList<Event>()
+            // Log events for debugging
+            events.forEach { event ->
+                println("Event Details: ${event.date}, ${event.title}, ${event.color}")
             }
-        } ?: run {
-            System.out.println("InputStream is null. Unable to read the file.")
-            emptyList()
+
+            // You can now map events to activities or any other logic you need
+            //activities.clear() // Clear existing activities
+            //activities.putAll(mapEventsToActivities(events)) // Populate with new activities
+
+        } catch (e: Exception) {
+            println("Error loading file: ${e.message}")
+            e.printStackTrace()
         }
     }
+
+    // In CalendarFile.kts
+    fun parseJsonFile(uri: Uri, context: Context): List<Event> {
+        System.out.println("IN fun parseJsonFile()")
+        val contentResolver = context.contentResolver
+        val inputStream = contentResolver.openInputStream(uri)
+        inputStream?.let { stream ->
+            // You can now parse the inputStream as a JSON file
+            try {
+                // Assuming you're using something like a JSON library to parse the input stream
+                val jsonString = stream.bufferedReader().use { it.readText() }
+                // Now, parse the JSON string to events (you can use your custom parsing logic)
+                val events = parseEventsFromJson(jsonString)  // Assuming you have a parse method
+                stream.close()
+                return events
+            } catch (e: Exception) {
+                e.printStackTrace()
+                System.err.println("Error reading or parsing the file: ${e.message}")
+            }
+        } ?: run {
+            System.err.println("Failed to open input stream from URI: $uri")
+        }
+        return emptyList() // If it fails, return an empty list
+    }
+
+    fun parseEventsFromJson(json: String): List<Event> {
+        val gson = Gson()
+        return gson.fromJson(json, Array<Event>::class.java).toList() // Convert JSON to List<Event>
+    }
+
+
 
 }
