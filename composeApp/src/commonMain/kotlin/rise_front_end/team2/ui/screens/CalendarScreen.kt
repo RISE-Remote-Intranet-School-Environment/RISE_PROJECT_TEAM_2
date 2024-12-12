@@ -200,26 +200,33 @@ fun CalendarScreen() {
                     events = events // Pass empty list for now
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(1.dp))
 
-                ActivitiesList(
-                    selectedDate = selectedDate,
-                    activities = activities[selectedDate].orEmpty()
-                )
-
-                // Floating action button to add activity
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomEnd
+                // Row containing the selected date and "+" button
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 1.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    Text(
+                        text = selectedDate.toString(), // Display the selected date here
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+
                     FloatingActionButton(
                         onClick = { showDialog = true },
-                        modifier = Modifier.padding(16.dp),
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                     ) {
                         Text("+", fontSize = 24.sp, color = Color.White, textAlign = TextAlign.Center)
                     }
                 }
+
+                ActivitiesList(
+                    selectedDate = selectedDate,
+                    activities = activities[selectedDate].orEmpty()
+                )
             }
 
             // Show dialog for adding activity
@@ -346,7 +353,7 @@ fun CalendarView(
                     isSelected = date == selectedDate,
                     onClick = { onDayClick(date) },
                     cellSize = cellSize,
-                    activities = activitiesForDate // Pass complete activities list
+                    activities = activitiesForDate
                 )
             }
         }
@@ -360,47 +367,55 @@ fun DayCell(
     isSelected: Boolean,
     onClick: () -> Unit,
     cellSize: Dp,
-    activities: List<Triple<String, String, Color>> // Liste des activités (titre, heure, couleur)
+    activities: List<Triple<String, String, Color>>
 ) {
-    // Trier les activités par leur heure de début (heure:min)
+
     val sortedActivities = activities.sortedBy { it.second }
 
     Box(
         modifier = Modifier
-            .size(cellSize) // Taille fixe pour la cellule
+            .size(cellSize) // Fixed size for the cell
             .background(
                 color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
                 shape = MaterialTheme.shapes.small
             )
             .clickable { onClick() }
     ) {
-        // Numéro du jour
-        Text(
-            text = date.dayOfMonth.toString(),
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold,
-            fontSize = 12.sp,
+        // Use a Row to control positioning with Spacer for alignment
+        Row(
             modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(2.dp)
-                .zIndex(1f)
-        )
+                .fillMaxWidth()
+                .align(Alignment.TopStart) // Align to the top left of the cell
+                .padding(4.dp)
+        ) {
+            Spacer(modifier = Modifier.width(6.dp))
 
-        // Lignes des activités (affichées dans l'ordre trié)
+            Text(
+                text = date.dayOfMonth.toString(),
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(end = 4.dp) // Optional padding to fine-tune position
+            )
+        }
+        // Activities displayed below the day number
         Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp), // Espacement entre les lignes
+            verticalArrangement = Arrangement.spacedBy(2.dp), // Space between activity indicators
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 3.dp)
-                .zIndex(0f) // Pour afficher les lignes au-dessus du numéro du jour
-                .align(Alignment.Center)
+                .padding(top = 20.dp, start = 4.dp, end = 4.dp, bottom = 0.dp) // Space for day number
+                .align(Alignment.Center) // Center the activities vertically within the Box
         ) {
+            Spacer(modifier = Modifier.height(4.dp))
             sortedActivities.forEach { (_, time, color) ->
                 Box(
                     modifier = Modifier
-                        .height(4.dp) // Hauteur de la ligne
-                        .fillMaxWidth()
-                        .background(color, shape = RoundedCornerShape(50)) // Ligne arrondie
+                        .height(4.dp)
+                        .fillMaxWidth(0.8f) // Bars smaller than full width
+                        .background(color, shape = RoundedCornerShape(50))
+                        .align(Alignment.CenterHorizontally) // Center the bars horizontally
                 )
             }
         }
