@@ -42,6 +42,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.compose.material.icons.filled.FileOpen
+import kotlinx.datetime.number
 import org.json.JSONArray
 
 val modernGradientDarkColor = listOf(
@@ -248,8 +249,10 @@ fun CalendarHeader(
     onNextMonth: () -> Unit,
     onFileSelected: (Uri) -> Unit
 ) {
-    val monthName = currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    val month = currentMonth.month.number // getDisplayName(TextStyle.FULL, Locale.getDefault())
     val year = currentMonth.year
+
+    val monthName = LocalDate.of(year, month, 1).format(DateTimeFormatter.ofPattern("MMM"))
 
     Row(
         modifier = Modifier.fillMaxWidth(),
