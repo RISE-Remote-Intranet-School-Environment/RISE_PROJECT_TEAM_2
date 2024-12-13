@@ -41,7 +41,11 @@ import Event
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.FileOpen
+import androidx.compose.material.icons.filled.Search
 import kotlinx.datetime.number
 import org.json.JSONArray
 
@@ -259,18 +263,35 @@ fun CalendarHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Button(onClick = onPreviousMonth) {
-            Text("<")
+        Button(onClick = onPreviousMonth,
+            modifier = Modifier.padding(4.dp)
+                .width(50.dp),
+            contentPadding = PaddingValues(8.dp)
+        ) {
+            Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "previous month", modifier = Modifier.size(24.dp))
         }
         Text(
             text = "$monthName $year",
             style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Medium
         )
-        Button(onClick = onNextMonth) {
-            Text(">")
+        Button(onClick = onNextMonth,
+            modifier = Modifier.padding(4.dp)
+                .width(50.dp),
+            contentPadding = PaddingValues(8.dp)
+        ) {
+            Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "next month",modifier = Modifier.size(24.dp))
         }
+
         FilePicker(onFileSelected = onFileSelected)
+
+        Button(onClick = onNextMonth,
+            modifier = Modifier.padding(4.dp)
+                .width(50.dp),
+            contentPadding = PaddingValues(8.dp)
+        ) {
+            Icon(Icons.Filled.Search, contentDescription = "File Picker Icon",modifier = Modifier.size(24.dp))
+        }
     }
 }
 
@@ -296,10 +317,12 @@ fun FilePicker(onFileSelected: (Uri) -> Unit) {
     )
 
     Button(onClick = {
-        launcher.launch(arrayOf("application/json"))
-    }) {
+        launcher.launch(arrayOf("application/json"))},
+        modifier = Modifier.padding(4.dp)
+            .width(50.dp),
+        contentPadding = PaddingValues(8.dp)){
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon")
+            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon",modifier = Modifier.size(24.dp))
         }
     }
 }
