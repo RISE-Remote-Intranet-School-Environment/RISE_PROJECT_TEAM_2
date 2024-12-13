@@ -216,8 +216,13 @@ fun CalendarScreen() {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = selectedDate.toString(), // Display the selected date here
-                        style = MaterialTheme.typography.bodyLarge
+                        text = selectedDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy")),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Start
                     )
 
                     FloatingActionButton(
@@ -457,16 +462,6 @@ fun ActivitiesList(selectedDate: LocalDate, activities: List<Triple<String, Stri
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Text(
-            text = selectedDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy")),
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .fillMaxWidth(),
-            textAlign = TextAlign.Start
-        )
-
         if (sortedActivities.isEmpty()) {
             Text(
                 text = "No activities for this day.",
