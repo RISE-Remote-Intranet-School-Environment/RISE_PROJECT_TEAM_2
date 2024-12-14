@@ -80,11 +80,11 @@ fun FilePicker(onFileSelected: (Uri) -> Unit) {
         onResult = { uri ->
             if (uri != null) {
                 try {
-                    // Log additional context about the selected file
                     val contentResolver = context.contentResolver
                     val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                     contentResolver.takePersistableUriPermission(uri, takeFlags)
 
+                    // Call your function to handle the file and update the activities
                     onFileSelected(uri)
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -93,14 +93,40 @@ fun FilePicker(onFileSelected: (Uri) -> Unit) {
         }
     )
 
-    Button(onClick = {
-        launcher.launch(arrayOf("application/json"))},
+    Button(
+        onClick = {
+            launcher.launch(arrayOf("application/json"))
+        },
         modifier = Modifier.padding(4.dp)
             .width(50.dp),
         contentPadding = PaddingValues(8.dp)
-    ){
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon",modifier = Modifier.size(24.dp))
+            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon", modifier = Modifier.size(24.dp))
         }
     }
+}
+
+fun addActivitiesFromJson(
+    uri: Uri,
+    context: Context,
+    existingActivities: SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>>
+) {
+    // Step 1: Parse the new events from the JSON file
+    val events = parseJsonFile(uri, context)
+
+    // Step 2: Map the events to activities and merge them with existing activities
+    val newActivities = mapEventsToActivities(events)
+
+    // Step 3: Merge the new activities with the existing ones
+    newActivities.forEach { (date, activitiesForDate) ->
+        // Get the current list of activities for the date or an empty list if none exist
+        val currentActivities = existingActivities.getOrPut(date) { mutableListOf() }
+
+        // Merge the new activities with the current ones (no duplicates)
+        currentActivities.addAll(activitiesForDate)
+    }
+
+    // Step 4: Update the state with the merged activities (if necessary, depending on your UI structure)
+    // For example, you can update the activities state here
 }

@@ -117,7 +117,7 @@ fun CalendarScreen() {
                     onNextMonth = { selectedMonth = selectedMonth.plusMonths(1) },
                     onFileSelected = { uri ->
                         events = parseJsonFile(uri, context)
-                        activities.clear()
+                        //activities.clear()
                         activities.putAll(mapEventsToActivities(events))
                     }
                 )
