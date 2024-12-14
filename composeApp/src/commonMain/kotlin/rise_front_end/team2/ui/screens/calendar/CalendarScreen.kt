@@ -1,4 +1,4 @@
-package rise_front_end.team2.ui.screens
+package rise_front_end.team2.ui.screens.calendar
 
 import android.app.TimePickerDialog
 import android.net.Uri
@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateMap
@@ -25,29 +24,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import rise_front_end.team2.ui.theme.AppTheme
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
 import java.util.*
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Folder
-import kotlinx.serialization.json.Json
 
-import Event
-import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.Search
 import kotlinx.datetime.number
-import org.json.JSONArray
+import network.chaintech.kmp_date_time_picker.parse
 
 val modernGradientDarkColor = listOf(
     Color(0xFF6a7ddcL),
@@ -57,6 +50,21 @@ val modernGradientDarkColor = listOf(
     Color(0xFFc9ab28L),
     Color(0xFF64B823L)
 )
+
+// Enum for Display Mode
+enum class DisplayMode {
+    MONTH, WEEK
+}
+
+fun onDisplayModeChange(displayMode: MutableState<DisplayMode>) {
+    displayMode.value = if (displayMode.value == DisplayMode.MONTH) DisplayMode.WEEK else DisplayMode.MONTH
+}
+
+fun getStartOfWeek(date: LocalDate): LocalDate {
+    val dayOfWeek = date.dayOfWeek.value
+    return date.minusDays((dayOfWeek - 1).toLong())
+}
+
 
 @Composable
 fun TimePicker
@@ -82,78 +90,6 @@ fun TimePicker
 }
 
 @Composable
-fun EventList(events: List<Event>) {
-    if (events.isEmpty()) {
-        Text("No events to display", modifier = Modifier.padding(16.dp))
-    } else {
-        // Display the list of events
-        events.forEach { event ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "${event.date}: ${event.title}",
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Box(
-                    modifier = Modifier
-                        .width(16.dp)
-                        .height(16.dp)
-                        .background(Color(android.graphics.Color.parseColor(event.color)))
-                )
-            }
-        }
-    }
-}
-
-fun parseJsonFile(uri: Uri, context: Context): List<Event> {
-    val events = mutableListOf<Event>()
-    try {
-        val inputStream = context.contentResolver.openInputStream(uri)
-        val jsonString = inputStream?.bufferedReader()?.use { it.readText() } ?: ""
-
-        val jsonArray = JSONArray(jsonString)
-
-        for (i in 0 until jsonArray.length()) {
-            val jsonObject = jsonArray.getJSONObject(i)
-            val date = jsonObject.getString("date")
-            val title = jsonObject.getString("title")
-            val time = jsonObject.getString("time")
-            val color = jsonObject.getString("color")
-            events.add(Event(title, time, color, date))
-        }
-    } catch (e: Exception) {
-        Log.e("parseJsonFile", "Error parsing JSON file: ${e.message}", e)
-        e.printStackTrace()
-    }
-    return events
-}
-
-
-fun mapEventsToActivities(events: List<Event>): SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>> {
-    val activities = mutableStateMapOf<LocalDate, MutableList<Triple<String, String, Color>>>()
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-    events.forEach { event ->
-        try {
-            val color = Color(android.graphics.Color.parseColor(event.color))
-
-            val date = LocalDate.parse(event.date, formatter)
-            val activity = Triple(event.title, event.time, color)
-
-            activities.getOrPut(date) { mutableListOf() }.add(activity)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-    return activities
-}
-
-@Composable
 fun CalendarScreen() {
     AppTheme {
         Surface(
@@ -165,22 +101,11 @@ fun CalendarScreen() {
             var showDialog by remember { mutableStateOf(false) } // State to control the dialog
             val context = LocalContext.current
 
-            // Define a list of events that you can update once a file is selected
+            // **Define mutable state for display mode**
+            val displayMode = remember { mutableStateOf(DisplayMode.MONTH) }
+
             var events by remember { mutableStateOf<List<Event>>(emptyList()) }
             val activities by remember { mutableStateOf(SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>>()) }
-
-
-            val onFileSelected: (Uri) -> Unit = { uri ->
-                try {
-                    events = parseJsonFile(uri, context)
-
-                    activities.clear()
-                    activities.putAll(mapEventsToActivities(events))
-                } catch (e: Exception) {
-                    Log.e("CalendarScreen", "Error loading file: ${e.message}", e)
-                    e.printStackTrace()
-                }
-            }
 
             Column(
                 modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -202,7 +127,9 @@ fun CalendarScreen() {
                     activities = activities,
                     selectedDate = selectedDate,
                     onDayClick = { date -> selectedDate = date },
-                    events = events // Pass empty list for now
+                    events = events,
+                    displayMode = displayMode.value, // Pass the display mode to CalendarView
+                    weekStartDate = getStartOfWeek(selectedDate) // Pass the start of the week
                 )
 
                 Spacer(modifier = Modifier.height(1.dp))
@@ -219,11 +146,18 @@ fun CalendarScreen() {
                         text = selectedDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy")),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .padding(vertical = 8.dp)
-                            .fillMaxWidth(),
+                        modifier = Modifier.padding(vertical = 8.dp),
                         textAlign = TextAlign.Start
                     )
+
+                    FloatingActionButton(
+                        onClick = { onDisplayModeChange(displayMode) }, // Toggle the display mode
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        modifier = Modifier.padding(start = 80.dp)
+                    ) {
+                        val icon = if (displayMode.value == DisplayMode.MONTH) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
+                        Icon(icon, contentDescription = "Toggle Display Mode", modifier = Modifier.size(35.dp))
+                    }
 
                     FloatingActionButton(
                         onClick = { showDialog = true },
@@ -239,7 +173,6 @@ fun CalendarScreen() {
                 )
             }
 
-            // Show dialog for adding activity
             if (showDialog) {
                 ShowAddActivityDialog(
                     selectedDate = selectedDate,
@@ -251,12 +184,13 @@ fun CalendarScreen() {
     }
 }
 
+
 @Composable
 fun CalendarHeader(
     currentMonth: YearMonth,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
-    onFileSelected: (Uri) -> Unit
+    onFileSelected: (Uri) -> Unit,
 ) {
     val month = currentMonth.month.number // getDisplayName(TextStyle.FULL, Locale.getDefault())
     val year = currentMonth.year
@@ -300,38 +234,6 @@ fun CalendarHeader(
     }
 }
 
-@Composable
-fun FilePicker(onFileSelected: (Uri) -> Unit) {
-    val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument(),
-        onResult = { uri ->
-            if (uri != null) {
-                try {
-                    // Log additional context about the selected file
-                    val contentResolver = context.contentResolver
-                    val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    contentResolver.takePersistableUriPermission(uri, takeFlags)
-
-                    onFileSelected(uri)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
-    )
-
-    Button(onClick = {
-        launcher.launch(arrayOf("application/json"))},
-        modifier = Modifier.padding(4.dp)
-            .width(50.dp),
-        contentPadding = PaddingValues(8.dp)){
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon",modifier = Modifier.size(24.dp))
-        }
-    }
-}
-
 
 @Composable
 fun CalendarView(
@@ -339,7 +241,9 @@ fun CalendarView(
     activities: SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>>,
     selectedDate: LocalDate,
     onDayClick: (LocalDate) -> Unit,
-    events: List<Event>
+    events: List<Event>,
+    displayMode: DisplayMode, // Add display mode as a parameter
+    weekStartDate: LocalDate // Start of the week if in WEEK mode
 ) {
     val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
     val daysInMonth = currentMonth.lengthOfMonth()
@@ -347,6 +251,7 @@ fun CalendarView(
     val screenWidth =
         LocalContext.current.resources.displayMetrics.widthPixels / LocalContext.current.resources.displayMetrics.density
     val cellSize = (screenWidth / 7).dp
+
 
     Column(modifier = Modifier.fillMaxWidth()) {
         // Weekday headers without grid borders
@@ -367,25 +272,58 @@ fun CalendarView(
 
         Spacer(modifier = Modifier.height(8.dp)) // Space between weekdays and grid
 
-        // Loop through the activities and display them in each day cell
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(7),
-            verticalArrangement = Arrangement.spacedBy(0.dp),
-            horizontalArrangement = Arrangement.spacedBy(0.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            items(daysInMonth) { day ->
-                val date = currentMonth.atDay(day + 1)
-                val activitiesForDate = activities[date].orEmpty()
+        when (displayMode) {
+            DisplayMode.MONTH -> {
+                // Display entire month grid
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(7),
+                    verticalArrangement = Arrangement.spacedBy(0.dp),
+                    horizontalArrangement = Arrangement.spacedBy(0.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    // Fill empty cells before the first day of the month
+                    items(startDayOfWeek) {
+                        Box(modifier = Modifier.size(cellSize))
+                    }
 
-                DayCell(
-                    date = date,
-                    activityCount = activitiesForDate.size,
-                    isSelected = date == selectedDate,
-                    onClick = { onDayClick(date) },
-                    cellSize = cellSize,
-                    activities = activitiesForDate
-                )
+                    // Display all days in the month
+                    items(daysInMonth) { day ->
+                        val date = currentMonth.atDay(day + 1)
+                        val activitiesForDate = activities[date].orEmpty()
+
+                        DayCell(
+                            date = date,
+                            activityCount = activitiesForDate.size,
+                            isSelected = date == selectedDate,
+                            onClick = { onDayClick(date) },
+                            cellSize = cellSize,
+                            activities = activitiesForDate
+                        )
+                    }
+                }
+            }
+
+            DisplayMode.WEEK -> {
+                // Display only the selected week
+                val daysInWeek = (0 until 7).map { weekStartDate.plusDays(it.toLong()) }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    daysInWeek.forEach { date ->
+                        val activitiesForDate = activities[date].orEmpty()
+
+                        DayCell(
+                            date = date,
+                            activityCount = activitiesForDate.size,
+                            isSelected = date == selectedDate,
+                            onClick = { onDayClick(date) },
+                            cellSize = cellSize,
+                            activities = activitiesForDate
+                        )
+                    }
+                }
             }
         }
     }
