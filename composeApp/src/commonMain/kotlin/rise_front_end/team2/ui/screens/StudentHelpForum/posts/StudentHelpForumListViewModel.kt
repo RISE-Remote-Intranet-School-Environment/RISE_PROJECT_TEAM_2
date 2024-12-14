@@ -18,6 +18,7 @@ class StudentHelpForumDetailViewModel(
         repository.addForumMessage(courseId, message)
     }
 
+    //Might need to use it later, we'll see
     fun updateForumMessage(courseId: Int, messageId: Int, newContent: String) = viewModelScope.launch {
         repository.updateForumMessage(courseId, messageId, newContent)
     }

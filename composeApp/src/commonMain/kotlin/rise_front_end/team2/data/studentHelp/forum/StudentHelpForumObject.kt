@@ -17,6 +17,7 @@ data class Course(
 @Serializable
 data class ForumMessage(
     val messageID: Int,
+    val title: String,
     val content: String,
     val author: String,
     val timestamp: String,
@@ -47,7 +48,7 @@ data class CourseFile(
 @Serializable
 data class FileMessage(
     val messageID: Int,
-    val content: String,
+    val content: String = "Content Missing",
     val author: String,
     val timestamp: String,
     val likes: Int
