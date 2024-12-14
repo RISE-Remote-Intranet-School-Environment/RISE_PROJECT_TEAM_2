@@ -247,7 +247,7 @@ fun CalendarView(
 ) {
     val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
     val daysInMonth = currentMonth.lengthOfMonth()
-    val startDayOfWeek = (currentMonth.atDay(1).dayOfWeek.value + 5) % 7 // Adjust for Monday = 0
+    val startDayOfWeek = (currentMonth.atDay(1).dayOfWeek.value + 6) % 7 // Adjust for Monday = 0
     val screenWidth =
         LocalContext.current.resources.displayMetrics.widthPixels / LocalContext.current.resources.displayMetrics.density
     val cellSize = (screenWidth / 7).dp
@@ -309,7 +309,7 @@ fun CalendarView(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly // This evenly spaces the days
                 ) {
                     daysInWeek.forEach { date ->
                         val activitiesForDate = activities[date].orEmpty()
@@ -319,7 +319,7 @@ fun CalendarView(
                             activityCount = activitiesForDate.size,
                             isSelected = date == selectedDate,
                             onClick = { onDayClick(date) },
-                            cellSize = cellSize,
+                            cellSize = (screenWidth/8).dp, // Use same cell size
                             activities = activitiesForDate
                         )
                     }
