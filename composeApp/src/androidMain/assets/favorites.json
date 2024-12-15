@@ -8,5 +8,11 @@
     "courseName": "Thermodynamics",
     "fileID": 400001,
     "fileName": "Thermodynamics Basics.pdf"
+  },
+  {
+    "courseID": 100003,
+    "courseName": "Advanced Mathematics",
+    "fileID": 400003,
+    "fileName": "Differential Equations Guide.pdf"
   }
 ]
