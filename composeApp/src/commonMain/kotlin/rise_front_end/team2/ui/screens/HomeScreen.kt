@@ -1,63 +1,91 @@
 package rise_front_end.team2.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import rise_front_end.team2.ui.theme.AppTheme
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 
 @Composable
 fun HomeScreen(
-    onSyllabusClick: () -> Unit,  // Lambda to navigate to SyllabusScreen
-    onFileHostingClick: () -> Unit, // Lambda to navigate to FileSharingScreen
+    onSyllabusClick: () -> Unit,
+    onFileHostingClick: () -> Unit,
     onStudentHelpForumClick: () -> Unit,
+    onOutlookClick: () -> Unit = {} // Valeur par défaut pour éviter les erreurs
 ) {
-    AppTheme {
-        // Use Column to vertically arrange the buttons
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+        // Logo ECAM
+        AsyncImage(
+            model = "https://th.bing.com/th/id/OIP.MQVDBjtT_jShbrFSGyIjMwAAAA?rs=1&pid=ImgDetMain",
+            contentDescription = "Logo ECAM",
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),  // Add padding around the content
+                .size(150.dp)
+                .padding(bottom = 16.dp),
+            contentScale = ContentScale.Fit
+        )
+
+        // Boutons organisés en grille
+        Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center // Center content vertically
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Text at the top
-            Text(text = "New HomeScreen")
-
-            Spacer(modifier = Modifier.height(16.dp)) // Add space between the Text and buttons
-
-            // Filled Button to navigate to SyllabusScreen
-            Button(
-                onClick = onSyllabusClick,
-                modifier = Modifier.fillMaxWidth() // Make the button fill the width
-            ) {
-                Text("Go to Syllabus")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp)) // Add space between buttons
-
-            // Tonal Button to navigate to FileSharingScreen
-            FilledTonalButton(
-                onClick = onFileHostingClick,
+            Row(
                 modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text("Go to File Sharing")
+                IconButtonWithText("Syllabus", Icons.Filled.MenuBook, onSyllabusClick)
+                IconButtonWithText("Student Help", Icons.Filled.Help, onStudentHelpForumClick)
             }
 
-            Spacer(modifier = Modifier.height(16.dp)) // Add space between buttons
-
-            // Elevated Button to navigate to Student Help Forum
-            ElevatedButton(
-                onClick = onStudentHelpForumClick,
-                modifier = Modifier.fillMaxWidth()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text("Go to Student Help Forum")
+                IconButtonWithText("File Sharing", Icons.Filled.Folder, onFileHostingClick)
+                IconButtonWithText("Outlook", Icons.Filled.Email, onOutlookClick)
             }
-
         }
+    }
+}
 
+@Composable
+fun IconButtonWithText(
+    text: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .size(width = 150.dp, height = 100.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0F2C4C))
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = text,
+                tint = Color.White,
+                modifier = Modifier.size(32.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = text, fontSize = 14.sp, color = Color.White)
+        }
     }
 }

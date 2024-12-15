@@ -42,8 +42,8 @@ actual fun PlatformNavigation() {
 
                 TopBar(getScreenTitle(currentRoute),
                     onProfilClick = {
-                    navController.navigate(Screens.ProfileScreen.route)
-                })
+                        navController.navigate(Screens.ProfileScreen.route)
+                    })
             },
             bottomBar = {
                 CommonNavigationBar(
@@ -257,13 +257,13 @@ actual fun PlatformNavigation() {
                 }
             }
 
-            }
-
-
         }
 
 
     }
+
+
+}
 
 
 fun getScreenTitle(route: String?): String {
