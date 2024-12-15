@@ -233,9 +233,9 @@ fun CalendarHeader(
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
     onFileSelected: (Uri) -> Unit,
-    displayMode: MutableState<DisplayMode>, // Add displayMode state
-    searchMode: Boolean,                  // Add searchMode state
-    onSearchModeChange: (Boolean) -> Unit // Lambda to toggle searchMode
+    displayMode: MutableState<DisplayMode>,
+    searchMode: Boolean,
+    onSearchModeChange: (Boolean) -> Unit
 ) {
     val month = currentMonth.month.number
     val year = currentMonth.year
@@ -367,7 +367,7 @@ fun CalendarView(
                             activityCount = activitiesForDate.size,
                             isSelected = date == selectedDate,
                             onClick = { onDayClick(date) },
-                            cellSize = (screenWidth/8).dp, // Use same cell size
+                            cellSize = (screenWidth/8).dp,
                             activities = activitiesForDate
                         )
                     }
@@ -391,7 +391,7 @@ fun DayCell(
 
     Box(
         modifier = Modifier
-            .size(cellSize) // Fixed size for the cell
+            .size(cellSize)
             .background(
                 color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
                 shape = MaterialTheme.shapes.small
