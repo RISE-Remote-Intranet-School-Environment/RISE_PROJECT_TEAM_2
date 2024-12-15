@@ -47,6 +47,10 @@ import rise_front_end.team2.data.data_grades.GradesObject
 import rise_front_end.team2.data.data_grades.downloadFile
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 
+import rise_front_end.team2.ui.theme.GradesGood
+import rise_front_end.team2.ui.theme.GradesBad
+
+
 
 @Composable
 fun GradeScreen(onRegistrationClick: () -> Unit,) {
@@ -297,7 +301,7 @@ fun CourseSection(objects: List<GradesObject>,) {
         Spacer(modifier = Modifier.height(16.dp))
         val list = gradesObject.list
         list.forEach { element ->
-            val cardColor = if (element.grades > 10) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onError
+            val cardColor = if (element.grades > 10) GradesGood else GradesBad
             GradeCard(
                 subject = element.name,
                 grade = element.grades,
