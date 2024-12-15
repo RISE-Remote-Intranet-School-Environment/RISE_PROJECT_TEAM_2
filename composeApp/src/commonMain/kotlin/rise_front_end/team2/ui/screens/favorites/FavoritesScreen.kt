@@ -95,10 +95,6 @@ private fun FavoriteFrame(
         modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .background(
-                color = AppTheme.colors.surfaceVariant,
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
-            )
             .padding(12.dp)
     ) {
         when (favorite) {
@@ -113,8 +109,7 @@ private fun FavoriteFrame(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Go to Course",
-                        color = AppTheme.colors.onPrimary)
+                        text = "Go to Course")
                 }
             }
             is FavoritesFileObject -> {
@@ -138,7 +133,6 @@ private fun FavoriteFrame(
                     ) {
                         Text(
                             text = "Go to File",
-                            color = AppTheme.colors.onPrimary,
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold))
                     }
                 }
