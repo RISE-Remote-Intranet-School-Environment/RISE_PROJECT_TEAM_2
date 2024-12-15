@@ -37,6 +37,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.Search
 import kotlinx.datetime.number
@@ -64,6 +65,32 @@ fun getStartOfWeek(date: LocalDate): LocalDate {
     val dayOfWeek = date.dayOfWeek.value
     return date.minusDays((dayOfWeek - 1).toLong())
 }
+
+@Composable
+fun SearchBar(
+    onDismiss: () -> Unit
+) {
+    var searchText by remember { mutableStateOf("") } // Track user input
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        OutlinedTextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            label = { Text("Search Activities") },
+            modifier = Modifier.weight(1f) // Take up available width
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Button(onClick = onDismiss) {
+            Icon(Icons.Filled.Check , contentDescription = "Enter", modifier = Modifier.size(24.dp, 24.dp))
+        }
+    }
+}
+
 
 
 @Composable
@@ -96,14 +123,14 @@ fun CalendarScreen() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
+            // State variables
             var selectedMonth by remember { mutableStateOf(YearMonth.now()) }
-            var selectedDate by remember { mutableStateOf(LocalDate.now()) } // Track the selected date
-            var showDialog by remember { mutableStateOf(false) } // State to control the dialog
+            var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+            var showDialog by remember { mutableStateOf(false) }
+            var searchMode by remember { mutableStateOf(false) } // Search Mode state
+            val displayMode = remember { mutableStateOf(DisplayMode.MONTH) } // Display Mode state
+
             val context = LocalContext.current
-
-            // **Define mutable state for display mode**
-            val displayMode = remember { mutableStateOf(DisplayMode.MONTH) }
-
             var events by remember { mutableStateOf<List<Event>>(emptyList()) }
             val activities by remember { mutableStateOf(SnapshotStateMap<LocalDate, MutableList<Triple<String, String, Color>>>()) }
 
@@ -111,30 +138,32 @@ fun CalendarScreen() {
                 modifier = Modifier.fillMaxSize().padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Pass states and handlers to CalendarHeader
                 CalendarHeader(
                     currentMonth = selectedMonth,
                     onPreviousMonth = { selectedMonth = selectedMonth.minusMonths(1) },
                     onNextMonth = { selectedMonth = selectedMonth.plusMonths(1) },
                     onFileSelected = { uri ->
                         events = parseJsonFile(uri, context)
-                        //activities.clear()
                         activities.putAll(mapEventsToActivities(events))
-                    }
+                    },
+                    displayMode = displayMode,
+                    searchMode = searchMode,
+                    onSearchModeChange = { searchMode = it },
                 )
 
                 CalendarView(
                     currentMonth = selectedMonth,
                     activities = activities,
                     selectedDate = selectedDate,
-                    onDayClick = { date -> selectedDate = date },
+                    onDayClick = { selectedDate = it },
                     events = events,
-                    displayMode = displayMode.value, // Pass the display mode to CalendarView
-                    weekStartDate = getStartOfWeek(selectedDate) // Pass the start of the week
+                    displayMode = displayMode.value,
+                    weekStartDate = getStartOfWeek(selectedDate)
                 )
 
                 Spacer(modifier = Modifier.height(1.dp))
 
-                // Row containing the selected date and "+" button
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -150,8 +179,15 @@ fun CalendarScreen() {
                         textAlign = TextAlign.Start
                     )
 
+                    // Floating Action Button to toggle displayMode
                     FloatingActionButton(
-                        onClick = { onDisplayModeChange(displayMode) }, // Toggle the display mode
+                        onClick = {
+                            // Toggle displayMode and hide the search bar
+                            searchMode = false // Ensure search mode is hidden
+                            displayMode.value =
+                                if (displayMode.value == DisplayMode.MONTH) DisplayMode.WEEK
+                                else DisplayMode.MONTH
+                        },
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         modifier = Modifier.padding(start = 80.dp)
                     ) {
@@ -167,10 +203,17 @@ fun CalendarScreen() {
                     }
                 }
 
-                ActivitiesList(
-                    selectedDate = selectedDate,
-                    activities = activities[selectedDate].orEmpty()
-                )
+                // Conditionally show the SearchBar or ActivitiesList
+                if (searchMode) {
+                    SearchBar(
+                        onDismiss = { searchMode = false }
+                    )
+                } else {
+                    ActivitiesList(
+                        selectedDate = selectedDate,
+                        activities = activities[selectedDate].orEmpty()
+                    )
+                }
             }
 
             if (showDialog) {
@@ -184,17 +227,18 @@ fun CalendarScreen() {
     }
 }
 
-
 @Composable
 fun CalendarHeader(
     currentMonth: YearMonth,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
     onFileSelected: (Uri) -> Unit,
+    displayMode: MutableState<DisplayMode>, // Add displayMode state
+    searchMode: Boolean,                  // Add searchMode state
+    onSearchModeChange: (Boolean) -> Unit // Lambda to toggle searchMode
 ) {
-    val month = currentMonth.month.number // getDisplayName(TextStyle.FULL, Locale.getDefault())
+    val month = currentMonth.month.number
     val year = currentMonth.year
-
     val monthName = LocalDate.of(year, month, 1).format(DateTimeFormatter.ofPattern("MMM"))
 
     Row(
@@ -202,38 +246,42 @@ fun CalendarHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Button(onClick = onPreviousMonth,
-            modifier = Modifier.padding(4.dp)
-                .width(50.dp),
+        Button(
+            onClick = onPreviousMonth,
+            modifier = Modifier.padding(4.dp).width(50.dp),
             contentPadding = PaddingValues(8.dp)
         ) {
             Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "previous month", modifier = Modifier.size(24.dp))
         }
+
         Text(
             text = "$monthName $year",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Medium
         )
+
         Button(onClick = onNextMonth,
-            modifier = Modifier.padding(4.dp)
-                .width(50.dp),
+            modifier = Modifier.padding(4.dp).width(50.dp),
             contentPadding = PaddingValues(8.dp)
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "next month",modifier = Modifier.size(24.dp))
+            Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "next month", modifier = Modifier.size(24.dp))
         }
 
         FilePicker(onFileSelected = onFileSelected)
 
-        Button(onClick = onNextMonth,
-            modifier = Modifier.padding(4.dp)
-                .width(50.dp),
+        Button(
+            onClick = {
+                // Toggle searchMode and optionally switch to WEEK mode
+                onSearchModeChange(!searchMode)
+                displayMode.value = DisplayMode.WEEK
+            },
+            modifier = Modifier.padding(4.dp).width(50.dp),
             contentPadding = PaddingValues(8.dp)
         ) {
-            Icon(Icons.Filled.Search, contentDescription = "File Picker Icon",modifier = Modifier.size(24.dp))
+            Icon(Icons.Filled.Search, contentDescription = "Search Button", modifier = Modifier.size(24.dp))
         }
     }
 }
-
 
 @Composable
 fun CalendarView(
@@ -242,8 +290,8 @@ fun CalendarView(
     selectedDate: LocalDate,
     onDayClick: (LocalDate) -> Unit,
     events: List<Event>,
-    displayMode: DisplayMode, // Add display mode as a parameter
-    weekStartDate: LocalDate // Start of the week if in WEEK mode
+    displayMode: DisplayMode,
+    weekStartDate: LocalDate
 ) {
     val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
     val daysInMonth = currentMonth.lengthOfMonth()
