@@ -1,9 +1,7 @@
-// CommonMain/HomeScreen.kt
 package rise_front_end.team2.ui.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +13,7 @@ import rise_front_end.team2.ui.theme.AppTheme
 fun HomeScreen(
     onSyllabusClick: () -> Unit,  // Lambda to navigate to SyllabusScreen
     onFileHostingClick: () -> Unit, // Lambda to navigate to FileSharingScreen
-    onStudentHelpForumClick: () -> Unit
+    onStudentHelpForumClick: () -> Unit,
 ) {
     AppTheme {
         // Use Column to vertically arrange the buttons
@@ -31,30 +29,34 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp)) // Add space between the Text and buttons
 
-            // Button to navigate to SyllabusScreen
+            // Filled Button to navigate to SyllabusScreen
             Button(
                 onClick = onSyllabusClick,
                 modifier = Modifier.fillMaxWidth() // Make the button fill the width
             ) {
-                Text("Go to Syllabus", color = Color.White)
+                Text("Go to Syllabus")
             }
 
             Spacer(modifier = Modifier.height(16.dp)) // Add space between buttons
 
-            // Button to navigate to FileSharingScreen
-            Button(
+            // Tonal Button to navigate to FileSharingScreen
+            FilledTonalButton(
                 onClick = onFileHostingClick,
-                modifier = Modifier.fillMaxWidth() // Make the button fill the width
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                Text("Go to File Sharing", color = Color.White)
+                Text("Go to File Sharing")
             }
 
-            Button(
+            Spacer(modifier = Modifier.height(16.dp)) // Add space between buttons
+
+            // Elevated Button to navigate to Student Help Forum
+            ElevatedButton(
                 onClick = onStudentHelpForumClick,
-                modifier = Modifier.fillMaxWidth() // Make the button fill the width
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Go to Student Help Forum", color = Color.White)
+                Text("Go to Student Help Forum")
             }
+
         }
 
     }
