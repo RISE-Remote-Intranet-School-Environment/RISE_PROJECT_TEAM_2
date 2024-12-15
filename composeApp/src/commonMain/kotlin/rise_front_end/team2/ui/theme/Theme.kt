@@ -10,32 +10,34 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 
 object AppTheme {
-    // État observable pour le mode sombre
+    // Observable state for the dark mode
     var isDarkMode by mutableStateOf(false)
 
-    // Détermine les couleurs en fonction de l'état
+    // Chooses the right colors according to the mode
     val colors
         get() = if (isDarkMode) DarkColorScheme else LightColorScheme
 }
 
-// Couleurs personnalisées
+// Personalized Colors
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
     secondary = Secondary,
     tertiary = Tertiary,
-    onError = Neutral
+    onError = Neutral,
+    onPrimary = OnPrimary
 )
 
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryDark,
     secondary = SecondaryDark,
     tertiary = TertiaryDark,
-    onError = NeutralDark
+    onError = NeutralDark,
+    onPrimary = OnPrimary
 )
 
 @Composable
 fun AppTheme(content: @Composable () -> Unit) {
-    // Applique les couleurs en fonction de l'état actuel
+    // Applies the colors for the present state
     MaterialTheme(
         colorScheme = AppTheme.colors,
         content = content

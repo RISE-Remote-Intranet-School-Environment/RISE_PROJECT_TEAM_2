@@ -2,17 +2,23 @@ package rise_front_end.team2.ui.screens.favorites
 
 import androidx.compose.runtime.Composable
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.favorites.FavoritesObject
@@ -45,31 +51,6 @@ fun FavoritesScreen(
         }
     }
 }
-
-//@Composable
-//private fun AddFavoriteButtons(viewModel: FavoritesViewModel) {
-//    // Example course and file to add as favorites
-//    val course = Course(courseID = 1000000, courseName = "Sample Course", teacherName = "John Doe", courseYear = "2024", forum = emptyList(), courseFiles = emptyList())
-//    val courseFile = CourseFile(fileID = 400000, fileName = "Sample File", fileUrl = "https://example.com/file", messages = emptyList())
-//
-//    Column(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(16.dp)
-//    ) {
-//        // Add Course Button
-//        Button(onClick = { viewModel.addCourseToFavorites(course) }) {
-//            Text("Add Course to Favorites")
-//        }
-//
-//        Spacer(modifier = Modifier.height(8.dp))
-//
-//        // Add File Button
-//        Button(onClick = { viewModel.addFileToFavorites(course, courseFile) }) {
-//            Text("Add File to Favorites")
-//        }
-//    }
-//}
 
 @Composable
 private fun FavouritesGrid(
@@ -113,24 +94,53 @@ private fun FavoriteFrame(
     Column(
         modifier
             .padding(8.dp)
+            .fillMaxWidth()
+            .background(
+                color = AppTheme.colors.surfaceVariant,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+            )
+            .padding(12.dp)
     ) {
         when (favorite) {
             is FavoritesCourseObject -> {
                 Text(
                     text = "Course: ${favorite.courseName}",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
-                Button(onClick = { onCourseClick(favorite.courseID) }) {
-                    Text("Go to Course", color = Color.White)
+                Button(
+                    onClick = { onCourseClick(favorite.courseID) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Go to Course",
+                        color = AppTheme.colors.onPrimary)
                 }
             }
             is FavoritesFileObject -> {
                 Text(
-                    text = "File: ${favorite.fileName} (Course: ${favorite.courseName})",
-                    style = MaterialTheme.typography.bodySmall
+                    text = "${favorite.fileName} (Course: ${favorite.courseName})",
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
-                Button(onClick = { onFileClick(favorite.courseID, favorite.fileID) }) {
-                    Text("Go to File", color = Color.White)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Description, // Use a file-related icon
+                        contentDescription = "File icon",
+                        modifier = Modifier.size(40.dp).padding(end = 8.dp)
+                    )
+                    Button(
+                        onClick = { onFileClick(favorite.courseID, favorite.fileID) },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = "Go to File",
+                            color = AppTheme.colors.onPrimary,
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold))
+                    }
                 }
             }
         }
