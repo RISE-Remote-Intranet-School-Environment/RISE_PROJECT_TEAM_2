@@ -207,7 +207,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                 ){
                     Text(
                         text = "Credit amount",
-                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        color = rise_front_end.team2.ui.theme.Secondary,
                         fontSize = 14.sp,
                     )
 
@@ -242,7 +242,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                     ){
                         Text(
                             text = "Grade point average",
-                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 14.sp,
                         )
                         Text(
@@ -257,7 +257,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                     ){
                         Text(
                             text = "Jury's decision",
-                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            color = rise_front_end.team2.ui.theme.Secondary,
                             fontSize = 14.sp,
                         )
                         Column (

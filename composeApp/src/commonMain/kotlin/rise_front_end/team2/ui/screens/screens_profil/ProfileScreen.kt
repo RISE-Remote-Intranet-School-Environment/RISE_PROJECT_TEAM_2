@@ -73,7 +73,7 @@ fun ProfileScreen(onShopClick: () -> Unit,) {
                         ) {
                             Text(
                                 "Class",
-                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                color = rise_front_end.team2.ui.theme.Secondary,
                                 fontSize = 20.sp
                             )
                             Spacer(modifier = Modifier.width(16.dp))
@@ -92,7 +92,7 @@ fun ProfileScreen(onShopClick: () -> Unit,) {
                         ) {
                             Text(
                                 "Option",
-                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                color = rise_front_end.team2.ui.theme.Secondary,
                                 fontSize = 20.sp
                             )
                             Spacer(modifier = Modifier.width(16.dp))
@@ -111,7 +111,7 @@ fun ProfileScreen(onShopClick: () -> Unit,) {
                         ) {
                             Text(
                                 "Year",
-                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                color = rise_front_end.team2.ui.theme.Secondary,
                                 fontSize = 20.sp
                             )
                             Spacer(modifier = Modifier.width(16.dp))
