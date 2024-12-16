@@ -19,12 +19,18 @@ import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.automirrored.filled.TextSnippet
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.InsertDriveFile
+import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material.icons.filled.TextSnippet
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -108,68 +114,190 @@ private fun FileList(
 }
 
 @Composable
-private fun FileFrame( //The frame in which each pdf are displayed
+private fun FileFrame(
     courseFile: CourseFile,
-    courseId: Int, //Might need to pass the courseID if files in different courses can have the same ID
+    courseId: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val viewModel = koinViewModel<CourseFilesViewModel>()
     val context = LocalContext.current
     val screenHeight = with(LocalDensity.current) { LocalContext.current.resources.displayMetrics.heightPixels.toDp() }
+    var isExpanded by remember { mutableStateOf(false) }
+    var isFavorite by remember { mutableStateOf(courseFile.inFavorites) }
 
-    Row(
-        modifier
+    // Find the most liked message
+    val mostLikedMessage = courseFile.messages.maxByOrNull { it.likes ?: 0 }
+
+    Box(
+        modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 8.dp) // 10px padding from both ends of the screen.
-            .clickable { onClick() }
+            .padding(horizontal = 10.dp, vertical = 8.dp)
             .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable { isExpanded = !isExpanded }
             .padding(16.dp)
     ) {
-        Icon(
-            imageVector = getFileIcon(courseFile.fileName),
-            contentDescription = "File type icon",
-            modifier = Modifier.padding(end = 8.dp)
-        )
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = courseFile.fileName,
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Box for the preview with rounded corners
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(screenHeight / 4) // Restrict height to 1/4th of the screen. Not sure it works tbh
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(10.dp)
+        // File icon and title row
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 40.dp) // Added space for the star icon in the top-right corner
+        ) {
+            // File icon and title row
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if (courseFile.fileName.endsWith(".pdf")) {
-                    PdfPreview(fileUrl = courseFile.fileUrl)
-                } else if (courseFile.fileName.endsWith(".jpg") || courseFile.fileName.endsWith(".png")) {
-                    ImagePreview(fileUrl = courseFile.fileUrl)
+                // Left side: Icon and filename
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = getFileIcon(courseFile.fileName),
+                        contentDescription = "File type icon",
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(
+                        text = courseFile.fileName,
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
+
+                // Right side: Likes and message count (when not expanded)
+                if (!isExpanded) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.ThumbUp,
+                            contentDescription = "Likes",
+                            modifier = Modifier.size(16.dp).padding(end = 4.dp)
+                        )
+                        Text(
+                            text = "${courseFile.fileLikes}",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(
+                            imageVector = Icons.Default.Message,
+                            contentDescription = "Messages",
+                            modifier = Modifier.size(16.dp).padding(end = 4.dp)
+                        )
+                        Text(
+                            text = "${courseFile.messages.size}",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
                 }
             }
 
-            // Download Button
-            Button(
-                onClick = { downloadFile(context, courseFile.fileUrl, courseFile.fileName) },
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                Text("Download")
+            // Expandable preview section
+            if (isExpanded) {
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // File details when expanded
+                Row(modifier = Modifier.padding(vertical = 8.dp)) {
+                    Column {
+                        Text(
+                            text = "Author: ${courseFile.fileAuthor}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = "Date: ${courseFile.fileDate}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+
+                // Most liked message
+                mostLikedMessage?.let { message ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                            .padding(8.dp)
+                    ) {
+                        Text(
+                            text = "Most Liked Discussion:",
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                        )
+                        Text(
+                            text = "${message.author}: ${message.content}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = "Likes: ${message.likes}",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                // Preview section
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(screenHeight / 4)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(10.dp)
+                ) {
+                    if (courseFile.fileName.endsWith(".pdf")) {
+                        PdfPreview(fileUrl = courseFile.fileUrl)
+                    } else if (courseFile.fileName.endsWith(".jpg") || courseFile.fileName.endsWith(".png")) {
+                        ImagePreview(fileUrl = courseFile.fileUrl)
+                    }
+                }
+
+                // Action buttons
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = onClick,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Go to Discussion", color = Color.White)
+                    }
+
+                    Button(
+                        onClick = { downloadFile(context, courseFile.fileUrl, courseFile.fileName) },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Download", color = Color.White)
+                    }
+                }
             }
+        }
+
+        // Star icon positioned at the top-right corner
+        IconButton(
+            onClick = {
+                isFavorite = !isFavorite
+                if (isFavorite) {
+                    viewModel.addToFavorites(courseId, courseFile.fileID)
+                } else {
+                    viewModel.removeFromFavorites(courseId, courseFile.fileID)
+                }
+            },
+            modifier = Modifier
+                .padding(4.dp)  // This padding moves the icon to the top-right corner
+                .align(Alignment.TopEnd)  // Places the icon in the top-right
+                .size(24.dp)  // Adjust the icon size
+        ) {
+            Icon(
+                imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
+                contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                tint = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }
-
 
 @Composable
 private fun PdfPreview(fileUrl: String) {
     val context = LocalContext.current
     var pdfFile by remember { mutableStateOf<File?>(null) }
 
+    // Preload the PDF on initial render
     LaunchedEffect(fileUrl) {
         if (fileUrl.isNotBlank() && Uri.parse(fileUrl).scheme != null) {
             pdfFile = downloadPdf(context, fileUrl)
@@ -192,8 +320,9 @@ private fun PdfPreview(fileUrl: String) {
                 }
             }
         )
-    } ?: Text("Error loading PDF", color = MaterialTheme.colorScheme.error, modifier = Modifier.fillMaxSize())
+    } ?: Text("Preview is loading", color = MaterialTheme.colorScheme.error, modifier = Modifier.fillMaxSize())
 }
+
 
 @Composable
 private fun ImagePreview(fileUrl: String) {

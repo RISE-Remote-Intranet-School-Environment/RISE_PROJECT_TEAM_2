@@ -14,4 +14,12 @@ class StudentHelpForumListViewModel(
     val courses: StateFlow<List<Course>> =
         repository.getCourses()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun addToFavorites(courseID: Int){
+
+    }
+
+    fun removeFromFavorites(courseID: Int){
+
+    }
 }

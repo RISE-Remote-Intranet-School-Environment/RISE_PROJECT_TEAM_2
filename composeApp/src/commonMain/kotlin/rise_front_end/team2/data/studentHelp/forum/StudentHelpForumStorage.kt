@@ -11,6 +11,10 @@ interface StudentHelpForumStorage {
     fun getForumMessageById(courseId: Int, messageId: Int): Flow<ForumMessage?>
     fun getFileById(courseId: Int, fileId: Int): Flow<CourseFile?>
     fun getFileMessageById(courseId: Int, fileId: Int, messageId: Int): Flow<FileMessage?>
+    suspend fun addForumMessage(courseId: Int, message: ForumMessage): Boolean
+    suspend fun updateForumMessage(courseId: Int, messageId: Int, newContent: String): Boolean
+    suspend fun addAnswer(courseId: Int, messageId: Int, answer: Answer): Boolean
+
 }
 
 class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
@@ -51,4 +55,92 @@ class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
                 ?.find { it.messageID == messageId }
         }
     }
+    override suspend fun addForumMessage(courseId: Int, message: ForumMessage): Boolean {
+        val currentCourses = storedCourses.value.toMutableList()
+        val courseIndex = currentCourses.indexOfFirst { it.courseID == courseId }
+
+        if (courseIndex != -1) {
+            // Generate a unique messageID
+            val newMessage = message.copy(
+                messageID = System.currentTimeMillis().toInt(),
+                timestamp = System.currentTimeMillis().toString()
+            )
+
+            val updatedCourses = currentCourses.toMutableList()
+            val updatedCourse = updatedCourses[courseIndex].copy(
+                forum = updatedCourses[courseIndex].forum + newMessage
+            )
+            updatedCourses[courseIndex] = updatedCourse
+
+            storedCourses.value = updatedCourses
+            return true
+        }
+
+        return false
+    }
+
+    override suspend fun updateForumMessage(courseId: Int, messageId: Int, newContent: String): Boolean {
+        val currentCourses = storedCourses.value.toMutableList()
+        val courseIndex = currentCourses.indexOfFirst { it.courseID == courseId }
+
+        if (courseIndex != -1) {
+            val messageIndex = currentCourses[courseIndex].forum.indexOfFirst { it.messageID == messageId }
+
+            if (messageIndex != -1) {
+                val updatedCourses = currentCourses.toMutableList()
+                val updatedForum = updatedCourses[courseIndex].forum.toMutableList()
+                val updatedMessage = updatedForum[messageIndex].copy(
+                    content = newContent,
+                    timestamp = System.currentTimeMillis().toString()
+                )
+                updatedForum[messageIndex] = updatedMessage
+
+                val updatedCourse = updatedCourses[courseIndex].copy(forum = updatedForum)
+                updatedCourses[courseIndex] = updatedCourse
+
+                storedCourses.value = updatedCourses
+                return true
+            }
+        }
+
+        return false
+    }
+
+    override suspend fun addAnswer(courseId: Int, messageId: Int, answer: Answer): Boolean {
+        val currentCourses = storedCourses.value.toMutableList()
+        val courseIndex = currentCourses.indexOfFirst { it.courseID == courseId }
+
+        if (courseIndex != -1) {
+            val courseForums = currentCourses[courseIndex].forum.toMutableList()
+            val messageIndex = courseForums.indexOfFirst { it.messageID == messageId }
+
+            if (messageIndex != -1) {
+                // Generate a unique answerID
+                val newAnswer = answer.copy(
+                    answerID = System.currentTimeMillis().toInt(),
+                    timestamp = System.currentTimeMillis().toString()
+                )
+
+                // Create an updated message with the new answer
+                val updatedMessage = courseForums[messageIndex].copy(
+                    answers = courseForums[messageIndex].answers + newAnswer
+                )
+
+                // Replace the old message with the updated one
+                courseForums[messageIndex] = updatedMessage
+
+                // Update the course's forum list
+                val updatedCourses = currentCourses.toMutableList()
+                updatedCourses[courseIndex] = updatedCourses[courseIndex].copy(
+                    forum = courseForums
+                )
+
+                storedCourses.value = updatedCourses
+                return true
+            }
+        }
+
+        return false
+    }
+
 }
