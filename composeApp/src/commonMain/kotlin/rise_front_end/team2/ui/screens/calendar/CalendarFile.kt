@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
@@ -104,7 +105,7 @@ fun FilePicker(onFileSelected: (Uri) -> Unit) {
         modifier = Modifier.padding(4.dp)
             .width(50.dp),
         contentPadding = PaddingValues(8.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = Primary)
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon", modifier = Modifier.size(24.dp), tint = Tertiary)

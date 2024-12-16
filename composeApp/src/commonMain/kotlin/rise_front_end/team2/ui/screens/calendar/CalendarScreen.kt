@@ -179,7 +179,7 @@ fun CalendarScreen() {
                                 if (displayMode.value == DisplayMode.MONTH) DisplayMode.WEEK
                                 else DisplayMode.MONTH
                         },
-                        containerColor = Primary,
+                        containerColor = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(start = 80.dp)
                     ) {
                         val icon = if (displayMode.value == DisplayMode.MONTH) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
@@ -188,7 +188,7 @@ fun CalendarScreen() {
 
                     FloatingActionButton(
                         onClick = { showDialog = true },
-                        containerColor = Primary,
+                        containerColor = MaterialTheme.colorScheme.primary,
                     ) {
                         Text("+", fontSize = 24.sp, color = Tertiary, textAlign = TextAlign.Center)
                     }
@@ -241,7 +241,7 @@ fun CalendarHeader(
             onClick = onPreviousMonth,
             modifier = Modifier.padding(4.dp).width(50.dp),
             contentPadding = PaddingValues(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Primary)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "previous month", modifier = Modifier.size(24.dp), tint = Tertiary)
         }
@@ -255,7 +255,7 @@ fun CalendarHeader(
             onClick = onNextMonth,
             modifier = Modifier.padding(4.dp).width(50.dp),
             contentPadding = PaddingValues(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Primary)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "next month", modifier = Modifier.size(24.dp), tint = Tertiary)
         }
@@ -270,7 +270,7 @@ fun CalendarHeader(
             },
             modifier = Modifier.padding(4.dp).width(50.dp),
             contentPadding = PaddingValues(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Primary)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Icon(Icons.Filled.Search, contentDescription = "Search Button", modifier = Modifier.size(24.dp), tint = Tertiary)
         }
@@ -387,7 +387,7 @@ fun DayCell(
         modifier = Modifier
             .size(cellSize)
             .background(
-                color = if (isSelected) Secondary else Color.Transparent,
+                color = if (isSelected) MaterialTheme.colorScheme.secondary else Color.Transparent,
                 shape = MaterialTheme.shapes.small
             )
             .clickable { onClick() }
