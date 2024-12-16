@@ -42,15 +42,7 @@ import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.Search
 import kotlinx.datetime.number
 import network.chaintech.kmp_date_time_picker.parse
-
-val modernGradientDarkColor = listOf(
-    Color(0xFF6a7ddcL),
-    Color(0xFFa357d9L),
-    Color(0xFFd745a7L),
-    Color(0xFFd43d31L),
-    Color(0xFFc9ab28L),
-    Color(0xFF64B823L)
-)
+import rise_front_end.team2.ui.theme.*
 
 // Enum for Display Mode
 enum class DisplayMode {
@@ -121,7 +113,6 @@ fun CalendarScreen() {
     AppTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
         ) {
             // State variables
             var selectedMonth by remember { mutableStateOf(YearMonth.now()) }
@@ -188,18 +179,18 @@ fun CalendarScreen() {
                                 if (displayMode.value == DisplayMode.MONTH) DisplayMode.WEEK
                                 else DisplayMode.MONTH
                         },
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        containerColor = Primary,
                         modifier = Modifier.padding(start = 80.dp)
                     ) {
                         val icon = if (displayMode.value == DisplayMode.MONTH) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
-                        Icon(icon, contentDescription = "Toggle Display Mode", modifier = Modifier.size(35.dp))
+                        Icon(icon, contentDescription = "Toggle Display Mode", modifier = Modifier.size(35.dp), tint = Tertiary)
                     }
 
                     FloatingActionButton(
                         onClick = { showDialog = true },
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        containerColor = Primary,
                     ) {
-                        Text("+", fontSize = 24.sp, color = Color.White, textAlign = TextAlign.Center)
+                        Text("+", fontSize = 24.sp, color = Tertiary, textAlign = TextAlign.Center)
                     }
                 }
 
@@ -249,22 +240,24 @@ fun CalendarHeader(
         Button(
             onClick = onPreviousMonth,
             modifier = Modifier.padding(4.dp).width(50.dp),
-            contentPadding = PaddingValues(8.dp)
+            contentPadding = PaddingValues(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Primary)
         ) {
-            Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "previous month", modifier = Modifier.size(24.dp))
+            Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "previous month", modifier = Modifier.size(24.dp), tint = Tertiary)
         }
 
         Text(
             text = "$monthName $year",
             style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Medium
-        )
+            fontWeight = FontWeight.Medium)
 
-        Button(onClick = onNextMonth,
+        Button(
+            onClick = onNextMonth,
             modifier = Modifier.padding(4.dp).width(50.dp),
-            contentPadding = PaddingValues(8.dp)
+            contentPadding = PaddingValues(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Primary)
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "next month", modifier = Modifier.size(24.dp))
+            Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "next month", modifier = Modifier.size(24.dp), tint = Tertiary)
         }
 
         FilePicker(onFileSelected = onFileSelected)
@@ -276,9 +269,10 @@ fun CalendarHeader(
                 displayMode.value = DisplayMode.WEEK
             },
             modifier = Modifier.padding(4.dp).width(50.dp),
-            contentPadding = PaddingValues(8.dp)
+            contentPadding = PaddingValues(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Primary)
         ) {
-            Icon(Icons.Filled.Search, contentDescription = "Search Button", modifier = Modifier.size(24.dp))
+            Icon(Icons.Filled.Search, contentDescription = "Search Button", modifier = Modifier.size(24.dp), tint = Tertiary)
         }
     }
 }
@@ -393,7 +387,7 @@ fun DayCell(
         modifier = Modifier
             .size(cellSize)
             .background(
-                color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+                color = if (isSelected) Secondary else Color.Transparent,
                 shape = MaterialTheme.shapes.small
             )
             .clickable { onClick() }
@@ -409,7 +403,6 @@ fun DayCell(
 
             Text(
                 text = date.dayOfMonth.toString(),
-                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 modifier = Modifier
@@ -476,8 +469,8 @@ fun ActivitiesList(selectedDate: LocalDate, activities: List<Triple<String, Stri
                     )
                 }
 
-                Divider(
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                HorizontalDivider(
+                    color = Primary.copy(alpha = 0.1f),
                     thickness = 1.dp
                 )
             }

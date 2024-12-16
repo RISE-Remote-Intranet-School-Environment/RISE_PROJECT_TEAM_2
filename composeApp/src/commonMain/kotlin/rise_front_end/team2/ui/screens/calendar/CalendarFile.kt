@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
@@ -24,6 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import org.json.JSONArray
+import rise_front_end.team2.ui.theme.Primary
+import rise_front_end.team2.ui.theme.Secondary
+import rise_front_end.team2.ui.theme.Tertiary
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -99,10 +103,11 @@ fun FilePicker(onFileSelected: (Uri) -> Unit) {
         },
         modifier = Modifier.padding(4.dp)
             .width(50.dp),
-        contentPadding = PaddingValues(8.dp)
+        contentPadding = PaddingValues(8.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Primary)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon", modifier = Modifier.size(24.dp))
+            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon", modifier = Modifier.size(24.dp), tint = Tertiary)
         }
     }
 }
