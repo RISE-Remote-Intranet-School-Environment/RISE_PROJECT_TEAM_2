@@ -56,7 +56,7 @@ fun TopBar(name: String, onProfilClick: () -> Unit,) {
                         bottomEnd = 50.dp
                     ) // Coins inférieurs arrondis
                 )
-                .padding(vertical = 30.dp),
+                .padding(vertical = 10.dp),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(horizontal = 60.dp)) {

@@ -28,7 +28,7 @@ fun AppTheme(
 ) {
     val dynamicThemeState = rememberDynamicMaterialThemeState(
         isDark = darkTheme,
-        style = PaletteStyle.Expressive,
+        style = PaletteStyle.Content,
         primary = Primary,
         secondary = Secondary,
         tertiary = Tertiary,
