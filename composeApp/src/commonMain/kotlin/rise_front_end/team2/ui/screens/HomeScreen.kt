@@ -30,7 +30,7 @@ fun HomeScreen(
     ) {
         // Logo ECAM
         AsyncImage(
-            model = "https://th.bing.com/th/id/OIP.MQVDBjtT_jShbrFSGyIjMwAAAA?rs=1&pid=ImgDetMain",
+            model = "https://www.ecam.be/wp-content/uploads/2023/12/logo_ECAM_entier_sansfond-2.png",
             contentDescription = "Logo ECAM",
             modifier = Modifier
                 .size(150.dp)
