@@ -59,8 +59,8 @@ fun RegistrationScreen() {
                         }
                          },
                     colors = CheckboxDefaults.colors(
-                        checkedColor = MaterialTheme.colorScheme.secondary,
-                        uncheckedColor = MaterialTheme.colorScheme.primary,
+                        checkedColor = MaterialTheme.colorScheme.secondaryContainer,
+                        uncheckedColor = MaterialTheme.colorScheme.primaryContainer,
                         checkmarkColor = Color.White
                     ),
                     modifier = Modifier
@@ -95,7 +95,7 @@ fun CheckButton(objects: List<GradesObject>, checkedStates: MutableMap<String, B
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.primaryContainer,
                                 shape = RoundedCornerShape(20.dp)
                             )
                             .padding(16.dp)
@@ -109,7 +109,7 @@ fun CheckButton(objects: List<GradesObject>, checkedStates: MutableMap<String, B
                                 checked = isChecked,
                                 onCheckedChange = { checkedStates[element.name] = it },
                                         colors = CheckboxDefaults.colors(
-                                            checkedColor = MaterialTheme.colorScheme.secondary,
+                                            checkedColor = MaterialTheme.colorScheme.secondaryContainer,
                                             uncheckedColor = Color.Gray,
                                             checkmarkColor = Color.White
                                          ),

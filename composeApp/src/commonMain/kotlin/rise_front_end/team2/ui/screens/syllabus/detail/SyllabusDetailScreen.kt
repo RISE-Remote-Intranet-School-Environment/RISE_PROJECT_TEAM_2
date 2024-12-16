@@ -82,7 +82,7 @@ private fun ObjectDetails(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
-                    .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp))
+                    .border(2.dp, MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
                     .padding(16.dp)
             ) {
@@ -126,6 +126,7 @@ private fun ObjectDetails(
 
 
                     Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
                         onClick = { /* Action of button buy */ },
                         modifier = Modifier
                             .fillMaxWidth()

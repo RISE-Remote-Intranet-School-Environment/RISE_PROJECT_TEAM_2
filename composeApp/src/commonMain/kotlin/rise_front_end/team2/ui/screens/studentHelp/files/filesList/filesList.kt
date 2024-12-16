@@ -286,7 +286,7 @@ private fun FileFrame(
             Icon(
                 imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
                 contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primaryContainer
             )
         }
     }

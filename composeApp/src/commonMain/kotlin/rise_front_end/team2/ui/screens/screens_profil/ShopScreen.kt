@@ -33,11 +33,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import rise_front_end.team2.ui.screens.screens_grades.CircularButton
 import rise_front_end.team2.ui.theme.AppTheme
 import androidx.compose.material3.*
 import androidx.compose.ui.text.font.FontWeight
 
+import rise_front_end.team2.ui.theme.GradesGood
+import rise_front_end.team2.ui.theme.GradesBad
 
 @Composable
 fun ShopScreen() {
@@ -59,7 +60,7 @@ fun ShopScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.primaryContainer,
                         shape = RoundedCornerShape(20.dp)
                     )
                     .padding(8.dp)
@@ -91,7 +92,7 @@ fun ShopScreen() {
                             }
                             Text(
                                 "50 points",
-                                color = MaterialTheme.colorScheme.tertiary,
+                                color = GradesGood,
                                 fontSize = 20.sp
                             )
 
@@ -112,7 +113,7 @@ fun ShopScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.primaryContainer,
                         shape = RoundedCornerShape(20.dp)
                     )
                     .padding(8.dp)
@@ -144,7 +145,7 @@ fun ShopScreen() {
 
                         Text(
                             "3000 points",
-                            color = MaterialTheme.colorScheme.onError,
+                            color = GradesBad,
                             fontSize = 20.sp
                         )
 
@@ -171,7 +172,7 @@ fun ShopScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.primaryContainer,
                         shape = RoundedCornerShape(20.dp)
                     )
                     .padding(8.dp)
@@ -202,7 +203,7 @@ fun ShopScreen() {
                             }
                             Text(
                                 "1200 points",
-                                color = MaterialTheme.colorScheme.onError,
+                                color = GradesBad,
                                 fontSize = 20.sp
                             )
 

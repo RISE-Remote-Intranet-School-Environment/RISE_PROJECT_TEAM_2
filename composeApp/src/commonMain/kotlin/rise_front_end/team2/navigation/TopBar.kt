@@ -37,7 +37,7 @@ fun TopBar(name: String, onProfilClick: () -> Unit,) {
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.secondary, // Couleur personnalisée de la TopBar
+                color = MaterialTheme.colorScheme.secondaryContainer, // Couleur personnalisée de la TopBar
                 shape = RoundedCornerShape(
                     bottomStart = 50.dp,
                     bottomEnd = 50.dp
@@ -50,7 +50,7 @@ fun TopBar(name: String, onProfilClick: () -> Unit,) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = MaterialTheme.colorScheme.primary, // Couleur personnalisée de la TopBar
+                    color = MaterialTheme.colorScheme.primaryContainer, // Couleur personnalisée de la TopBar
                     shape = RoundedCornerShape(
                         bottomStart = 50.dp,
                         bottomEnd = 50.dp
@@ -71,7 +71,7 @@ fun TopBar(name: String, onProfilClick: () -> Unit,) {
 
                     )
                 }
-                CircularButton(onClick = onProfilClick, Icons.Default.Person, MaterialTheme.colorScheme.primary, 45)
+                CircularButton(onClick = onProfilClick, Icons.Default.Person, MaterialTheme.colorScheme.primaryContainer, 45)
                 if(name == "Profile") { objects.forEach { profileObject ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),

@@ -10,8 +10,8 @@ val Primary = Color(0xFF13294C)
 val Secondary = Color(0xFF79ADD3)
 val Tertiary = Color(0xFFF8F8F8)
 
-val GradesGood = Color(0XFF276221)
-val GradesBad = Color(0xFF8E1600)
+val GradesGood = Color(0xFF409B35)
+val GradesBad = Color(0xFFDA5A44)
 
 
 // for calendar color picker

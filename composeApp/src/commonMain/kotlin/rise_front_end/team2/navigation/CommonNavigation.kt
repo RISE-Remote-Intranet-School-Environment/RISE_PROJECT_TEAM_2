@@ -29,7 +29,7 @@ fun CommonNavigationBar(
                     Text(text = navItem.label)
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = MaterialTheme.colorScheme.primary,// Couleur de l'indicateur de sélection (l'arrière-plan du bouton)
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,// Couleur de l'indicateur de sélection (l'arrière-plan du bouton)
                 )
 
             )

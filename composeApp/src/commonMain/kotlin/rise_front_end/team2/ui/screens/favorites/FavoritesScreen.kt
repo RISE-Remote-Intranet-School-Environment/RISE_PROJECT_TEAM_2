@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -105,11 +106,14 @@ private fun FavoriteFrame(
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
                     onClick = { onCourseClick(favorite.courseID) },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Go to Course")
+                        text = "Go to Course",
+                        color = Color.White
+                    )
                 }
             }
             is FavoritesFileObject -> {
@@ -128,11 +132,13 @@ private fun FavoriteFrame(
                         modifier = Modifier.size(40.dp).padding(end = 8.dp)
                     )
                     Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
                         onClick = { onFileClick(favorite.courseID, favorite.fileID) },
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(
                             text = "Go to File",
+                            color = Color.White,
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold))
                     }
                 }

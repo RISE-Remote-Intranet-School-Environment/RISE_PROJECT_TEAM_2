@@ -113,12 +113,12 @@ fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String)
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
-        CircularButton(onClick = { downloadFile(context, "grades.json") }, Icons.Default.Download, MaterialTheme.colorScheme.primary, 45)
+        CircularButton(onClick = { downloadFile(context, "grades.json") }, Icons.Default.Download, MaterialTheme.colorScheme.primaryContainer, 45)
         Spacer(modifier = Modifier.width(16.dp))
-        CircularButton(onClick = onRegistrationClick, Icons.Default.DriveFileRenameOutline, MaterialTheme.colorScheme.primary, 45)
+        CircularButton(onClick = onRegistrationClick, Icons.Default.DriveFileRenameOutline, MaterialTheme.colorScheme.primaryContainer, 45)
 
         Spacer(modifier = Modifier.width(16.dp))
-        CircularButton({showSearchBar = !showSearchBar}, Icons.Default.Search, MaterialTheme.colorScheme.primary, 45)
+        CircularButton({showSearchBar = !showSearchBar}, Icons.Default.Search, MaterialTheme.colorScheme.primaryContainer, 45)
     }
     if (showSearchBar) {
         TextField(
@@ -136,7 +136,7 @@ fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String)
                 .onFocusChanged { focusState -> isFocused = focusState.isFocused }, // Met à jour l'état de focus
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.White,
-                unfocusedContainerColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                 focusedIndicatorColor = Color.White,
                 cursorColor = Color.White
             ),
@@ -149,7 +149,7 @@ fun ButtonBar(context: Context, searchText: String, onSearchTextChange: (String)
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        CircularButton({}, Icons.Default.ArrowBackIosNew, MaterialTheme.colorScheme.secondary, 35)
+        CircularButton({}, Icons.Default.ArrowBackIosNew, MaterialTheme.colorScheme.secondaryContainer, 35)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = "Previous years",
@@ -171,7 +171,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(20.dp))
             .padding(16.dp)
             .animateContentSize()
     ) {
@@ -207,7 +207,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                 ){
                     Text(
                         text = "Credit amount",
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.secondaryContainer,
                         fontSize = 14.sp,
                     )
 
@@ -242,7 +242,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                     ){
                         Text(
                             text = "Grade point average",
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = MaterialTheme.colorScheme.secondaryContainer,
                             fontSize = 14.sp,
                         )
                         Text(
@@ -257,7 +257,7 @@ fun ExpandableCreditContainer(objects: List<GradesObject>,) {
                     ){
                         Text(
                             text = "Jury's decision",
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = MaterialTheme.colorScheme.secondaryContainer,
                             fontSize = 14.sp,
                         )
                         Column (

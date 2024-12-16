@@ -244,10 +244,11 @@ fun StyledAddPostForm(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.AttachFile,
-                        contentDescription = "Attach File"
+                        contentDescription = "Attach File",
+                        tint = MaterialTheme.colorScheme.primaryContainer
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(if (fileSelected) "Not yet implemented" else "Attach File")
+                    Text(if (fileSelected) "Not yet implemented" else "Attach File", color = MaterialTheme.colorScheme.primaryContainer)
                 }
             }
         }
@@ -259,9 +260,10 @@ fun StyledAddPostForm(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
                 onClick = onCancel,
             ) {
-                Text("Cancel")
+                Text("Cancel", color = Color.White)
             }
 
             Button(

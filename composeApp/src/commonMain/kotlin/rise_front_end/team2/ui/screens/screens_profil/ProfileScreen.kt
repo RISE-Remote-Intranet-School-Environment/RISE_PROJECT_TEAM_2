@@ -19,9 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingBasket
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -32,12 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.ui.theme.AppTheme
-import androidx.compose.runtime.*
 import androidx.compose.material3.*
-import org.koin.core.logger.PrintLogger
 import rise_front_end.team2.ui.screens.screens_grades.CircularButton
-import rise_front_end.team2.ui.theme.Primary
-import rise_front_end.team2.ui.theme.Secondary
 
 @Composable
 fun ProfileScreen(onShopClick: () -> Unit,) {
@@ -63,7 +57,7 @@ fun ProfileScreen(onShopClick: () -> Unit,) {
                 Box(
                     modifier = Modifier
                         .background(
-                            MaterialTheme.colorScheme.primary,
+                            MaterialTheme.colorScheme.primaryContainer,
                             shape = RoundedCornerShape(20.dp)
                         )
                         .padding(30.dp)
@@ -79,7 +73,7 @@ fun ProfileScreen(onShopClick: () -> Unit,) {
                         ) {
                             Text(
                                 "Class",
-                                color = MaterialTheme.colorScheme.secondary,
+                                color = MaterialTheme.colorScheme.secondaryContainer,
                                 fontSize = 20.sp
                             )
                             Spacer(modifier = Modifier.width(16.dp))
@@ -98,7 +92,7 @@ fun ProfileScreen(onShopClick: () -> Unit,) {
                         ) {
                             Text(
                                 "Option",
-                                color = MaterialTheme.colorScheme.secondary,
+                                color = MaterialTheme.colorScheme.secondaryContainer,
                                 fontSize = 20.sp
                             )
                             Spacer(modifier = Modifier.width(16.dp))
@@ -117,7 +111,7 @@ fun ProfileScreen(onShopClick: () -> Unit,) {
                         ) {
                             Text(
                                 "Year",
-                                color = MaterialTheme.colorScheme.secondary,
+                                color = MaterialTheme.colorScheme.secondaryContainer,
                                 fontSize = 20.sp
                             )
                             Spacer(modifier = Modifier.width(16.dp))
@@ -137,7 +131,7 @@ fun ProfileScreen(onShopClick: () -> Unit,) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            MaterialTheme.colorScheme.primary,
+                            MaterialTheme.colorScheme.primaryContainer,
                             shape = RoundedCornerShape(20.dp)
                         )
                         .padding(8.dp)
@@ -157,7 +151,7 @@ fun ProfileScreen(onShopClick: () -> Unit,) {
                                 fontSize = 20.sp
                             )
                             Spacer(modifier = Modifier.width(16.dp))
-                            CircularButton(onClick = onShopClick, Icons.Default.ShoppingBasket, MaterialTheme.colorScheme.primary, 45)
+                            CircularButton(onClick = onShopClick, Icons.Default.ShoppingBasket, MaterialTheme.colorScheme.primaryContainer, 45)
 
                         }
                     }
@@ -178,10 +172,10 @@ fun CustomSwitch(
         checked = isChecked,
         onCheckedChange = onCheckedChange,
         colors = SwitchDefaults.colors(
-            checkedThumbColor = MaterialTheme.colorScheme.secondary,
-            uncheckedThumbColor = MaterialTheme.colorScheme.primary,
-            checkedTrackColor = MaterialTheme.colorScheme.primary,
-            uncheckedTrackColor = MaterialTheme.colorScheme.secondary
+            checkedThumbColor = MaterialTheme.colorScheme.secondaryContainer,
+            uncheckedThumbColor = MaterialTheme.colorScheme.primaryContainer,
+            checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+            uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer
         )
     )
 }
