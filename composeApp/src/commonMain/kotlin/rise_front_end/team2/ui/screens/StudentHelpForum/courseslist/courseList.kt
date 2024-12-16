@@ -83,9 +83,6 @@ private fun CourseFrame(
     onFilesClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel = koinViewModel<StudentHelpForumListViewModel>()
-    var isFavorite by remember { mutableStateOf(course.inFavorites) }
-
     Box(
         modifier = modifier
             .padding(8.dp)
@@ -121,26 +118,6 @@ private fun CourseFrame(
                     Text("Files", color = Color.White)
                 }
             }
-        }
-
-        IconButton(
-            onClick = {
-                isFavorite = !isFavorite
-                if (isFavorite) {
-                    viewModel.addToFavorites(course.courseID)
-                } else {
-                    viewModel.removeFromFavorites(course.courseID)
-                }
-            },
-            modifier = Modifier
-                .padding(start = 142.dp, top = 4.dp)
-                .size(24.dp)
-        ) {
-            Icon(
-                imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
-                contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
-                tint = MaterialTheme.colorScheme.primary
-            )
         }
     }
 }

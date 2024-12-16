@@ -1,10 +1,6 @@
 [
   {
     "courseID": 100001,
-    "courseName": "Thermodynamics"
-  },
-  {
-    "courseID": 100001,
     "courseName": "Thermodynamics",
     "fileID": 400001,
     "fileName": "Thermodynamics Basics.pdf"
