@@ -14,6 +14,8 @@ interface StudentHelpForumStorage {
     suspend fun addForumMessage(courseId: Int, message: ForumMessage): Boolean
     suspend fun updateForumMessage(courseId: Int, messageId: Int, newContent: String): Boolean
     suspend fun addAnswer(courseId: Int, messageId: Int, answer: Answer): Boolean
+    fun getTagsForCourse(courseId: Int): Flow<List<String>>
+
 
 }
 
@@ -141,6 +143,17 @@ class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
         }
 
         return false
+    }
+    override fun getTagsForCourse(courseId: Int): Flow<List<String>> {
+        return storedCourses.map { courses ->
+            courses
+                .find { it.courseID == courseId }
+                ?.courseFiles
+                ?.flatMap { it.tags }
+                ?.distinct()
+                ?.sorted()
+                ?: emptyList()
+        }
     }
 
 }

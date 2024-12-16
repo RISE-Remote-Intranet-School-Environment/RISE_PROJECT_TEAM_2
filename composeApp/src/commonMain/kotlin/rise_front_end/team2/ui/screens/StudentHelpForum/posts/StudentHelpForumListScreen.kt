@@ -4,27 +4,32 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import coil.compose.AsyncImage
 import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.studentHelp.forum.ForumMessage
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
+
 
 @Composable
 fun StudentHelpForumPostsScreen(
@@ -34,6 +39,9 @@ fun StudentHelpForumPostsScreen(
 ) {
     AppTheme {
         val viewModel = koinViewModel<StudentHelpForumDetailViewModel>()
+        LaunchedEffect(courseId) {
+            viewModel.loadTagsForCourse(courseId)
+        }
         val course by viewModel.getCourse(courseId).collectAsState(initial = null)
 
         AnimatedContent(course != null) { courseAvailable ->
@@ -42,7 +50,8 @@ fun StudentHelpForumPostsScreen(
                     messages = course!!.forum,
                     courseId = courseId,
                     navigateToAnswers = navigateToAnswers,
-                    navigateBack = navigateBack
+                    navigateBack = navigateBack,
+                    viewModel = viewModel
                 )
             } else {
                 EmptyScreenContent(Modifier.fillMaxSize())
@@ -58,9 +67,8 @@ private fun ForumMessageList(
     courseId: Int,
     navigateToAnswers: (courseId: Int, messageId: Int) -> Unit,
     navigateBack: () -> Unit,
+    viewModel: StudentHelpForumDetailViewModel
 ) {
-    val viewModel = koinViewModel<StudentHelpForumDetailViewModel>()
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -111,29 +119,71 @@ private fun MessageFrame(
             defaultElevation = 2.dp
         )
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.Top
         ) {
-            Text(
-                text = message.title,
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+            // Profile Picture
+            AsyncImage(
+                model = message.profilePicture,
+                contentDescription = "User Profile Picture",
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(24.dp)),
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "By: ${message.author} | ${message.timestamp}",
-                style = MaterialTheme.typography.bodySmall
-            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            // Message Info
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                Text(
+                    text = message.title,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "By: ${message.author} | ${message.timestamp}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Display tags
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    message.tags.forEach { tag ->
+                        Box(
+                            modifier = Modifier
+                                .background(colorScheme.primary.copy(alpha = 0.2f))
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                        ) {
+                            Text(
+                                text = tag,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = colorScheme.primary
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
+
 @Composable
 fun AddForumMessageButton(
-
     courseId: Int,
     viewModel: StudentHelpForumDetailViewModel
-) { AppTheme{
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     FloatingActionButton(onClick = { showDialog = true }) {
@@ -145,14 +195,17 @@ fun AddForumMessageButton(
 
     if (showDialog) {
         AddPostDialog(
-            onSubmit = { title, description ->
+            viewModel = viewModel,
+            onSubmit = { title, description, selectedTags ->
                 val newMessage = ForumMessage(
-                    messageID = 0, // Will need to depend on the storage
+                    messageID = 0, // This ID would depend on the backend/database logic
                     title = title,
                     content = description,
-                    author = "CurrentUser", // Replace with actual username
-                    timestamp = System.currentTimeMillis().toString(), // Replace with proper timestamp
-                    answers = emptyList()
+                    author = "CurrentUser", // Replace this with actual username logic
+                    timestamp = System.currentTimeMillis().toString(),
+                    answers = emptyList(),
+                    tags = selectedTags,
+                    profilePicture = "https://i.imgur.com/0fvzn7p.png"
                 )
                 viewModel.addForumMessage(courseId, newMessage)
                 showDialog = false
@@ -160,26 +213,27 @@ fun AddForumMessageButton(
             onCancel = { showDialog = false }
         )
     }
-}}
+}
 
 @Composable
 fun AddPostDialog(
-    onSubmit: (title: String, description: String) -> Unit,
+    viewModel: StudentHelpForumDetailViewModel,
+    onSubmit: (title: String, description: String, selectedTags: List<String>) -> Unit,
     onCancel: () -> Unit
-) { AppTheme{
+) {
+    val tags by viewModel.tags.collectAsState()
+
     Dialog(
         onDismissRequest = { onCancel() },
-        properties = DialogProperties(usePlatformDefaultWidth = false) // Important for custom width
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Card(
             modifier = Modifier
-                .fillMaxWidth(0.9f) // 90% of screen width
-                .heightIn(min = 500.dp, max = 600.dp), // Controlled height
+                .fillMaxWidth(0.9f)
+                .heightIn(min = 500.dp, max = 600.dp),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
+            Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = "Add New Forum Message",
                     style = MaterialTheme.typography.headlineSmall,
@@ -187,95 +241,92 @@ fun AddPostDialog(
                 )
 
                 StyledAddPostForm(
+                    tags = tags,
                     onSubmit = onSubmit,
                     onCancel = onCancel
                 )
             }
         }
-    }}
+    }
 }
 
 @Composable
 fun StyledAddPostForm(
-    onSubmit: (title: String, description: String) -> Unit,
+    tags: List<String>,
+    onSubmit: (title: String, description: String, selectedTags: List<String>) -> Unit,
     onCancel: () -> Unit
-) { AppTheme{
+) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var fileSelected by remember { mutableStateOf(false) }
+    var selectedTags by remember { mutableStateOf(mutableListOf<String>()) }
 
     Column {
         Text(
             text = "Title",
             style = MaterialTheme.typography.bodyMedium,
         )
-        Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = title,
             onValueChange = { title = it },
-            placeholder = { Text("Short and descriptive") },
+            placeholder = { Text("Title of the post") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = "Description",
             style = MaterialTheme.typography.bodyMedium,
         )
-        Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = description,
             onValueChange = { description = it },
-            placeholder = { Text("Details, actions taken, etc.") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 200.dp, max = 300.dp)
+            placeholder = { Text("Description for the forum post") },
+            modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+        LazyColumn(
+            modifier = Modifier.height(150.dp)
         ) {
-            TextButton(onClick = { fileSelected = !fileSelected }) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.AttachFile,
-                        contentDescription = "Attach File",
-                        tint = MaterialTheme.colorScheme.primaryContainer
+            items(tags) { tag ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            if (selectedTags.contains(tag)) {
+                                selectedTags.remove(tag)
+                            } else {
+                                selectedTags.add(tag)
+                            }
+                        }
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = selectedTags.contains(tag),
+                        onCheckedChange = {
+                            if (it) selectedTags.add(tag) else selectedTags.remove(tag)
+                        }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(if (fileSelected) "Not yet implemented" else "Attach File", color = MaterialTheme.colorScheme.primaryContainer)
+                    Text(text = tag)
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                onClick = onCancel,
-            ) {
-                Text("Cancel", color = Color.White)
-            }
-
-            Button(
-                onClick = {
-                    if (title.isNotBlank() && description.isNotBlank()) {
-                        onSubmit(title, description)
-                    }
-                },
-                enabled = title.isNotBlank() && description.isNotBlank()
-            ) {
-                Text("Submit")
-            }
+            Button(onClick = onCancel) { Text("Cancel") }
+            Button(onClick = {
+                onSubmit(title, description, selectedTags.toList())
+            }) { Text("Submit") }
         }
-    }}
+    }
 }

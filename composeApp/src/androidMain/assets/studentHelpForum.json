@@ -5,20 +5,25 @@
     "teacherName": "Therm O Dynamo",
     "courseYear": "BA3",
     "inFavorites": true,
+    "icon": "fire",
     "forum": [
       {
         "messageID": 200001,
         "title": "What is the first law of thermodynamics?",
-        "content": "Hello, I do not understand the 1st law of thermodynamics. Could someone plz explain it to me. ",
+        "content": "Hello, I do not understand the 1st law of thermodynamics. Could someone plz explain it to me.",
         "author": "Student123",
         "timestamp": "2024-11-28T10:00:00Z",
+        "profilePicture": "https://i.imgur.com/XGH8EFC.png",
+
+        "tags": ["Chapter 1", "Fundamentals", "Student Question"],
         "answers": [
           {
             "answerID": 300001,
             "content": "The first law is about energy conservation: energy cannot be created or destroyed.",
             "author": "TeacherMarc",
             "timestamp": "2024-11-28T12:00:00Z",
-            "likes": 15
+            "likes": 15,
+            "profilePicture": "https://i.imgur.com/JoDayfy.png"
           }
         ]
       }
@@ -32,20 +37,23 @@
         "fileAuthor": "Another Author",
         "fileDate": "17-04/2013",
         "fileLikes": 21,
+        "tags": ["Chapter 1", "Old", "Teacher's Recommended"],
         "messages": [
           {
             "messageID": 500001,
             "content": "Is this file enough to understand the first law?",
             "author": "Student987",
             "timestamp": "2024-11-27T14:00:00Z",
-            "likes": 10
+            "likes": 10,
+            "profilePicture": "https://i.imgur.com/XGH8EFC.png"
           },
           {
             "messageID": 500002,
             "content": "Yes, this file provides a solid foundation.",
             "author": "TeacherMarc",
             "timestamp": "2024-11-27T15:00:00Z",
-            "likes": 5
+            "likes": 5,
+            "profilePicture": "https://i.imgur.com/JoDayfy.png"
           }
         ]
       },
@@ -57,20 +65,23 @@
         "fileAuthor": "Le Z tmtc",
         "fileDate": "17-04/2023",
         "fileLikes": 18,
+        "tags": ["Chapter 2", "Recent", "Supplementary"],
         "messages": [
           {
             "messageID": 500003,
             "content": "This is a test for docx files",
             "author": "Student987",
             "timestamp": "2024-11-27T14:00:00Z",
-            "likes": 7
+            "likes": 7,
+            "profilePicture": "https://i.imgur.com/XGH8EFC.png"
           },
           {
             "messageID": 500004,
             "content": "Hell yeah, it works!",
             "author": "TeacherMarc",
             "timestamp": "2024-11-27T15:00:00Z",
-            "likes": 5
+            "likes": 5,
+            "profilePicture": "https://i.imgur.com/0fvzn7p.png"
           }
         ]
       }
@@ -82,6 +93,7 @@
     "teacherName": "Dr. Al Gorithm",
     "courseYear": "BA4",
     "inFavorites": false,
+    "icon": "keyboard",
     "forum": [
       {
         "messageID": 200002,
@@ -89,13 +101,16 @@
         "content": "I have a trouble with the 2nd part of chapter 1 blablablablabla",
         "author": "StudentML",
         "timestamp": "2024-11-29T10:00:00Z",
+        "profilePicture": "https://i.imgur.com/0fvzn7p.png",
+        "tags": ["Chapter 1", "Supervised Learning", "Student Question"],
         "answers": [
           {
             "answerID": 300001,
             "content": "Supervised learning involves training a model on labeled data.",
             "author": "TeacherGorithm",
             "timestamp": "2024-11-29T12:00:00Z",
-            "likes": 20
+            "likes": 20,
+            "profilePicture": "https://i.imgur.com/JoDayfy.png"
           }
         ]
       }
@@ -109,20 +124,23 @@
         "fileAuthor": "Yeah Yeah Yeah",
         "fileDate": "18-04/2023",
         "fileLikes": 181,
+        "tags": ["Introduction", "Basics", "Chapter 1"],
         "messages": [
           {
             "messageID": 500005,
             "content": "Does this include examples of supervised learning?",
             "author": "StudentML",
             "timestamp": "2024-11-28T14:00:00Z",
-            "likes": 8
+            "likes": 8,
+            "profilePicture": "https://i.imgur.com/2JD07eT.png"
           },
           {
             "messageID": 500006,
             "content": "Yes, it covers classification and regression examples.",
             "author": "TeacherGorithm",
             "timestamp": "2024-11-28T15:00:00Z",
-            "likes": 6
+            "likes": 6,
+            "profilePicture": "https://i.imgur.com/JoDayfy.png"
           }
         ]
       }
@@ -133,21 +151,25 @@
     "courseName": "Advanced Mathematics",
     "teacherName": "Prof. Calc U. Lator",
     "courseYear": "BA4",
-    "inFavorites": false,
+    "inFavorites": true,
+    "icon": "function",
     "forum": [
       {
         "messageID": 200003,
         "title": "How do you solve differential equations?",
-        "content": "Something something something I have no inspiraiton",
+        "content": "Something something something I have no inspiration",
         "author": "MathEnthusiast",
         "timestamp": "2024-11-30T09:00:00Z",
+        "profilePicture": "https://i.imgur.com/JoDayfy.png",
+        "tags": ["Differential Equations", "Chapter 3", "Student Question"],
         "answers": [
           {
             "answerID": 300003,
             "content": "Basic answer, blablablablabla",
             "author": "ProfLator",
             "timestamp": "2024-11-30T11:00:00Z",
-            "likes": 12
+            "likes": 12,
+            "profilePicture": "https://i.imgur.com/2JD07eT.png"
           }
         ]
       }
@@ -161,20 +183,23 @@
         "fileAuthor": "Le T tmtc",
         "fileDate": "17-04/2023",
         "fileLikes": 108,
+        "tags": ["Chapter 3", "Exam Prep", "Recommended"],
         "messages": [
           {
             "messageID": 500007,
             "content": "Is this guide enough for BA4 exams?",
             "author": "ExamPrepper",
             "timestamp": "2024-11-29T14:00:00Z",
-            "likes": 9
+            "likes": 9,
+            "profilePicture": "https://i.imgur.com/0fvzn7p.png"
           },
           {
             "messageID": 500008,
             "content": "Yes, it is quite comprehensive.",
             "author": "ProfLator",
             "timestamp": "2024-11-29T15:00:00Z",
-            "likes": 10
+            "likes": 10,
+            "profilePicture": "https://i.imgur.com/2JD07eT.png"
           }
         ]
       }

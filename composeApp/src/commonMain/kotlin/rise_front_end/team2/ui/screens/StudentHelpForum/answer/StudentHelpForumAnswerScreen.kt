@@ -111,7 +111,10 @@ private fun AnswerList(
                         content = description,
                         author = "CurrentUser", //Replace with actual username
                          timestamp = System.currentTimeMillis().toString(),
-                        likes = 0
+                        likes = 0,
+                        profilePicture = "https://i.imgur.com/0fvzn7p.png" //Need to replace with actual profile picture
+
+
                     )
                     viewModel.addAnswer(courseId, message.messageID, newAnswer)
                     showAddAnswerDialog = false
