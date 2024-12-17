@@ -3,6 +3,7 @@ package rise_front_end.team2.Repo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import rise_front_end.team2.data.studentHelp.forum.Answer
 import rise_front_end.team2.data.studentHelp.forum.ForumMessage
@@ -62,5 +63,10 @@ class StudentHelpForumRepository(
 
     suspend fun addAnswer(courseId: Int, messageId: Int, answer: Answer): Boolean {
         return studentHelpForumStorage.addAnswer(courseId, messageId, answer)
+    }
+
+
+    fun getTagsForCourse(courseId: Int): Flow<List<String>> {
+        return studentHelpForumStorage.getTagsForCourse(courseId)
     }
 }
