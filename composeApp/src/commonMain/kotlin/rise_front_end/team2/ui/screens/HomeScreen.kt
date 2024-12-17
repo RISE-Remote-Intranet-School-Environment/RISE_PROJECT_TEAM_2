@@ -17,7 +17,7 @@ import coil.compose.AsyncImage
 @Composable
 fun HomeScreen(
     onSyllabusClick: () -> Unit,
-    onFileHostingClick: () -> Unit,
+    onNewsClick: () -> Unit = {},
     onStudentHelpForumClick: () -> Unit,
     onOutlookClick: () -> Unit = {} // Valeur par défaut pour éviter les erreurs
 ) {
@@ -55,7 +55,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                IconButtonWithText("File Sharing", Icons.Filled.Folder, onFileHostingClick)
+                IconButtonWithText("News", Icons.Filled.Newspaper, onNewsClick)
                 IconButtonWithText("Outlook", Icons.Filled.Email, onOutlookClick)
             }
         }

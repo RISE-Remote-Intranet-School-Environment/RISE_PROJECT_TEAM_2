@@ -79,12 +79,8 @@ actual fun PlatformNavigation() {
                         onSyllabusClick = {
                             navController.navigate(Screens.SyllabusListDestination.route)
                         },
-                        onFileHostingClick = {
-                            navController.navigate(Screens.FileHostingScreen.route)
-                        },
                         onStudentHelpForumClick = {
                             navController.navigate(Screens.StudentHelpForumList.route)
-
                         }
 
                     )
