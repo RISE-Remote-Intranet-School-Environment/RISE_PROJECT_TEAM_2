@@ -10,5 +10,13 @@ class FileDiscussionsViewModel(
 ) : ViewModel() {
     fun getFile(courseId: Int, fileId: Int): Flow<CourseFile?> =
         repository.getFileById(courseId, fileId)
+
+    fun addToFavorites(courseID: Int, courseFileID: Int){
+
+    }
+
+    fun removeFromFavorites(courseID: Int, courseFileID: Int){
+
+    }
 }
 
