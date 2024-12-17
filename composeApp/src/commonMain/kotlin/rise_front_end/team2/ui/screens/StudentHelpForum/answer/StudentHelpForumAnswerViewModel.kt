@@ -18,5 +18,9 @@ class ForumMessageAnswersViewModel(
     fun addAnswer(courseId: Int, messageId: Int, answer: Answer) = viewModelScope.launch {
         repository.addAnswer(courseId, messageId, answer)
     }
+
+    fun likeAnswer(courseId: Int, messageId: Int, answerId: Int) = viewModelScope.launch {
+        repository.likeAnswer(courseId, messageId, answerId)
+    }
 }
 

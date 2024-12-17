@@ -2,11 +2,13 @@ package rise_front_end.team2.ui.screens.StudentHelpForum.posts
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -19,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -128,10 +131,12 @@ private fun MessageFrame(
             // Profile Picture
             AsyncImage(
                 model = message.profilePicture,
-                contentDescription = "User Profile Picture",
+                contentDescription = "Profile Picture of ${message.author}",
                 modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(24.dp)),
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, colorScheme.primary, CircleShape),
+                contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = Modifier.width(8.dp))
