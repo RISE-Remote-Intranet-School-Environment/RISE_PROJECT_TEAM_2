@@ -11,7 +11,32 @@ This project is a **Kotlin Compose Multiplatform** application designed for visu
 1. **Calendar Page**
 
 2. **Syllabus Page**
-
+    - **Location** : `rise_front_end.team2.ui.screens.syllabus`
+    - **Functionality** :
+      - SyllabusListScreen.kt : Displays a list of available syllabi with a dynamic search bar for filtering results.
+      - SyllabusDetailScreen.kt : Shows the details of a selected syllabus, such as objectives, chapters, and associated resources.
+      - Seamless navigation : Allows users to navigate easily between the syllabus list and details.
+    - **Architecture** :
+      - **SyllabusListViewModel** :
+           - Retrieves the list of syllabi using a StateFlow via the SyllabusRepository.
+           - Handles data processing and updates for the view.
+      - **SyllabusDetailViewModel** :
+          - Fetches the details of a specific syllabus.
+          - Manages user interactions related to syllabus details.
+    - **Screens** :
+      - **SyllabusListScreen.kt** :
+        - Displays the list of syllabi.
+        - Integrates a dynamic search bar for filtering.
+        - Provides navigation to the syllabus detail screen.
+      - **SyllabusDetailScreen.kt** :
+        - Shows comprehensive information about a syllabus, including :
+            - Objectives
+            - Chapters
+            - Resources
+    - **Data Layer** :
+      - **SyllabusApi.kt**: Interface to fetch syllabus data from an external source.
+      - **SyllabusStorage.kt**: Handles local storage for syllabus data.
+      - **SyllabusObject**: Data model representing the structure of a syllabus.
 3. **Grades Page**
   - **Location**: `rise_front_end.team2.ui.screens.screens_grades`
   - **Functionality**:
