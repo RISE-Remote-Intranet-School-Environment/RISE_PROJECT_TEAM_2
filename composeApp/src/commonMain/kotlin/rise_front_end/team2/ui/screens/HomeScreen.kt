@@ -18,7 +18,7 @@ import coil.compose.AsyncImage
 fun HomeScreen(
     onSyllabusClick: () -> Unit,
     onNewsClick: () -> Unit = {},
-    onStudentHelpForumClick: () -> Unit,
+    onGradesClick: () -> Unit,
     onOutlookClick: () -> Unit = {} // Valeur par défaut pour éviter les erreurs
 ) {
     Column(
@@ -48,7 +48,7 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 IconButtonWithText("Syllabus", Icons.Filled.MenuBook, onSyllabusClick)
-                IconButtonWithText("Student Help", Icons.Filled.Help, onStudentHelpForumClick)
+                IconButtonWithText("Grades", Icons.Filled.PieChart, onGradesClick)
             }
 
             Row(

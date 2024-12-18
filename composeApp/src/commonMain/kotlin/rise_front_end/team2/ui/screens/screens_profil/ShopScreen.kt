@@ -11,19 +11,24 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddShoppingCart
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Coffee
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Fastfood
+import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material.icons.filled.PestControl
 import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.PointOfSale
 import androidx.compose.material.icons.filled.ShoppingBasket
 import androidx.compose.material.icons.filled.ShoppingCartCheckout
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,7 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import rise_front_end.team2.ui.theme.AppTheme
 import androidx.compose.material3.*
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.font.FontWeight
+import org.koin.compose.viewmodel.koinViewModel
 
 import rise_front_end.team2.ui.theme.GradesGood
 import rise_front_end.team2.ui.theme.GradesBad
@@ -43,6 +51,8 @@ import rise_front_end.team2.ui.theme.GradesBad
 @Composable
 fun ShopScreen() {
     AppTheme {
+        val viewModel = koinViewModel<ProfileViewModel>()
+        val objects by viewModel.objects.collectAsState()
         Column (
             modifier = Modifier
                 .fillMaxSize()
@@ -50,6 +60,49 @@ fun ShopScreen() {
                 .verticalScroll(rememberScrollState()),
 
         ) {
+
+
+            Spacer(modifier = Modifier.height(8.dp))
+            objects.forEach { profileObject ->
+                val number_of_point = profileObject.points.toString()
+                Column (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                    ,
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Text(
+                        "Current Balance",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ){
+                        Icon(
+                            imageVector = Icons.Default.AttachMoney,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(40.dp)
+
+                            )
+                        Text(
+                            "$number_of_point pts",
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+
+                    }
+
+
+                }
+
+            }
             Text(
                 "Food/Drink",
                 fontSize = 20.sp,
