@@ -7,9 +7,11 @@ import android.os.Environment
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -17,7 +19,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.automirrored.filled.TextSnippet
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.PictureAsPdf
@@ -32,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
@@ -122,175 +127,249 @@ private fun FileFrame(
 ) {
     val viewModel = koinViewModel<CourseFilesViewModel>()
     val context = LocalContext.current
-    val screenHeight = with(LocalDensity.current) { LocalContext.current.resources.displayMetrics.heightPixels.toDp() }
+    val screenHeight =
+        with(LocalDensity.current) { LocalContext.current.resources.displayMetrics.heightPixels.toDp() }
     var isExpanded by remember { mutableStateOf(false) }
     var isFavorite by remember { mutableStateOf(courseFile.inFavorites) }
+    var fileLikes by remember { mutableStateOf(courseFile.fileLikes) }
 
     // Find the most liked message
     val mostLikedMessage = courseFile.messages.maxByOrNull { it.likes ?: 0 }
 
-    Box(
+    Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 8.dp)
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .clickable { isExpanded = !isExpanded }
-            .padding(16.dp)
+            .clickable { isExpanded = !isExpanded },
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        // File icon and title row
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 40.dp) // Added space for the star icon in the top-right corner
+            modifier = Modifier.padding(16.dp)
         ) {
-            // File icon and title row
+            // Header section with profile picture, title, and favorite icon
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Left side: Icon and filename
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = getFileIcon(courseFile.fileName),
-                        contentDescription = "File type icon",
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(
-                        text = courseFile.fileName,
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
-                    )
-                }
+                // Profile Picture
+                AsyncImage(
+                    model = courseFile.profilePicture,
+                    contentDescription = "Profile picture of ${courseFile.fileAuthor}",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
+                    contentScale = ContentScale.Crop
+                )
 
-                // Right side: Likes and message count (when not expanded)
-                if (!isExpanded) {
+                Spacer(modifier = Modifier.width(16.dp))
+
+                // Title and Favorite Icon
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    // Title and File Icon
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = Icons.Default.ThumbUp,
-                            contentDescription = "Likes",
-                            modifier = Modifier.size(16.dp).padding(end = 4.dp)
+                            imageVector = getFileIcon(courseFile.fileName),
+                            contentDescription = "File type icon",
+                            modifier = Modifier.padding(end = 8.dp)
                         )
                         Text(
-                            text = "${courseFile.fileLikes}",
-                            style = MaterialTheme.typography.bodySmall
+                            text = courseFile.fileName,
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+
+                    // Favorite Icon
+                    IconButton(
+                        onClick = {
+                            isFavorite = !isFavorite
+                            if (isFavorite) {
+                                viewModel.addToFavorites(courseId, courseFile.fileID)
+                            } else {
+                                viewModel.removeFromFavorites(courseId, courseFile.fileID)
+                            }
+                        }
+                    ) {
                         Icon(
-                            imageVector = Icons.Default.Message,
-                            contentDescription = "Messages",
-                            modifier = Modifier.size(16.dp).padding(end = 4.dp)
-                        )
-                        Text(
-                            text = "${courseFile.messages.size}",
-                            style = MaterialTheme.typography.bodySmall
+                            imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
+                            contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                            tint = MaterialTheme.colorScheme.primaryContainer
                         )
                     }
                 }
             }
 
-            // Expandable preview section
-            if (isExpanded) {
-                Spacer(modifier = Modifier.height(8.dp))
 
-                // File details when expanded
-                Row(modifier = Modifier.padding(vertical = 8.dp)) {
-                    Column {
-                        Text(
-                            text = "Author: ${courseFile.fileAuthor}",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Text(
-                            text = "Date: ${courseFile.fileDate}",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+            // Author and file details
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "By: ${courseFile.fileAuthor}",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+
+        // Bottom row with Like and Chat icons
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Like Button
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(
+                    onClick = {
+                        viewModel.likeFile(courseId, courseFile.fileID)
+                        fileLikes++
                     }
-                }
-
-                // Most liked message
-                mostLikedMessage?.let { message ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-                            .padding(8.dp)
-                    ) {
-                        Text(
-                            text = "Most Liked Discussion:",
-                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-                        )
-                        Text(
-                            text = "${message.author}: ${message.content}",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Text(
-                            text = "Likes: ${message.likes}",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-
-                // Preview section
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(screenHeight / 4)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(10.dp)
                 ) {
-                    if (courseFile.fileName.endsWith(".pdf")) {
-                        PdfPreview(fileUrl = courseFile.fileUrl)
-                    } else if (courseFile.fileName.endsWith(".jpg") || courseFile.fileName.endsWith(".png")) {
-                        ImagePreview(fileUrl = courseFile.fileUrl)
-                    }
+                    Icon(
+                        imageVector = Icons.Default.ThumbUp,
+                        contentDescription = "Like",
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
                 }
+                Text(
+                    text = fileLikes.toString(),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
 
-                // Action buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Button(
-                        onClick = onClick,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Go to Discussion", color = Color.White)
-                    }
-
-                    Button(
-                        onClick = { downloadFile(context, courseFile.fileUrl, courseFile.fileName) },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Download", color = Color.White)
-                    }
+            // Chat/Discussions Button
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = onClick) {
+                    Icon(
+                        imageVector = Icons.Default.Chat,
+                        contentDescription = "Discussions",
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
                 }
+                Text(
+                    text = courseFile.messages.size.toString(),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 4.dp)
+                )
             }
         }
 
-        // Star icon positioned at the top-right corner
-        IconButton(
-            onClick = {
-                isFavorite = !isFavorite
-                if (isFavorite) {
-                    viewModel.addToFavorites(courseId, courseFile.fileID)
-                } else {
-                    viewModel.removeFromFavorites(courseId, courseFile.fileID)
-                }
-            },
-            modifier = Modifier
-                .padding(4.dp)  // This padding moves the icon to the top-right corner
-                .align(Alignment.TopEnd)  // Places the icon in the top-right
-                .size(24.dp)  // Adjust the icon size
-        ) {
-            Icon(
-                imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
-                contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
-                tint = MaterialTheme.colorScheme.primaryContainer
+        // Expanded content
+        if (isExpanded) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // File details
+            Text(
+                text = "Uploaded on: ${courseFile.fileDate}",
+                style = MaterialTheme.typography.bodyMedium
             )
+
+            // Most liked discussion in an inner card
+            mostLikedMessage?.let { message ->
+                Spacer(modifier = Modifier.height(16.dp))
+                OutlinedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "Most Liked answer:",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            AsyncImage(
+                                model = message.profilePicture,
+                                contentDescription = "Profile picture of ${message.author}",
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape)
+                                    .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Column {
+                                Text(
+                                    text = "${message.author}: ${message.content}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.ThumbUp,
+                                        contentDescription = "Likes",
+                                        modifier = Modifier
+                                            .size(16.dp)
+                                            .padding(end = 4.dp)
+                                    )
+                                    Text(
+                                        text = "${message.likes}",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // File preview and action buttons
+            Spacer(modifier = Modifier.height(16.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(screenHeight / 4)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(10.dp)
+            ) {
+                if (courseFile.fileName.endsWith(".pdf")) {
+                    PdfPreview(fileUrl = courseFile.fileUrl)
+                } else if (courseFile.fileName.endsWith(".jpg") || courseFile.fileName.endsWith(".png")) {
+                    ImagePreview(fileUrl = courseFile.fileUrl)
+                }
+            }
+
+            // Action buttons
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                IconButton(
+                    onClick = onClick,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Chat,
+                        contentDescription = "Go to Discussion",
+                        tint = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                }
+
+                IconButton(
+                    onClick = { downloadFile(context, courseFile.fileUrl, courseFile.fileName) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Download,
+                        contentDescription = "Download",
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+
+                    )
+                }
+            }
         }
     }
 }
+
+
 
 @Composable
 private fun PdfPreview(fileUrl: String) {

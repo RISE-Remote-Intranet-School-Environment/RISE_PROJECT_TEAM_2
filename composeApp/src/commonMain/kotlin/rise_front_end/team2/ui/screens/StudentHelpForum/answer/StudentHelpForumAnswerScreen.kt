@@ -1,5 +1,6 @@
 package rise_front_end.team2.ui.screens.StudentHelpForum.answer
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,11 +29,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format
+import network.chaintech.kmp_date_time_picker.utils.now
 import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.studentHelp.forum.Answer
 import rise_front_end.team2.data.studentHelp.forum.ForumMessage
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun ForumMessageAnswersScreen(
@@ -117,15 +128,23 @@ private fun AnswerList(
         if (showAddAnswerDialog) {
             AddAnswerDialog(
                 onSubmit = { description ->
+                    val currentTimeMillis = System.currentTimeMillis()
+
+                    val currentTime = Date(currentTimeMillis)
+                    Log.d("current time", currentTime.toString())
+
+                    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                    val timestamp = formatter.format(currentTime)
+                    Log.d("Timestamp", timestamp)
+
+
                     val newAnswer = Answer(
-                        answerID = 0, // Will need to depend on the storage
+                        answerID = 0,
                         content = description,
-                        author = "CurrentUser", //Need to replace  with actual username
-                         timestamp = System.currentTimeMillis().toString(), //Need to change with something better
+                        author = "CurrentUser",
+                        timestamp = timestamp,
                         likes = 0,
-                        profilePicture = "https://i.imgur.com/0fvzn7p.png" //Need to replace with actual profile picture
-
-
+                        profilePicture = "https://i.imgur.com/0fvzn7p.png"
                     )
                     viewModel.addAnswer(courseId, message.messageID, newAnswer)
                     showAddAnswerDialog = false
@@ -213,17 +232,44 @@ private fun OriginalPostFrame(
     message: ForumMessage,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier
+    // A Row to display the profile picture and title next to each other
+    Row(
+        modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically // Vertically align them in the center
     ) {
-        Text(
-            text = message.title,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
+        // Profile Picture
+        AsyncImage(
+            model = "https://i.imgur.com/0fvzn7p.png", // Replace with the actual profile image URL
+            contentDescription = "Profile Picture of ${message.author}",
+            modifier = Modifier
+                .size(50.dp)
+                .clip(CircleShape)
+                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                .align(Alignment.CenterVertically), // Align to the top-left
+            contentScale = ContentScale.Crop
         )
-        Spacer(modifier = Modifier.height(8.dp))
+
+        Spacer(modifier = Modifier.width(16.dp)) // Space between the profile picture and the title
+
+        // Title of the original post
+        Column(
+            modifier = Modifier.weight(1f) // Make the title take the remaining space
+        ) {
+            Text(
+                text = message.title,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+
+    // Rest of the content (below the profile picture and title)
+    Column(
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp)
+    ) {
+        Spacer(modifier = Modifier.height(8.dp)) // Space between title and content
         Text(
             text = message.content,
             style = MaterialTheme.typography.bodyLarge
@@ -235,6 +281,9 @@ private fun OriginalPostFrame(
         )
     }
 }
+
+
+
 
 @Composable
 fun AddAnswerButton(

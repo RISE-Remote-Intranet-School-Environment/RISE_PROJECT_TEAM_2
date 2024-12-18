@@ -16,7 +16,7 @@ interface StudentHelpForumStorage {
     suspend fun addAnswer(courseId: Int, messageId: Int, answer: Answer): Boolean
     fun getTagsForCourse(courseId: Int): Flow<List<String>>
     suspend fun likeAnswer(courseId: Int, messageId: Int, answerId: Int): Boolean
-
+    suspend fun likeFile(courseId: Int, fileId: Int): Boolean
 
 }
 
@@ -194,5 +194,36 @@ class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
 
         return false
     }
+
+    override suspend fun likeFile(courseId: Int, fileId: Int): Boolean {
+        val currentCourses = storedCourses.value.toMutableList()
+        val courseIndex = currentCourses.indexOfFirst { it.courseID == courseId }
+
+        if (courseIndex != -1) {
+            val updatedCourseFiles = currentCourses[courseIndex].courseFiles.map { courseFile ->
+                if (courseFile.fileID == fileId) {
+                    courseFile.copy(
+                        fileLikes = courseFile.fileLikes + 1
+                    )
+                } else {
+                    courseFile
+                }
+            }
+
+            // Create an updated course with the modified course files
+            val updatedCourses = currentCourses.toMutableList()
+            updatedCourses[courseIndex] = updatedCourses[courseIndex].copy(
+                courseFiles = updatedCourseFiles
+            )
+
+            // Update the stored courses
+            storedCourses.value = updatedCourses
+            return true
+        }
+
+        return false
+    }
+
+
 
 }
