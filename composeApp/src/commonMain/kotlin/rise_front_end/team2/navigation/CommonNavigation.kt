@@ -1,13 +1,22 @@
 package rise_front_end.team2.navigation
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 expect fun PlatformNavigation()
+
+@Preview
+@Composable
+fun PreviewCommonNavigationBar() {
+    MaterialTheme {
+        CommonNavigationBar(
+            currentRoute = NavigationItems.getNavItems().first().route, // Set the first item as selected for the preview
+            onNavigate = {} // No-op for preview
+        )
+    }
+}
 
 @Composable
 fun CommonNavigationBar(
@@ -29,9 +38,12 @@ fun CommonNavigationBar(
                     Text(text = navItem.label)
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,// Couleur de l'indicateur de sélection (l'arrière-plan du bouton)
+                    indicatorColor = MaterialTheme.colorScheme.secondaryContainer,// Couleur de l'indicateur de sélection (l'arrière-plan du bouton)
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
             )
         }
     }

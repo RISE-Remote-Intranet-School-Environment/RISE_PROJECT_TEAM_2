@@ -1,9 +1,8 @@
 package rise_front_end.team2.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -22,9 +21,9 @@ object NavigationItems {
             route = Screens.HomeScreen.route
         ),
         NavItem(
-            label = "Grades",
-            icon = Icons.Default.Person,
-            route = Screens.GradeScreen.route
+            label = "Student Forum",
+            icon = Icons.Default.Forum,
+            route = Screens.StudentHelpForumList.route
         ),
         NavItem(
             label = "Favorites",
