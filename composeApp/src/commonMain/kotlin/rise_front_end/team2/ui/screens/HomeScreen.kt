@@ -48,7 +48,7 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 IconButtonWithText("Syllabus", Icons.Filled.MenuBook, onSyllabusClick)
-                IconButtonWithText("Student Help", Icons.Filled.Person, onGradesClick)
+                IconButtonWithText("Grades", Icons.Filled.PieChart, onGradesClick)
             }
 
             Row(

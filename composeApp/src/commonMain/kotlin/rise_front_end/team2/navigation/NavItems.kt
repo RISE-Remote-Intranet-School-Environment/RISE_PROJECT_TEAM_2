@@ -21,7 +21,7 @@ object NavigationItems {
             route = Screens.HomeScreen.route
         ),
         NavItem(
-            label = "Student Forum",
+            label = "Forum",
             icon = Icons.Default.Forum,
             route = Screens.StudentHelpForumList.route
         ),
