@@ -32,6 +32,18 @@ import rise_front_end.team2.ui.theme.Tertiary
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+// Sample JSON file format for events:
+/*
+[
+  {
+    "date": "2024-12-02",
+    "title": "Mathematics",
+    "time": "08:30",
+    "color": "#FF5733"
+  }
+]
+*/
+
 
 data class Event(val title: String, val time: String, val color: String, val date: String)
 
@@ -108,7 +120,7 @@ fun FilePicker(onFileSelected: (Uri) -> Unit) {
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon", modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.surface)
+            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon", modifier = Modifier.size(24.dp), tint = Color.White)
         }
     }
 }
