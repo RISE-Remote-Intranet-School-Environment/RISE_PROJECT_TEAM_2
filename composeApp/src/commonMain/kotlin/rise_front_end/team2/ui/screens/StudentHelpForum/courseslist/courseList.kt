@@ -221,7 +221,7 @@ private fun CourseCard(
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
                     contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
-                    tint = colorScheme.primaryContainer
+                    tint = colorScheme.onSecondaryContainer
                 )
             }
         }
