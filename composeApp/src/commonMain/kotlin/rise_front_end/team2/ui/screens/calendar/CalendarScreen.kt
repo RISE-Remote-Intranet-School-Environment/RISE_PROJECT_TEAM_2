@@ -183,14 +183,14 @@ fun CalendarScreen() {
                         modifier = Modifier.padding(start = 80.dp)
                     ) {
                         val icon = if (displayMode.value == DisplayMode.MONTH) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
-                        Icon(icon, contentDescription = "Toggle Display Mode", modifier = Modifier.size(35.dp), tint = Tertiary)
+                        Icon(icon, contentDescription = "Toggle Display Mode", modifier = Modifier.size(35.dp), tint = Color.White)
                     }
 
                     FloatingActionButton(
                         onClick = { showDialog = true },
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                     ) {
-                        Text("+", fontSize = 24.sp, color = Tertiary, textAlign = TextAlign.Center)
+                        Text("+", fontSize = 24.sp, color = Color.White, textAlign = TextAlign.Center)
                     }
                 }
 
@@ -243,7 +243,7 @@ fun CalendarHeader(
             contentPadding = PaddingValues(8.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         ) {
-            Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "previous month", modifier = Modifier.size(24.dp), tint = Tertiary)
+            Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "previous month", modifier = Modifier.size(24.dp), tint = Color.White)
         }
 
         Text(
@@ -257,7 +257,7 @@ fun CalendarHeader(
             contentPadding = PaddingValues(8.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "next month", modifier = Modifier.size(24.dp), tint = Tertiary)
+            Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "next month", modifier = Modifier.size(24.dp), tint = Color.White)
         }
 
         FilePicker(onFileSelected = onFileSelected)
@@ -272,7 +272,7 @@ fun CalendarHeader(
             contentPadding = PaddingValues(8.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         ) {
-            Icon(Icons.Filled.Search, contentDescription = "Search Button", modifier = Modifier.size(24.dp), tint = Tertiary)
+            Icon(Icons.Filled.Search, contentDescription = "Search Button", modifier = Modifier.size(24.dp), tint = Color.White)
         }
     }
 }
