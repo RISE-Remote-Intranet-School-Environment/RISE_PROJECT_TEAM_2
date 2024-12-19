@@ -77,4 +77,15 @@ class StudentHelpForumRepository(
     suspend fun likeFile(courseId: Int, fileId: Int): Boolean{
         return studentHelpForumStorage.likeFile(courseId, fileId)
     }
-}
+
+    suspend fun addNewFile(courseId: Int, fileName: String, fileUrl: String): Boolean{
+        return studentHelpForumStorage.addNewFile(courseId, fileName, fileUrl)
+    }
+
+    suspend fun addFileAnswer(courseId: Int, fileId: Int, message: FileMessage): Boolean {
+        return studentHelpForumStorage.addFileAnswer(courseId, fileId, message)
+    }
+
+
+
+    }
