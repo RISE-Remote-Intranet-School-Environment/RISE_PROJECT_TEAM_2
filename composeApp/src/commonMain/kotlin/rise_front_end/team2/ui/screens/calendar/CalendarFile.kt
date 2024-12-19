@@ -108,7 +108,7 @@ fun FilePicker(onFileSelected: (Uri) -> Unit) {
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon", modifier = Modifier.size(24.dp), tint = Tertiary)
+            Icon(Icons.Filled.FileOpen, contentDescription = "File Picker Icon", modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.surface)
         }
     }
 }
