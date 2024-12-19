@@ -1,5 +1,7 @@
 
-# **School App**
+# **Kotlin Compose Multiplatform - School App**
+
+
 The main objective is to create a customizable and intuitive application, allowing to integrate several essential tools and services in the same space. The application meets various educational needs by offering key features such as a forum system, file sharing, an interactive calendar, a syllabus purchase page, grade management and an enriched user profile. It emphasizes customization and ergonomics to offer an optimal user experience.
 
 ## **Application**
@@ -85,12 +87,6 @@ Here are some screenshots of the application:
 
 ---
 
-
-
-
-
-
-
 ## Architecture
 
 - This project follows the **MVVM (Model-View-ViewModel)**  architecture to ensure a clear separation.
@@ -100,10 +96,14 @@ Here are some screenshots of the application:
 
 ## Technologies Used
 
-- **Language**: Kotlin
+- **Language**: Kotlin (Compose Multiplatform)
+- **Material3** (Modern UI components)
 - **UI Framework**: Jetpack Compose
 - **Architecture**: Component-based for better extensibility
 - **Color Management**: Modern palette with support for light and dark themes
+- **Coroutines** (Asynchronous flows using `StateFlow`)
+- **Koin** (Dependency Injection)
+- **Animation** (Expandable and dynamic content)
 
 ---
 
@@ -112,9 +112,31 @@ Here are some screenshots of the application:
 - **JDK**: 11 or higher
 - **Device or Emulator**: Android 6.0 (API 23) or higher
 
+----
+
+## **Setup**
+
+This is a Kotlin Multiplatform project targeting Android, iOS, Web.
+
+* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
+  It contains several subfolders:
+  - `commonMain` is for code that’s common for all targets.
+  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
+    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
+    `iosMain` would be the right folder for such calls.
+
+* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
+  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
 
 
+Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
+[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
+[Kotlin/Wasm](https://kotl.in/wasm/)…
 
+We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
+If you face any issues, please report them on [GitHub](https://github.com/JetBrains/compose-multiplatform/issues).
+
+You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle task.
 
 
 
