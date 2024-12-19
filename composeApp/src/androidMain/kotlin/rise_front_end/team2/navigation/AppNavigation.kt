@@ -13,7 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import rise.front_end.team2.ui.screens.studentHelp.files.filesList.CourseFilesListScreen
+import rise_front_end.team2.ui.screens.studentHelp.files.filesList.CourseFilesListScreen
 import rise_front_end.team2.ui.screens.calendar.CalendarScreen
 import rise_front_end.team2.ui.screens.*
 import rise_front_end.team2.ui.screens.StudentHelpForum.answer.ForumMessageAnswersScreen
