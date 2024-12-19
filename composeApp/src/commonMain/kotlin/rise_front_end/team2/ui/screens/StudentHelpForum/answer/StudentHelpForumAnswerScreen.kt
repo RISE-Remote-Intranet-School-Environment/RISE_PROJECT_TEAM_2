@@ -104,7 +104,7 @@ private fun AnswerList(
         ) {
             OriginalPostFrame(message)
 
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
             )
@@ -232,30 +232,29 @@ private fun OriginalPostFrame(
     message: ForumMessage,
     modifier: Modifier = Modifier,
 ) {
-    // A Row to display the profile picture and title next to each other
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically // Vertically align them in the center
+        verticalAlignment = Alignment.CenterVertically
     ) {
         // Profile Picture
         AsyncImage(
-            model = "https://i.imgur.com/0fvzn7p.png", // Replace with the actual profile image URL
+            model = "https://i.imgur.com/0fvzn7p.png", // To Replace with the actual profile image URL
             contentDescription = "Profile Picture of ${message.author}",
             modifier = Modifier
                 .size(50.dp)
                 .clip(CircleShape)
                 .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                .align(Alignment.CenterVertically), // Align to the top-left
+                .align(Alignment.CenterVertically),
             contentScale = ContentScale.Crop
         )
 
-        Spacer(modifier = Modifier.width(16.dp)) // Space between the profile picture and the title
+        Spacer(modifier = Modifier.width(16.dp))
 
         // Title of the original post
         Column(
-            modifier = Modifier.weight(1f) // Make the title take the remaining space
+            modifier = Modifier.weight(1f)
         ) {
             Text(
                 text = message.title,
@@ -269,7 +268,7 @@ private fun OriginalPostFrame(
     Column(
         modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp)
     ) {
-        Spacer(modifier = Modifier.height(8.dp)) // Space between title and content
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = message.content,
             style = MaterialTheme.typography.bodyLarge

@@ -5,24 +5,123 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 interface StudentHelpForumStorage {
+
+    /**
+     * Saves a list of courses to the storage.
+     * @param newCourses The list of courses to save.
+     */
     suspend fun saveCourses(newCourses: List<Course>)
+
+    /**
+     * Retrieves all stored courses.
+     * @return A Flow emitting a list of courses.
+     */
     fun getCourses(): Flow<List<Course>>
+
+    /**
+     * Retrieves a specific course by its ID.
+     * @param courseId The ID of the course to retrieve.
+     * @return A Flow emitting the course or null if not found.
+     */
     fun getCourseById(courseId: Int): Flow<Course?>
+
+    /**
+     * Retrieves a forum message by course ID and message ID.
+     * @param courseId The ID of the course containing the message.
+     * @param messageId The ID of the message to retrieve.
+     * @return A Flow emitting the forum message or null if not found.
+     */
     fun getForumMessageById(courseId: Int, messageId: Int): Flow<ForumMessage?>
+
+    /**
+     * Retrieves a file by its ID within a course.
+     * @param courseId The ID of the course containing the file.
+     * @param fileId The ID of the file to retrieve.
+     * @return A Flow emitting the file or null if not found.
+     */
     fun getFileById(courseId: Int, fileId: Int): Flow<CourseFile?>
+
+    /**
+     * Retrieves a message associated with a specific file in a course.
+     * @param courseId The ID of the course containing the file.
+     * @param fileId The ID of the file containing the message.
+     * @param messageId The ID of the message to retrieve.
+     * @return A Flow emitting the file message or null if not found.
+     */
     fun getFileMessageById(courseId: Int, fileId: Int, messageId: Int): Flow<FileMessage?>
+
+    /**
+     * Adds a forum message to a specific course.
+     * @param courseId The ID of the course.
+     * @param message The forum message to add.
+     * @return True if the message was added successfully, false otherwise.
+     */
     suspend fun addForumMessage(courseId: Int, message: ForumMessage): Boolean
+
+    /**
+     * Updates the content of a forum message.
+     * @param courseId The ID of the course containing the message.
+     * @param messageId The ID of the message to update.
+     * @param newContent The new content for the message.
+     * @return True if the message was updated successfully, false otherwise.
+     */
     suspend fun updateForumMessage(courseId: Int, messageId: Int, newContent: String): Boolean
+
+    /**
+     * Adds an answer to a forum message.
+     * @param courseId The ID of the course.
+     * @param messageId The ID of the forum message.
+     * @param answer The answer to add.
+     * @return True if the answer was added successfully, false otherwise.
+     */
     suspend fun addAnswer(courseId: Int, messageId: Int, answer: Answer): Boolean
+
+    /**
+     * Retrieves tags associated with a specific course.
+     * @param courseId The ID of the course.
+     * @return A Flow emitting a list of tags.
+     */
     fun getTagsForCourse(courseId: Int): Flow<List<String>>
+
+    /**
+     * Likes an answer to a forum message.
+     * @param courseId The ID of the course.
+     * @param messageId The ID of the forum message.
+     * @param answerId The ID of the answer to like.
+     * @return True if the answer was liked successfully, false otherwise.
+     */
     suspend fun likeAnswer(courseId: Int, messageId: Int, answerId: Int): Boolean
+
+    /**
+     * Likes a file associated with a course.
+     * @param courseId The ID of the course.
+     * @param fileId The ID of the file to like.
+     * @return True if the file was liked successfully, false otherwise.
+     */
     suspend fun likeFile(courseId: Int, fileId: Int): Boolean
+
+    /**
+     * Adds a new file to a course.
+     * @param courseId The ID of the course.
+     * @param fileName The name of the file.
+     * @param fileUrl The URL of the file.
+     * @return True if the file was added successfully, false otherwise.
+     */
     suspend fun addNewFile(courseId: Int, fileName: String, fileUrl: String): Boolean
+
+    /**
+     * Adds a message to a specific file within a course.
+     * @param courseId The ID of the course.
+     * @param fileId The ID of the file.
+     * @param message The message to add.
+     * @return True if the message was added successfully, false otherwise.
+     */
     suspend fun addFileAnswer(courseId: Int, fileId: Int, message: FileMessage): Boolean
+}
 
 
 
-    }
+
 
 class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
     private val storedCourses = MutableStateFlow(emptyList<Course>())

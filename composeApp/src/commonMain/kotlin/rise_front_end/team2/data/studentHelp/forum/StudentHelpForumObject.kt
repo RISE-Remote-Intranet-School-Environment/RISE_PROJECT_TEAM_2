@@ -32,8 +32,8 @@ data class Answer(
     val content: String,
     val author: String,
     val timestamp: String,
-    val likes: Int, // the number of likes of an answer
-    val profilePicture: String="https://i.imgur.com/0fvzn7p.png" // New property for profile picture
+    val likes: Int,
+    val profilePicture: String="https://i.imgur.com/0fvzn7p.png" //Random pfp if none given
 )
 
 @Serializable
@@ -46,8 +46,8 @@ data class CourseFile(
     val fileAuthor: String = "Unknown Author", // Default to a placeholder if missing
     val fileDate: String = "Unknown Date", // Default to a placeholder if missing
     val messages: List<FileMessage> = emptyList(), // Default to empty list if missing
-    val tags: List<String>, // New property for tags
-    val profilePicture: String="https://i.imgur.com/0fvzn7p.png" // New property for profile picture
+    val tags: List<String> = emptyList(), //Tags. Not used right now but could be implemented
+    val profilePicture: String="https://i.imgur.com/0fvzn7p.png" //Author pfp
 )
 
 @Serializable
@@ -57,5 +57,5 @@ data class FileMessage(
     val author: String,
     val timestamp: String,
     val likes: Int,
-    val profilePicture: String="https://i.imgur.com/0fvzn7p.png" // New property for profile picture
+    val profilePicture: String="https://i.imgur.com/0fvzn7p.png" // author pfp
 )

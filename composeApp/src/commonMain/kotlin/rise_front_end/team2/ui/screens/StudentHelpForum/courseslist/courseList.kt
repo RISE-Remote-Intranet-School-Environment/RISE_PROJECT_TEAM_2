@@ -46,7 +46,7 @@ fun StudentHelpCourseListScreen(
         val viewModel = koinViewModel<StudentHelpForumListViewModel>()
         val courses by viewModel.courses.collectAsState()
 
-        // Sort courses: Favorites first
+        // Sort courses: Favorites first (But not really visible right now because favorites aren't saved as mutable states:( )
         val sortedCourses = courses.sortedByDescending { it.inFavorites }
 
         AnimatedContent(sortedCourses.isNotEmpty()) { coursesAvailable ->
@@ -89,7 +89,7 @@ private fun CourseGrid(
 }
 
 
-
+//The card with the course inside
 @Composable
 private fun CourseCard(
     course: Course,
@@ -183,7 +183,7 @@ private fun CourseCard(
                  */
 
 
-                // Row for Forum and Files Icons
+                // Forum and Files Icons
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,

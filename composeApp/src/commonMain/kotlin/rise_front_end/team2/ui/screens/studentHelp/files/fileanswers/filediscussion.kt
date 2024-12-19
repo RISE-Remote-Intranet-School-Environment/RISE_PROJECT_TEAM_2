@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Star
@@ -38,7 +38,7 @@ import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.compose.viewmodel.koinViewModel
-import rise.front_end.team2.ui.screens.studentHelp.files.filesList.getFileIcon
+import rise_front_end.team2.ui.screens.studentHelp.files.filesList.getFileIcon
 import rise_front_end.team2.data.studentHelp.forum.CourseFile
 import rise_front_end.team2.data.studentHelp.forum.FileMessage
 import rise_front_end.team2.ui.screens.EmptyScreenContent
@@ -110,7 +110,7 @@ private fun FileMessageList(
                 courseId = courseId
             )
 
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
             )
@@ -162,6 +162,7 @@ fun AddMessageButton(
     }
 }
 
+//Pop up Dialog when adding a message
 @Composable
 fun AddMessageDialog(
     onSubmit: (content: String) -> Unit,
@@ -223,6 +224,8 @@ fun AddMessageDialog(
     }
 }
 
+
+//Card with the preview of the PDF file
 @Composable
 private fun FilePreviewCard(
     file: CourseFile,
@@ -251,7 +254,6 @@ private fun FilePreviewCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // File profile picture and file details
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.weight(1f)
@@ -267,7 +269,7 @@ private fun FilePreviewCard(
                         contentScale = ContentScale.Crop
                     )
 
-                    Spacer(modifier = Modifier.width(16.dp)) // Spacer between profile picture and text
+                    Spacer(modifier = Modifier.width(16.dp))
 
                     // File name and author
                     Column {
@@ -283,9 +285,8 @@ private fun FilePreviewCard(
                     }
                 }
 
-                // Favorite and interaction stats
                 Column(horizontalAlignment = Alignment.End) {
-                    // Favorite toggle
+                    // Favorite
                     IconButton(
                         onClick = {
                             isFavorite = !isFavorite
@@ -318,7 +319,7 @@ private fun FilePreviewCard(
                         Spacer(modifier = Modifier.width(8.dp))
 
                         Icon(
-                            imageVector = Icons.Default.Message,
+                            imageVector = Icons.AutoMirrored.Filled.Message,
                             contentDescription = "Messages",
                             modifier = Modifier.size(16.dp)
                         )
@@ -384,7 +385,7 @@ private fun FileMessageFrame(
     message: FileMessage,
     modifier: Modifier = Modifier,
 ) {
-    // Local state to keep track of the likes count (NOT PERMANENT)
+    // Local state to keep track of the likes count (THIS ONE IS NOT PERMANENT UNLIKE THE OTHER)
     var likeCount by remember { mutableStateOf(message.likes) }
 
     Card(
@@ -434,7 +435,7 @@ private fun FileMessageFrame(
                     .padding(start = 8.dp)
             ) {
                 IconButton(onClick = {
-                    likeCount += 1 // Increment the like count on click
+                    likeCount += 1
                 }) {
                     Icon(
                         imageVector = Icons.Default.ThumbUp,

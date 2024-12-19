@@ -9,18 +9,15 @@ interface StudentHelpForumApi {
 }
 
 class KtorStudentHelpForumApi(private val context: Context) : StudentHelpForumApi {
+    companion object {
+        private val json = Json { ignoreUnknownKeys = true }
+    }
+
     override suspend fun getData(): List<Course> {
         return try {
-            // Open the JSON file from assets
             val inputStream = context.assets.open("studentHelpForum.json")
-
-            // Read the file contents
             val jsonString = inputStream.bufferedReader().use { it.readText() }
-
-            // Parse the JSON string into a list of Course objects
-            Json {
-                ignoreUnknownKeys = true // Helpful for handling additional JSON fields
-            }.decodeFromString(jsonString)
+            json.decodeFromString(jsonString)
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()

@@ -62,14 +62,14 @@
         "fileName": "Thermodynamics Synthese.pdf",
         "fileUrl": "https://wagner.nyu.edu/files/students/Math_Review_-_Algebra_Operations.pdf",
         "inFavorites": false,
-        "fileAuthor": "Le T tmtc",
+        "fileAuthor": "Student XYZ",
         "fileDate": "17-04/2023",
         "fileLikes": 18,
         "tags": ["Chapter 2", "Recent", "Supplementary"],
         "messages": [
           {
             "messageID": 500003,
-            "content": "This is a test for docx files",
+            "content": "This synthèse looks great!",
             "author": "Student987",
             "timestamp": "2024-11-27T14:00:00Z",
             "likes": 7,
@@ -77,7 +77,7 @@
           },
           {
             "messageID": 500004,
-            "content": "Hell yeah, it works!",
+            "content": "It is great indeed!",
             "author": "TeacherMarc",
             "timestamp": "2024-11-27T15:00:00Z",
             "likes": 5,
@@ -91,14 +91,14 @@
     "courseID": 100002,
     "courseName": "Introduction to Machine Learning",
     "teacherName": "Dr. Al Gorithm",
-    "courseYear": "BA4",
+    "courseYear": "MA1",
     "inFavorites": false,
     "icon": "keyboard",
     "forum": [
       {
         "messageID": 200002,
-        "title": "What is supervised learning?",
-        "content": "I have a trouble with the 2nd part of chapter 1 blablablablabla",
+        "title": "Can a machine really learn? ",
+        "content": "I firmly believe that to have the ability to learn, one needs a soul. Can a rock learn? No. Can a table ? Neither. A computer can remember, it can spit results, but can it really learn?",
         "author": "StudentML",
         "timestamp": "2024-11-29T10:00:00Z",
         "profilePicture": "https://i.imgur.com/0fvzn7p.png",
@@ -106,7 +106,7 @@
         "answers": [
           {
             "answerID": 300001,
-            "content": "Supervised learning involves training a model on labeled data.",
+            "content": "Please, no more philosophy questions. You have chosen the wrong major.",
             "author": "TeacherGorithm",
             "timestamp": "2024-11-29T12:00:00Z",
             "likes": 20,
@@ -121,14 +121,14 @@
         "fileName": "ML Basics.pdf",
         "fileUrl": "https://www.physics.ox.ac.uk/system/files/file_attachments/basic_thermo.pdf",
         "inFavorites": false,
-        "fileAuthor": "Yeah Yeah Yeah",
+        "fileAuthor": "Student UVW",
         "fileDate": "18-04/2023",
         "fileLikes": 181,
         "tags": ["Introduction", "Basics", "Chapter 1"],
         "messages": [
           {
             "messageID": 500005,
-            "content": "Does this include examples of supervised learning?",
+            "content": "Does this include examples of demos from the exam ?",
             "author": "StudentML",
             "timestamp": "2024-11-28T14:00:00Z",
             "likes": 8,
@@ -150,14 +150,14 @@
     "courseID": 100003,
     "courseName": "Advanced Mathematics",
     "teacherName": "Prof. Calc U. Lator",
-    "courseYear": "BA4",
+    "courseYear": "MA1",
     "inFavorites": true,
     "icon": "function",
     "forum": [
       {
         "messageID": 200003,
         "title": "How do you solve differential equations?",
-        "content": "Something something something I have no inspiration",
+        "content": "My exam is in two hour, I need an answer quickly please",
         "author": "MathEnthusiast",
         "timestamp": "2024-11-30T09:00:00Z",
         "profilePicture": "https://i.imgur.com/JoDayfy.png",
@@ -165,7 +165,7 @@
         "answers": [
           {
             "answerID": 300003,
-            "content": "Basic answer, blablablablabla",
+            "content": "See you soon:)",
             "author": "ProfLator",
             "timestamp": "2024-11-30T11:00:00Z",
             "likes": 12,
@@ -180,14 +180,14 @@
         "fileName": "Differential Equations Guide.pdf",
         "fileUrl": "https://www.hood.edu/sites/default/files/A%20Quick%20Algebra%20Review.pdf",
         "inFavorites": false,
-        "fileAuthor": "Le T tmtc",
+        "fileAuthor": "Student UCO",
         "fileDate": "17-04/2023",
         "fileLikes": 108,
         "tags": ["Chapter 3", "Exam Prep", "Recommended"],
         "messages": [
           {
             "messageID": 500007,
-            "content": "Is this guide enough for BA4 exams?",
+            "content": "Is this guide enough for MA1 exams?",
             "author": "ExamPrepper",
             "timestamp": "2024-11-29T14:00:00Z",
             "likes": 9,

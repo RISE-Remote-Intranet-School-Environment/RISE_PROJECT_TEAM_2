@@ -1,4 +1,4 @@
-package rise.front_end.team2.ui.screens.studentHelp.files.filesList
+package rise_front_end.team2.ui.screens.studentHelp.files.filesList
 
 import android.app.DownloadManager
 import android.content.Context
@@ -10,7 +10,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,25 +17,21 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.automirrored.filled.TextSnippet
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.InsertDriveFile
-import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.filled.TableChart
-import androidx.compose.material.icons.filled.TextSnippet
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -56,7 +51,6 @@ import kotlinx.coroutines.withContext
 import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.studentHelp.forum.CourseFile
 import rise_front_end.team2.ui.screens.EmptyScreenContent
-import rise_front_end.team2.ui.screens.studentHelp.files.filesList.CourseFilesViewModel
 import rise_front_end.team2.ui.theme.AppTheme
 import java.io.File
 import java.net.URL
@@ -177,7 +171,7 @@ private fun FileFrame(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            // Header section with profile picture, title, and favorite icon
+            // Profile picture, title, and favorite icon
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -244,7 +238,7 @@ private fun FileFrame(
             )
         }
 
-        // Bottom row with Like and Chat icons
+        //Like and Chat icons
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -271,11 +265,11 @@ private fun FileFrame(
                 )
             }
 
-            // Chat/Discussions Button
+            // Chat Button
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onClick) {
                     Icon(
-                        imageVector = Icons.Default.Chat,
+                        imageVector = Icons.AutoMirrored.Filled.Chat,
                         contentDescription = "Discussions",
                         tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
@@ -292,7 +286,6 @@ private fun FileFrame(
         if (isExpanded) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            // File details
             Text(
                 text = "Uploaded on: ${courseFile.fileDate}",
                 style = MaterialTheme.typography.bodyMedium
@@ -377,9 +370,9 @@ private fun FileFrame(
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Chat,
+                        imageVector = Icons.AutoMirrored.Filled.Chat,
                         contentDescription = "Go to Discussion",
-                        tint = MaterialTheme.colorScheme.onTertiaryContainer
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
 
@@ -532,8 +525,7 @@ private fun ImagePreview(fileUrl: String) {
     )
 }
 
-//Not really used right now but will be later
-//Might need to replace icons with material3. Right now it's material
+//Show the icon depending on the file type
 fun getFileIcon(fileName: String): ImageVector {
     return when {
         fileName.endsWith(".pdf") -> Icons.Default.PictureAsPdf
@@ -544,7 +536,7 @@ fun getFileIcon(fileName: String): ImageVector {
     }
 }
 
-//Need to sorta download the pdf before previewing it. Need to check if it can be done more easily
+//Need to download the pdf before previewing it. To check if there is a more effective method
 suspend fun downloadPdf(context: Context, url: String): File? = withContext(Dispatchers.IO) {
     try {
         val file = File(context.cacheDir, "tempfile.pdf")

@@ -203,10 +203,10 @@ fun AddForumMessageButton(
             viewModel = viewModel,
             onSubmit = { title, description, selectedTags ->
                 val newMessage = ForumMessage(
-                    messageID = 0, // This ID would depend on the backend/database logic
+                    messageID = 0, // This ID would depend on the backend/database logic. Check addForumMessage for more infos
                     title = title,
                     content = description,
-                    author = "CurrentUser", // Replace this with actual username logic
+                    author = "CurrentUser", // Need to Replace this with actual username logic
                     timestamp = System.currentTimeMillis().toString(),
                     answers = emptyList(),
                     tags = selectedTags,
@@ -263,7 +263,7 @@ fun StyledAddPostForm(
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var selectedTags by remember { mutableStateOf(mutableStateListOf<String>()) }
+    val selectedTags by remember { mutableStateOf(mutableStateListOf<String>()) }
     var showValidationError by remember { mutableStateOf(false) }
 
     Column {
