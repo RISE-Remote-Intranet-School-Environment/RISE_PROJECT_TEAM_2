@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
@@ -28,6 +29,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.github.barteksc.pdfviewer.PDFView
@@ -42,6 +45,9 @@ import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
 import java.io.File
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun FileDiscussionsScreen(
@@ -74,6 +80,9 @@ private fun FileMessageList(
     courseId: Int,
     navigateBack: () -> Unit,
 ) {
+    var showAddMessageDialog by remember { mutableStateOf(false) }
+    val viewModel = koinViewModel<FileDiscussionsViewModel>()
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -83,6 +92,11 @@ private fun FileMessageList(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
+            )
+        },
+        floatingActionButton = {
+            AddMessageButton(
+                onClick = { showAddMessageDialog = true }
             )
         }
     ) { paddingValues ->
@@ -109,6 +123,101 @@ private fun FileMessageList(
 
             file.messages.forEach { message ->
                 FileMessageFrame(message)
+            }
+        }
+
+        if (showAddMessageDialog) {
+            AddMessageDialog(
+                onSubmit = { content ->
+                    val currentTimeMillis = System.currentTimeMillis()
+                    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                    val timestamp = formatter.format(Date(currentTimeMillis))
+
+                    val newMessage = FileMessage(
+                        messageID = System.currentTimeMillis().toInt(),
+                        content = content,
+                        author = "CurrentUser",
+                        timestamp = timestamp,
+                        likes = 0,
+                        profilePicture = "https://i.imgur.com/0fvzn7p.png"
+                    )
+                    viewModel.addFileAnswer(courseId, file.fileID, newMessage)
+                    showAddMessageDialog = false
+                },
+                onCancel = { showAddMessageDialog = false }
+            )
+        }
+    }
+}
+
+@Composable
+fun AddMessageButton(
+    onClick: () -> Unit
+) {
+    FloatingActionButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "Add Message"
+        )
+    }
+}
+
+@Composable
+fun AddMessageDialog(
+    onSubmit: (content: String) -> Unit,
+    onCancel: () -> Unit
+) {
+    var content by remember { mutableStateOf("") }
+
+    Dialog(
+        onDismissRequest = { onCancel() },
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .heightIn(min = 400.dp, max = 500.dp),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = "Add New Message",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                TextField(
+                    value = content,
+                    onValueChange = { content = it },
+                    placeholder = { Text("Write your message here") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 200.dp, max = 300.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(onClick = onCancel) {
+                        Text("Cancel")
+                    }
+
+                    Button(
+                        onClick = {
+                            if (content.isNotBlank()) {
+                                onSubmit(content)
+                            }
+                        },
+                        enabled = content.isNotBlank()
+                    ) {
+                        Text("Submit")
+                    }
+                }
             }
         }
     }

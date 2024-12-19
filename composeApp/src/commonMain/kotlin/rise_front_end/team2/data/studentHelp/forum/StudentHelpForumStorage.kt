@@ -17,8 +17,12 @@ interface StudentHelpForumStorage {
     fun getTagsForCourse(courseId: Int): Flow<List<String>>
     suspend fun likeAnswer(courseId: Int, messageId: Int, answerId: Int): Boolean
     suspend fun likeFile(courseId: Int, fileId: Int): Boolean
+    suspend fun addNewFile(courseId: Int, fileName: String, fileUrl: String): Boolean
+    suspend fun addFileAnswer(courseId: Int, fileId: Int, message: FileMessage): Boolean
 
-}
+
+
+    }
 
 class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
     private val storedCourses = MutableStateFlow(emptyList<Course>())
@@ -219,6 +223,70 @@ class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
             // Update the stored courses
             storedCourses.value = updatedCourses
             return true
+        }
+
+        return false
+    }
+
+    override suspend fun addNewFile(courseId: Int, fileName: String, fileUrl: String): Boolean {
+        val currentCourses = storedCourses.value.toMutableList()
+        val courseIndex = currentCourses.indexOfFirst { it.courseID == courseId }
+
+        if (courseIndex != -1) {
+            // Create new file with generated ID and default values
+            val newFile = CourseFile(
+                fileID = System.currentTimeMillis().toInt(),
+                fileName = fileName,
+                fileUrl = fileUrl,
+                fileDate = System.currentTimeMillis().toString(),
+                inFavorites = false,
+                fileLikes = 0,
+                messages = emptyList(),
+                tags = emptyList(),
+                fileAuthor = "Current Author", //Need to change it to a real username
+                profilePicture = "https://i.imgur.com/0fvzn7p.png" // Default profile picture
+            )
+
+            val updatedCourses = currentCourses.toMutableList()
+            val updatedCourse = updatedCourses[courseIndex].copy(
+                courseFiles = updatedCourses[courseIndex].courseFiles + newFile
+            )
+            updatedCourses[courseIndex] = updatedCourse
+
+            storedCourses.value = updatedCourses
+            return true
+        }
+
+        return false
+    }
+
+
+    override suspend fun addFileAnswer(courseId: Int, fileId: Int, message: FileMessage): Boolean {
+        val currentCourses = storedCourses.value.toMutableList()
+        val courseIndex = currentCourses.indexOfFirst { it.courseID == courseId }
+
+        if (courseIndex != -1) {
+            val courseFiles = currentCourses[courseIndex].courseFiles.toMutableList()
+            val fileIndex = courseFiles.indexOfFirst { it.fileID == fileId }
+
+            if (fileIndex != -1) {
+                // Create an updated file with the new message
+                val updatedFile = courseFiles[fileIndex].copy(
+                    messages = courseFiles[fileIndex].messages + message
+                )
+
+                // Replace the old file with the updated one
+                courseFiles[fileIndex] = updatedFile
+
+                // Update the course's files list
+                val updatedCourses = currentCourses.toMutableList()
+                updatedCourses[courseIndex] = updatedCourses[courseIndex].copy(
+                    courseFiles = courseFiles
+                )
+
+                storedCourses.value = updatedCourses
+                return true
+            }
         }
 
         return false

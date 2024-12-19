@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.automirrored.filled.TextSnippet
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Download
@@ -42,6 +44,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -90,16 +94,27 @@ private fun FileList(
     navigateToFileDiscussions: (courseId: Int, fileId: Int) -> Unit,
     navigateBack: () -> Unit,
 ) {
+    var showAddFileDialog by remember { mutableStateOf(false) }
+    val viewModel = koinViewModel<CourseFilesViewModel>()
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = "Course Files") },
+                title = { Text(text = "Files Sharing") },
                 navigationIcon = {
                     IconButton(onClick = navigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { showAddFileDialog = true }) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add file"
+                )
+            }
         }
     ) { paddingValues ->
         Column(
@@ -115,8 +130,23 @@ private fun FileList(
                 )
             }
         }
+
+        if (showAddFileDialog) {
+            AddFileDialog(
+                onDismiss = { showAddFileDialog = false },
+                onSubmit = { fileName, fileUrl ->
+                    viewModel.addNewFile(
+                        courseId = courseId,
+                        fileName = fileName,
+                        fileUrl = fileUrl,
+                    )
+                    showAddFileDialog = false
+                }
+            )
+        }
     }
 }
+
 
 @Composable
 private fun FileFrame(
@@ -198,7 +228,6 @@ private fun FileFrame(
                         Icon(
                             imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
                             contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
-                            tint = MaterialTheme.colorScheme.primaryContainer
                         )
                     }
                 }
@@ -368,6 +397,93 @@ private fun FileFrame(
         }
     }
 }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddFileDialog(
+    onDismiss: () -> Unit,
+    onSubmit: (fileName: String, fileUrl: String) -> Unit
+) {
+    var fileName by remember { mutableStateOf("") }
+    var fileUrl by remember { mutableStateOf("") }
+    var showValidationError by remember { mutableStateOf(false) }
+
+    Dialog(
+        onDismissRequest = { onDismiss() },
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .heightIn(min = 500.dp, max = 600.dp),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = "Add New File",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                Text(
+                    text = "File Name",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                TextField(
+                    value = fileName,
+                    onValueChange = { fileName = it },
+                    placeholder = { Text("Name of the file") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "File URL",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                TextField(
+                    value = fileUrl,
+                    onValueChange = { fileUrl = it },
+                    placeholder = { Text("URL to the file") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(onClick = onDismiss) {
+                        Text("Cancel")
+                    }
+                    Button(
+                        onClick = {
+                            if (fileName.isBlank() || fileUrl.isBlank()
+                            ) {
+                                showValidationError = true
+                            } else {
+                                showValidationError = false
+                                onSubmit(fileName, fileUrl)
+                            }
+                        },
+                        enabled = fileName.isNotBlank() || fileUrl.isNotBlank()
+                    ) {
+                        Text("Submit")
+                    }
+                }
+                }
+            }
+        }
+    }
 
 
 

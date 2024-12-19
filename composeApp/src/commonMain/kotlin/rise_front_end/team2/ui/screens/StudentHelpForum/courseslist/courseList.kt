@@ -34,6 +34,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import com.materialkolor.ktx.harmonize
+import rise_front_end.team2.ui.theme.Secondary
 
 @Composable
 fun StudentHelpCourseListScreen(
@@ -191,14 +193,14 @@ private fun CourseCard(
                         Icon(
                             imageVector = Icons.Filled.Forum,
                             contentDescription = "Go to Forum",
-                            tint = colorScheme.primary
+                            tint = colorScheme.primaryContainer
                         )
                     }
                     IconButton(onClick = onFilesClick) {
                         Icon(
                             imageVector = Icons.Filled.Folder,
                             contentDescription = "Go to Files",
-                            tint = colorScheme.primary
+                            tint = colorScheme.primaryContainer
                         )
                     }
                 }
@@ -219,7 +221,7 @@ private fun CourseCard(
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
                     contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
-                    tint = colorScheme.primary
+                    tint = colorScheme.primaryContainer
                 )
             }
         }

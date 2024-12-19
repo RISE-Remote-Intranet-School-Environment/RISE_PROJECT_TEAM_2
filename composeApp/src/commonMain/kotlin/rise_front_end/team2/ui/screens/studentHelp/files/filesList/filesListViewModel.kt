@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import rise_front_end.team2.Repo.StudentHelpForumRepository
 import rise_front_end.team2.data.studentHelp.forum.Course
+import rise_front_end.team2.data.studentHelp.forum.CourseFile
 
 class CourseFilesViewModel(
     private val repository: StudentHelpForumRepository
@@ -26,6 +27,12 @@ class CourseFilesViewModel(
             repository.likeFile(courseId, fileId)
         }
     }
+    fun addNewFile(courseId: Int, fileName: String, fileUrl: String,) {
+        viewModelScope.launch {
+            repository.addNewFile(courseId, fileName, fileUrl)
+        }
+    }
+
 
 
 }
