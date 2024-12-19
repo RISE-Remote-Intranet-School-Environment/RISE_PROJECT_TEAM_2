@@ -1,7 +1,9 @@
 package rise_front_end.team2.ui.screens.studentHelp.files.filesList
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import rise_front_end.team2.Repo.StudentHelpForumRepository
 import rise_front_end.team2.data.studentHelp.forum.Course
 
@@ -18,4 +20,12 @@ class CourseFilesViewModel(
     fun removeFromFavorites(courseID: Int, courseFileID: Int){
 
     }
+
+    fun likeFile(courseId: Int, fileId: Int) {
+        viewModelScope.launch {
+            repository.likeFile(courseId, fileId)
+        }
+    }
+
+
 }

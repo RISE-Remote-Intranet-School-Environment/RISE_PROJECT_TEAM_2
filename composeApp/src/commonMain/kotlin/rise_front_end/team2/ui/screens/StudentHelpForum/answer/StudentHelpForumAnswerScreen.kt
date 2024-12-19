@@ -1,31 +1,49 @@
 package rise_front_end.team2.ui.screens.StudentHelpForum.answer
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import coil.compose.AsyncImage
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format
+import network.chaintech.kmp_date_time_picker.utils.now
 import org.koin.compose.viewmodel.koinViewModel
 import rise_front_end.team2.data.studentHelp.forum.Answer
 import rise_front_end.team2.data.studentHelp.forum.ForumMessage
 import rise_front_end.team2.ui.screens.EmptyScreenContent
 import rise_front_end.team2.ui.theme.AppTheme
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun ForumMessageAnswersScreen(
@@ -56,8 +74,8 @@ fun ForumMessageAnswersScreen(
 @Composable
 private fun AnswerList(
     message: ForumMessage,
-    courseId: Int, // Add courseId
-    viewModel: ForumMessageAnswersViewModel, // Add ViewModel
+    courseId: Int,
+    viewModel: ForumMessageAnswersViewModel,
     navigateBack: () -> Unit,
 ) {
     var showAddAnswerDialog by remember { mutableStateOf(false) }
@@ -98,7 +116,11 @@ private fun AnswerList(
             )
 
             message.answers.forEach { answer ->
-                AnswerFrame(answer)
+                AnswerFrame(
+                    answer = answer,
+                    courseId = courseId,
+                    messageId = message.messageID,
+                    viewModel = viewModel)
             }
         }
 
@@ -106,15 +128,23 @@ private fun AnswerList(
         if (showAddAnswerDialog) {
             AddAnswerDialog(
                 onSubmit = { description ->
+                    val currentTimeMillis = System.currentTimeMillis()
+
+                    val currentTime = Date(currentTimeMillis)
+                    Log.d("current time", currentTime.toString())
+
+                    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                    val timestamp = formatter.format(currentTime)
+                    Log.d("Timestamp", timestamp)
+
+
                     val newAnswer = Answer(
-                        answerID = 0, // Will need to depend on the storage
+                        answerID = 0,
                         content = description,
-                        author = "CurrentUser", //Replace with actual username
-                         timestamp = System.currentTimeMillis().toString(),
+                        author = "CurrentUser",
+                        timestamp = timestamp,
                         likes = 0,
-                        profilePicture = "https://i.imgur.com/0fvzn7p.png" //Need to replace with actual profile picture
-
-
+                        profilePicture = "https://i.imgur.com/0fvzn7p.png"
                     )
                     viewModel.addAnswer(courseId, message.messageID, newAnswer)
                     showAddAnswerDialog = false
@@ -128,23 +158,72 @@ private fun AnswerList(
 @Composable
 private fun AnswerFrame(
     answer: Answer,
+    courseId: Int,
+    messageId: Int,
+    viewModel: ForumMessageAnswersViewModel,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier
+    Card(
+        modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Text(
-            text = answer.content,
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Text(
-            text = "By: ${answer.author} | ${answer.timestamp} | Likes: ${answer.likes}",
-            style = MaterialTheme.typography.bodySmall
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            // Profile Picture
+            AsyncImage(
+                model = answer.profilePicture,
+                contentDescription = "Profile Picture of ${answer.author}",
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = answer.content,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "By: ${answer.author} | ${answer.timestamp}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            // Like Button
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                IconButton(
+                    onClick = {
+                        viewModel.likeAnswer(courseId, messageId, answer.answerID)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ThumbUp,
+                        contentDescription = "Like",
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                }
+                Text(
+                    text = answer.likes.toString(),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
     }
 }
 
@@ -153,17 +232,44 @@ private fun OriginalPostFrame(
     message: ForumMessage,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier
+    // A Row to display the profile picture and title next to each other
+    Row(
+        modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically // Vertically align them in the center
     ) {
-        Text(
-            text = message.title,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
+        // Profile Picture
+        AsyncImage(
+            model = "https://i.imgur.com/0fvzn7p.png", // Replace with the actual profile image URL
+            contentDescription = "Profile Picture of ${message.author}",
+            modifier = Modifier
+                .size(50.dp)
+                .clip(CircleShape)
+                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                .align(Alignment.CenterVertically), // Align to the top-left
+            contentScale = ContentScale.Crop
         )
-        Spacer(modifier = Modifier.height(8.dp))
+
+        Spacer(modifier = Modifier.width(16.dp)) // Space between the profile picture and the title
+
+        // Title of the original post
+        Column(
+            modifier = Modifier.weight(1f) // Make the title take the remaining space
+        ) {
+            Text(
+                text = message.title,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+
+    // Rest of the content (below the profile picture and title)
+    Column(
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp)
+    ) {
+        Spacer(modifier = Modifier.height(8.dp)) // Space between title and content
         Text(
             text = message.content,
             style = MaterialTheme.typography.bodyLarge
@@ -175,6 +281,9 @@ private fun OriginalPostFrame(
         )
     }
 }
+
+
+
 
 @Composable
 fun AddAnswerButton(

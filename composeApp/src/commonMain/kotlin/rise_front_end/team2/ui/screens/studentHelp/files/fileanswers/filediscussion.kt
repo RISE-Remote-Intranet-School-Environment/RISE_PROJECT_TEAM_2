@@ -5,8 +5,11 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -18,6 +21,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
@@ -137,17 +142,36 @@ private fun FilePreviewCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // File name and author
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = file.fileName,
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
+                // File profile picture and file details
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    // Profile picture
+                    AsyncImage(
+                        model = file.profilePicture,
+                        contentDescription = "Profile picture of ${file.fileAuthor}",
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
+                        contentScale = ContentScale.Crop
                     )
-                    Text(
-                        text = "By: ${file.fileAuthor}",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+
+                    Spacer(modifier = Modifier.width(16.dp)) // Spacer between profile picture and text
+
+                    // File name and author
+                    Column {
+                        Text(
+                            text = file.fileName,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "By: ${file.fileAuthor}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
 
                 // Favorite and interaction stats
@@ -245,28 +269,80 @@ private fun FilePreviewCard(
     }
 }
 
+
 @Composable
 private fun FileMessageFrame(
     message: FileMessage,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier
+    // Local state to keep track of the likes count (NOT PERMANENT)
+    var likeCount by remember { mutableStateOf(message.likes) }
+
+    Card(
+        modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Text(
-            text = message.content,
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Text(
-            text = "By: ${message.author} | ${message.timestamp} | Likes: ${message.likes}",
-            style = MaterialTheme.typography.bodySmall
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            // Profile Picture
+            AsyncImage(
+                model = message.profilePicture,
+                contentDescription = "Profile Picture of ${message.author}",
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = message.content,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "By: ${message.author} | ${message.timestamp}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            // Likes Section
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .padding(start = 8.dp)
+            ) {
+                IconButton(onClick = {
+                    likeCount += 1 // Increment the like count on click
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.ThumbUp,
+                        contentDescription = "Like",
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                }
+                Text(
+                    text = likeCount.toString(), // Display the updated like count
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
     }
 }
+
+
 
 @Composable
 private fun PdfPreview(fileUrl: String) {

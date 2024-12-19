@@ -69,4 +69,12 @@ class StudentHelpForumRepository(
     fun getTagsForCourse(courseId: Int): Flow<List<String>> {
         return studentHelpForumStorage.getTagsForCourse(courseId)
     }
+
+    suspend fun likeAnswer(courseId: Int, messageId: Int, answerId: Int): Boolean {
+        return studentHelpForumStorage.likeAnswer(courseId, messageId, answerId)
+    }
+
+    suspend fun likeFile(courseId: Int, fileId: Int): Boolean{
+        return studentHelpForumStorage.likeFile(courseId, fileId)
+    }
 }

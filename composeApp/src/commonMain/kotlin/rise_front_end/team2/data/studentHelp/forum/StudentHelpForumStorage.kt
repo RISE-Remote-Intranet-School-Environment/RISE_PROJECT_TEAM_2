@@ -15,7 +15,8 @@ interface StudentHelpForumStorage {
     suspend fun updateForumMessage(courseId: Int, messageId: Int, newContent: String): Boolean
     suspend fun addAnswer(courseId: Int, messageId: Int, answer: Answer): Boolean
     fun getTagsForCourse(courseId: Int): Flow<List<String>>
-
+    suspend fun likeAnswer(courseId: Int, messageId: Int, answerId: Int): Boolean
+    suspend fun likeFile(courseId: Int, fileId: Int): Boolean
 
 }
 
@@ -155,5 +156,74 @@ class InMemoryStudentHelpForumStorage : StudentHelpForumStorage {
                 ?: emptyList()
         }
     }
+
+    override suspend fun likeAnswer(courseId: Int, messageId: Int, answerId: Int): Boolean {
+        val currentCourses = storedCourses.value.toMutableList()
+        val courseIndex = currentCourses.indexOfFirst { it.courseID == courseId }
+
+        if (courseIndex != -1) {
+            val courseForums = currentCourses[courseIndex].forum.toMutableList()
+            val messageIndex = courseForums.indexOfFirst { it.messageID == messageId }
+
+            if (messageIndex != -1) {
+                val updatedAnswers = courseForums[messageIndex].answers.map { answer ->
+                    if (answer.answerID == answerId) {
+                        // Toggle likes - increment if not liked, decrement if already liked
+                        answer.copy(
+                            likes = if (answer.likes >= 0) answer.likes + 1 else 0
+                        )
+                    } else {
+                        answer
+                    }
+                }
+
+                // Update the message with modified answers
+                val updatedMessage = courseForums[messageIndex].copy(answers = updatedAnswers)
+                courseForums[messageIndex] = updatedMessage
+
+                // Update the courses
+                val updatedCourses = currentCourses.toMutableList()
+                updatedCourses[courseIndex] = updatedCourses[courseIndex].copy(
+                    forum = courseForums
+                )
+
+                storedCourses.value = updatedCourses
+                return true
+            }
+        }
+
+        return false
+    }
+
+    override suspend fun likeFile(courseId: Int, fileId: Int): Boolean {
+        val currentCourses = storedCourses.value.toMutableList()
+        val courseIndex = currentCourses.indexOfFirst { it.courseID == courseId }
+
+        if (courseIndex != -1) {
+            val updatedCourseFiles = currentCourses[courseIndex].courseFiles.map { courseFile ->
+                if (courseFile.fileID == fileId) {
+                    courseFile.copy(
+                        fileLikes = courseFile.fileLikes + 1
+                    )
+                } else {
+                    courseFile
+                }
+            }
+
+            // Create an updated course with the modified course files
+            val updatedCourses = currentCourses.toMutableList()
+            updatedCourses[courseIndex] = updatedCourses[courseIndex].copy(
+                courseFiles = updatedCourseFiles
+            )
+
+            // Update the stored courses
+            storedCourses.value = updatedCourses
+            return true
+        }
+
+        return false
+    }
+
+
 
 }
