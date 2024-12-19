@@ -75,7 +75,7 @@ private fun ForumMessageList(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = "Forum Messages") },
+                title = { Text(text = " Forum Board") },
                 navigationIcon = {
                     IconButton(onClick = navigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -194,7 +194,7 @@ fun AddForumMessageButton(
     FloatingActionButton(onClick = { showDialog = true }) {
         Icon(
             imageVector = Icons.Default.Add,
-            contentDescription = "Add forum post"
+            contentDescription = "Post a question"
         )
     }
 
@@ -263,7 +263,8 @@ fun StyledAddPostForm(
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var selectedTags by remember { mutableStateOf(mutableListOf<String>()) }
+    var selectedTags by remember { mutableStateOf(mutableStateListOf<String>()) }
+    var showValidationError by remember { mutableStateOf(false) }
 
     Column {
         Text(
@@ -293,6 +294,10 @@ fun StyledAddPostForm(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        Text(
+            text = "Tags",
+            style = MaterialTheme.typography.bodyMedium,
+        )
         LazyColumn(
             modifier = Modifier.height(150.dp)
         ) {
@@ -307,6 +312,12 @@ fun StyledAddPostForm(
                                 selectedTags.add(tag)
                             }
                         }
+                        .padding(8.dp)
+                        .background(
+                            if (selectedTags.contains(tag)) colorScheme.primary.copy(alpha = 0.2f)
+                            else Color.Transparent,
+                            shape = RoundedCornerShape(8.dp)
+                        )
                         .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -317,9 +328,20 @@ fun StyledAddPostForm(
                         }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = tag)
+                    Text(
+                        text = tag,
+                        color = if (selectedTags.contains(tag)) colorScheme.primary else Color.Unspecified
+                    )
                 }
             }
+        }
+
+        if (showValidationError) {
+            Text(
+                text = "Please select at least one tag.",
+                color = Color.Red,
+                style = MaterialTheme.typography.bodySmall
+            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -330,8 +352,14 @@ fun StyledAddPostForm(
         ) {
             Button(onClick = onCancel) { Text("Cancel") }
             Button(onClick = {
-                onSubmit(title, description, selectedTags.toList())
+                if (selectedTags.isEmpty()) {
+                    showValidationError = true
+                } else {
+                    showValidationError = false
+                    onSubmit(title, description, selectedTags.toList())
+                }
             }) { Text("Submit") }
         }
     }
 }
+
