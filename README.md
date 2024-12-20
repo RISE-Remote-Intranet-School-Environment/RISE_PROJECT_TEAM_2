@@ -94,16 +94,52 @@ Here are some screenshots of the application:
 
 
 
-## Technologies Used
+### Dependencies
 
-- **Language**: Kotlin (Compose Multiplatform)
-- **Material3** (Modern UI components)
-- **UI Framework**: Jetpack Compose
-- **Architecture**: Component-based for better extensibility
-- **Color Management**: Modern palette with support for light and dark themes
-- **Coroutines** (Asynchronous flows using `StateFlow`)
-- **Koin** (Dependency Injection)
-- **Animation** (Expandable and dynamic content)
+#### Common Dependencies
+- **Compose Runtime**
+- **Compose Foundation**
+- **Compose Material**
+- **Compose Material3**: `1.2.1`
+- **Compose UI**
+- **Compose Tooling**
+  - Preview: `1.7.2`
+  - Debugging: `1.7.2`
+- **Material Kolor**: `2.0.0`
+
+#### Android-Specific Dependencies
+- **AndroidX Activity Compose**: `1.9.2`
+- **AndroidX Lifecycle ViewModel**: `2.8.2`
+- **AndroidX Lifecycle Runtime Compose**: `2.8.2`
+- **Navigation Compose**: `2.8.0-alpha10`
+- **Material Icons Extended**: `1.7.5`
+- **OkHttp**: `4.11.0`
+- **Retrofit**:
+  - Core: `2.9.0`
+  - Gson Converter: `2.9.0`
+- **Coil for Compose**: `2.4.0`
+- **PDF Viewer**: `3.2.0-beta.3`
+
+#### Multiplatform Dependencies
+- **Koin Core**: `4.0.0`
+- **Koin Android**: `4.0.0`
+- **Koin Compose ViewModel**: `4.0.0`
+- **Ktor**:
+  - Core: `2.3.12`
+  - OkHttp: `2.3.12`
+  - Content Negotiation: `2.3.12`
+  - JSON Serialization: `2.3.12`
+- **Network DateTime Picker**: `1.0.6`
+- **Kamel (Image Loading)**: `0.9.5`
+- **Kotlinx Coroutines**: 
+  - Core: `1.6.4`
+  - Android: `1.7.3`
+
+#### Build Plugins
+- **Kotlin Multiplatform Plugin**: `2.0.20`
+- **Compose Multiplatform Plugin**: `1.6.11`
+- **Android Application Plugin**: `8.7.2`
+- **Kotlin Serialization Plugin**: `2.0.20`
 
 ---
 
