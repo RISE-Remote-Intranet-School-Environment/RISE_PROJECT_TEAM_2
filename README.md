@@ -174,7 +174,28 @@ If you face any issues, please report them on [GitHub](https://github.com/JetBra
 
 You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle task.
 
+---------
 
+
+## **Possible Fixes**
+Here is a list of issues identified in the project, with suggestions for improvements:
+
+1. **Not optimally targeting Android**
+
+- Which could limit its effectiveness on other target platforms like iOS and Web.
+- Solution: Check the balance between Android-specific modules and shared modules in commonMain.
+
+
+2. **Issues in the build.gradle file**
+
+- Incorrect or incomplete declarations that could lead to compilation or runtime errors.
+- Solution: Review the build.gradle configurations to fix errors and optimize dependency management.
+- Bad separation between Android and Coil
+
+- The Coil integration is not properly separated in the Android part, which causes dependency inconsistencies and logic errors.
+Confusion between androidMain and commonMain
+
+- A bad implementation of CoroutineScope could lead to memory leaks.
 
 
 
